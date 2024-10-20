@@ -7,6 +7,7 @@ import ProjectDescriptionHelpers
 
 let configurations: [Configuration] = .default
 
+@MainActor
 let settings: Settings = .settings(
     base: env.baseSetting,
     configurations: configurations,
@@ -15,6 +16,7 @@ let settings: Settings = .settings(
 
 let scripts: [TargetScript] = generateEnvironment.scripts
 
+@MainActor
 let targets: [Target] = [
     .target(
         name: env.name,
@@ -31,6 +33,7 @@ let targets: [Target] = [
     )
 ]
 
+@MainActor
 let schemes: [Scheme] = [
     .scheme(
         name: "\(env.name)-DEV",
@@ -61,6 +64,7 @@ let schemes: [Scheme] = [
     )
 ]
 
+@MainActor
 let project = Project(
     name: env.name,
     organizationName: env.organizationName,
