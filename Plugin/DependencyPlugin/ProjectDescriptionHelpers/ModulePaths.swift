@@ -30,7 +30,7 @@ public extension ModulePaths {
 
 public extension ModulePaths {
     enum Domain: String, MicroTargetPathConvertable {
-        case BaseDomain
+        case Domain
     }
 }
 
