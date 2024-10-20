@@ -1,9 +1,8 @@
 // swift-tools-version:5.7
 @preconcurrency import PackageDescription
-
 #if TUIST
 @preconcurrency import ProjectDescription
-import ProjectDescriptionHelpers
+@preconcurrency import ProjectDescriptionHelpers
 
 let packageSetting = PackageSettings(
     baseSettings: .settings(
@@ -18,5 +17,7 @@ let packageSetting = PackageSettings(
 
 let package = Package(
     name: "Package",
-    dependencies: []
+    dependencies: [
+            .package(url: "https://github.com/Moya/Moya.git", from: "15.0.0")
+        ]
 )
