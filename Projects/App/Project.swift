@@ -2,7 +2,7 @@ import ConfigurationPlugin
 import DependencyPlugin
 import EnvironmentPlugin
 import Foundation
-import ProjectDescription
+@preconcurrency import ProjectDescription
 import ProjectDescriptionHelpers
 
 let configurations: [Configuration] = .default

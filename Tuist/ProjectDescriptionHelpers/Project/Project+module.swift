@@ -1,7 +1,7 @@
 import ConfigurationPlugin
 import EnvironmentPlugin
 import Foundation
-import ProjectDescription
+@preconcurrency import ProjectDescription
 
 public extension Project {
     static func module(

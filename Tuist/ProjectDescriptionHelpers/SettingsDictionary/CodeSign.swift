@@ -1,4 +1,4 @@
-import ProjectDescription
+@preconcurrency import ProjectDescription
 
 public extension SettingsDictionary {
     static let codeSign = SettingsDictionary()

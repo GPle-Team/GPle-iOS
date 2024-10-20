@@ -1,7 +1,7 @@
 import ConfigurationPlugin
 import DependencyPlugin
 import EnvironmentPlugin
-import ProjectDescription
+@preconcurrency import ProjectDescription
 
 // MARK: - Interface
 public extension Target {

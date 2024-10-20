@@ -1,3 +1,3 @@
-import ProjectDescription
+@preconcurrency import ProjectDescription
 
 let dependencyPlugin = Plugin(name: "DependencyPlugin")

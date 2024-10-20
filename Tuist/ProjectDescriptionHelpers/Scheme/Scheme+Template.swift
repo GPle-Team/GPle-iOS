@@ -1,4 +1,4 @@
-import ProjectDescription
+@preconcurrency import ProjectDescription
 
 extension Scheme {
     static func makeScheme(target: ConfigurationName, name: String) -> Scheme {

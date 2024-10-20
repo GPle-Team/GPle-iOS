@@ -1,6 +1,6 @@
 import ConfigurationPlugin
 import EnvironmentPlugin
-import ProjectDescription
+@preconcurrency import ProjectDescription
 
 public struct TargetSpec: Configurable {
     public var name: String

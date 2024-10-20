@@ -1,4 +1,4 @@
-import ProjectDescription
+@preconcurrency import ProjectDescription
 
 public extension TargetScript {
     static let swiftLint = TargetScript.pre(

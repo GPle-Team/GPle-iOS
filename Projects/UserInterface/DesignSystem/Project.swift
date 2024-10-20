@@ -1,5 +1,5 @@
 import DependencyPlugin
-import ProjectDescription
+@preconcurrency import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.module(

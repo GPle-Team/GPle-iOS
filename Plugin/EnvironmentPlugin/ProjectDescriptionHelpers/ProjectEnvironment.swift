@@ -1,5 +1,5 @@
 import Foundation
-import ProjectDescription
+@preconcurrency import ProjectDescription
 
 public struct ProjectEnvironment {
     public let name: String
@@ -9,9 +9,9 @@ public struct ProjectEnvironment {
     public let baseSetting: SettingsDictionary
 }
 
-public let env = ProjectEnvironment(
-    name: "",
-    organizationName: "",
+@MainActor public let env = ProjectEnvironment(
+    name: "GPle",
+    organizationName: "GSM.GPle",
     destinations: [.iPhone, .iPad],
     deploymentTargets: .iOS("16.0"),
     baseSetting: [:]
