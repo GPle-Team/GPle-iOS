@@ -29,7 +29,8 @@ let targets: [Target] = [
         resources: ["Resources/**"],
         scripts: scripts,
         dependencies: [
-            .SPM.Moya
+            .SPM.Moya,
+            .SPM.Firebase
         ],
         settings: .settings(base: env.baseSetting)
     )
