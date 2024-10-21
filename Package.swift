@@ -18,6 +18,7 @@ let packageSetting = PackageSettings(
 let package = Package(
     name: "Package",
     dependencies: [
-            .package(url: "https://github.com/Moya/Moya.git", from: "15.0.0")
+            .package(url: "https://github.com/Moya/Moya.git", from: "15.0.0"),
+            .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.22.0")
         ]
 )
