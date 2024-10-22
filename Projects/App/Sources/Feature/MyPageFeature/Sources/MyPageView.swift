@@ -3,6 +3,7 @@ import SwiftUI
 struct MyPageView: View {
     @StateObject var viewModel: MyPageViewModel
     @State private var topNavigationState = false
+
     var body: some View {
         ZStack {
             GPleAsset.Color.back.swiftUIColor
@@ -27,7 +28,7 @@ struct MyPageView: View {
                             .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 20))
 
                         HStack(spacing: 0) {
-                            Text(topNavigationState ? String(viewModel.reactionImage) : String(viewModel.upLoadImage))
+                            Text(topNavigationState ? String(viewModel.reactionImage) : String(viewModel.uploadImage))
                                 .foregroundStyle(GPleAsset.Color.main.swiftUIColor)
                                 .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 20))
                             Text(topNavigationState ? "개의 사진에 반응하셨어요!" : "개의 사진을 올리셨어요!")
@@ -89,7 +90,7 @@ struct MyPageView: View {
                             )
 
                     TabView(selection: $topNavigationState) {
-                        alignmentImages(imageCount: viewModel.upLoadImage)
+                        alignmentImages(imageCount: viewModel.uploadImage)
                         .tag(false)
 
                         alignmentImages(imageCount: viewModel.reactionImage)
