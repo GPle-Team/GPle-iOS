@@ -25,6 +25,9 @@ struct DetailTopView: View {
                         .foregroundStyle(.white)
                         .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
                 }
+
+                DetailView(viewModel: DetailViewModel())
+                    .padding(.top, 16)
                 Spacer()
             }
             .padding(.top, 16)
