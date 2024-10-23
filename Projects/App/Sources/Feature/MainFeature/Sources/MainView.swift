@@ -158,7 +158,3 @@ struct MainView: View {
         .cornerRadius(12)
     }
 }
-
-#Preview {
-    MainView()
-}
