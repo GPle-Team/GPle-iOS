@@ -25,7 +25,7 @@ let targets: [Target] = [
         bundleId: "\(env.organizationName).\(env.name)",
         deploymentTargets: env.deploymentTargets,
         infoPlist: .file(path: "Support/Info.plist"),
-        sources: ["Sources/**"],
+        sources: ["Sources**"],
         resources: ["Resources/**"],
         scripts: scripts,
         dependencies: [
