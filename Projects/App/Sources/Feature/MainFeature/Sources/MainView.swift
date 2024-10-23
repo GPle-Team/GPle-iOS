@@ -6,7 +6,7 @@ struct MainView: View {
             GPleAsset.Color.back.swiftUIColor
                 .ignoresSafeArea()
 
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
                         GPleAsset.Assets.gpleBigLogo.swiftUIImage
@@ -157,4 +157,8 @@ struct MainView: View {
         .background(GPleAsset.Color.gray1000.swiftUIColor)
         .cornerRadius(12)
     }
+}
+
+#Preview {
+    MainView()
 }
