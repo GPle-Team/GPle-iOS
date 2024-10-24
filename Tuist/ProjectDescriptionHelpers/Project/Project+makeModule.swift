@@ -12,6 +12,7 @@ public enum MicroFeatureTarget {
     case demo
 }
 
+@MainActor
 public extension Project {
     static func makeModule(
         name: String,
