@@ -30,7 +30,8 @@ let targets: [Target] = [
         scripts: scripts,
         dependencies: [
             .SPM.Moya,
-            .SPM.Firebase
+            .SPM.Firebase,
+            .SPM.GoogleSignIn
         ],
         settings: .settings(base: env.baseSetting)
     )
