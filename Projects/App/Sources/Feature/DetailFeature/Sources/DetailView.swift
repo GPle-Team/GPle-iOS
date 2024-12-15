@@ -12,8 +12,8 @@ struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var topNavigationState = false
     @State private var emojiName: [String] = ["RedHeart", "PartyPopper", "ThumbsUp", "ThinkingFace", "PileOfPoo", "FlagChina"]
-    @State private var emojiStates: [Int] = [100, 200, 300, 400, 500, 600]
-    @State private var test = false
+    @State private var emojiStates: [Int] = [100, 2, 3, 400, 500, 600]
+    @State private var test: [Bool] = [false , false, false, false, false, false]
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -92,7 +92,7 @@ struct DetailView: View {
 
                                 ForEach(0..<6) { tag in
                                     if emojiStates[tag] != 0 {
-                                        emojiComponent(emojiName: emojiName[tag], emojiCount: emojiStates[tag], emojiState: $test)
+                                        emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiStates[tag], emojiState: $test[tag])
                                     }
                                 }
                                 .padding(.top, 2)
@@ -113,14 +113,14 @@ struct DetailView: View {
 @ViewBuilder
 func emojiComponent(
     emojiName: String,
-    emojiCount: Int,
+    emojiCount: Binding<Int>,
     emojiState: Binding<Bool>
 ) -> some View {
     HStack(spacing: 6) {
         Image(emojiName)
             .resizable()
             .frame(width: 16, height: 16)
-        Text("\(emojiCount)")
+        Text("\(emojiCount.wrappedValue)")
             .foregroundStyle(.white)
             .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
     }
