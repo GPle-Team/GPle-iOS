@@ -129,3 +129,7 @@ func alignmentImages(
         }
     }
 }
+
+#Preview {
+    MyPageView(viewModel: MyPageViewModel())
+}
