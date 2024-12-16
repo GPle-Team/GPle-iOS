@@ -1,11 +1,3 @@
-//
-//  DetailView.swift
-//  GPle
-//
-//  Created by 서지완 on 10/23/24.
-//  Copyright © 2024 GSM.GPle. All rights reserved.
-//
-
 import SwiftUI
 
 struct DetailView: View {
@@ -177,8 +169,4 @@ func emojiComponent(
                 .stroke(emojiState.wrappedValue ? GPleAsset.Color.main.swiftUIColor : GPleAsset.Color.gray1000.swiftUIColor, lineWidth: 1.5)
         )
     }
-}
-
-#Preview {
-    DetailView(viewModel: DetailViewModel())
 }

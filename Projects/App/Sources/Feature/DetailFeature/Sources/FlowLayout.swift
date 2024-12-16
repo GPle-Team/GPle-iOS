@@ -1,11 +1,3 @@
-//
-//  FlowLayout.swift
-//  GPle
-//
-//  Created by 서지완 on 12/15/24.
-//  Copyright © 2024 GSM.GPle. All rights reserved.
-//
-
 import SwiftUI
 
 struct FlowLayout: Layout {
