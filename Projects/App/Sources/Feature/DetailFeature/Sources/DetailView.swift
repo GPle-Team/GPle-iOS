@@ -7,6 +7,7 @@ struct DetailView: View {
     @State private var emojiStates: [Int] = [0, 2, 3, 400, 500, 600]
     @State private var test: [Bool] = [false, false, false, false, false, false]
     @State private var graySmileState: Bool = false
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -16,8 +17,12 @@ struct DetailView: View {
             VStack(alignment: .leading, spacing: 0) {
                 ZStack {
                     HStack {
-                        GPleAsset.Assets.chevronRight.swiftUIImage
-                            .padding(.leading, 20)
+                        Button {
+                            dismiss()
+                        } label: {
+                            GPleAsset.Assets.chevronRight.swiftUIImage
+                                .padding(.leading, 20)
+                        }
                         Spacer()
                     }
                     Text("운동장")
