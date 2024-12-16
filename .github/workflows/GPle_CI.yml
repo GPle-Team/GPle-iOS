@@ -2,6 +2,8 @@ name: GPle CI
 
 on:
   pull_request:
+    branches: [ "master" ]
+  push:
     branches: [ "*" ]
 
 jobs:
@@ -13,7 +15,7 @@ jobs:
 
       - uses: swift-actions/setup-swift@v1
         with:
-          swift-version: "5.9"
+          xcode-version: 16.0
 
       - name: Build
         run: swift build
