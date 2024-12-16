@@ -72,11 +72,9 @@ struct DetailView: View {
 
                         HStack(spacing: 8) {
                             ForEach(viewModel.tagUser, id: \.self) { tag in
-
-                                    Text("@\(tag)")
-                                        .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
-                                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-
+                                Text("@\(tag)")
+                                    .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
+                                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                             }
                         }
                         .padding(.top, 6)
@@ -88,26 +86,26 @@ struct DetailView: View {
                             .padding(.top, 6)
                             .padding(.leading, 16)
 
-                            VStack(alignment: .leading, spacing: 0) {
-                                FlowLayout {
-                                    Button(action: {
-                                        Haptic.impact(style: .soft)
-                                        graySmileState.toggle()
-                                    }) {
-                                        GPleAsset.Assets.graySmile.swiftUIImage
-                                            .padding(.leading, 16)
-                                    }
-
-                                    ForEach(0..<6) { tag in
-                                        if emojiStates[tag] != 0 {
-                                            emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiStates[tag], emojiState: $test[tag])
-                                        }
-                                    }
-                                    .padding(.top, 2)
+                        VStack(alignment: .leading, spacing: 0) {
+                            FlowLayout {
+                                Button(action: {
+                                    Haptic.impact(style: .soft)
+                                    graySmileState.toggle()
+                                }) {
+                                    GPleAsset.Assets.graySmile.swiftUIImage
+                                        .padding(.leading, 16)
                                 }
+
+                                ForEach(0..<6) { tag in
+                                    if emojiStates[tag] != 0 {
+                                        emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiStates[tag], emojiState: $test[tag])
+                                    }
+                                }
+                                .padding(.top, 2)
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, 8)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, 8)
 
                     }
                 }
