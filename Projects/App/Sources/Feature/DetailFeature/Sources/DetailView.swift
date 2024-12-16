@@ -10,10 +10,11 @@ import SwiftUI
 
 struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
-    @State private var topNavigationState = false
+    @State private var topNavigationState: Bool = false
     @State private var emojiName: [String] = ["RedHeart", "PartyPopper", "ThumbsUp", "ThinkingFace", "PileOfPoo", "FlagChina"]
-    @State private var emojiStates: [Int] = [100, 2, 3, 400, 500, 600]
-    @State private var test: [Bool] = [false , false, false, false, false, false]
+    @State private var emojiStates: [Int] = [0, 2, 3, 400, 500, 600]
+    @State private var test: [Bool] = [false, false, false, false, false, false]
+    @State private var graySmileState: Bool = false
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -71,9 +72,11 @@ struct DetailView: View {
 
                         HStack(spacing: 8) {
                             ForEach(viewModel.tagUser, id: \.self) { tag in
-                                Text("@\(tag)")
-                                    .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
-                                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+
+                                    Text("@\(tag)")
+                                        .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
+                                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+
                             }
                         }
                         .padding(.top, 6)
@@ -85,27 +88,59 @@ struct DetailView: View {
                             .padding(.top, 6)
                             .padding(.leading, 16)
 
-                        VStack(alignment: .leading, spacing: 0) {
-                            FlowLayout {
-                                GPleAsset.Assets.graySmile.swiftUIImage
-                                    .padding(.leading, 16)
-
-                                ForEach(0..<6) { tag in
-                                    if emojiStates[tag] != 0 {
-                                        emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiStates[tag], emojiState: $test[tag])
+                            VStack(alignment: .leading, spacing: 0) {
+                                FlowLayout {
+                                    Button(action: {
+                                        Haptic.impact(style: .soft)
+                                        graySmileState.toggle()
+                                    }) {
+                                        GPleAsset.Assets.graySmile.swiftUIImage
+                                            .padding(.leading, 16)
                                     }
+
+                                    ForEach(0..<6) { tag in
+                                        if emojiStates[tag] != 0 {
+                                            emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiStates[tag], emojiState: $test[tag])
+                                        }
+                                    }
+                                    .padding(.top, 2)
                                 }
-                                .padding(.top, 2)
                             }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, 8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top, 8)
+
                     }
                 }
 
                 Spacer()
             }
             .padding(.top, 8)
+
+            if graySmileState {
+                HStack(spacing: 25) {
+                    ForEach(0..<6) { tag in
+                        Button(action: {
+                            Haptic.impact(style: .soft)
+                            test[tag].toggle()
+                            if test[tag] {
+                                emojiStates[tag] += 1
+                            } else {
+                                emojiStates[tag] -= 1
+                            }
+                        }) {
+                            Image(emojiName[tag])
+                        }
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
+                )
+                .padding(.leading, 20)
+                .padding(.top, 490)
+            }
         }
     }
 }
@@ -116,24 +151,34 @@ func emojiComponent(
     emojiCount: Binding<Int>,
     emojiState: Binding<Bool>
 ) -> some View {
-    HStack(spacing: 6) {
-        Image(emojiName)
-            .resizable()
-            .frame(width: 16, height: 16)
-        Text("\(emojiCount.wrappedValue)")
-            .foregroundStyle(.white)
-            .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-    }
-    .padding(.horizontal, 8)
-    .padding(.vertical, 4)
-    .background(
-        RoundedRectangle(cornerRadius: 8)
-            .foregroundStyle(emojiState.wrappedValue ? GPleAsset.Color.secondary2.swiftUIColor : GPleAsset.Color.gray1000.swiftUIColor)
+    Button(action: {
+        Haptic.impact(style: .soft)
+        emojiState.wrappedValue.toggle()
+        if emojiState.wrappedValue {
+            emojiCount.wrappedValue += 1
+        } else {
+            emojiCount.wrappedValue -= 1
+        }
+    }) {
+        HStack(spacing: 6) {
+            Image(emojiName)
+                .resizable()
+                .frame(width: 16, height: 16)
+            Text("\(emojiCount.wrappedValue)")
+                .foregroundStyle(.white)
+                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .foregroundStyle(emojiState.wrappedValue ? GPleAsset.Color.secondary2.swiftUIColor : GPleAsset.Color.gray1000.swiftUIColor)
         )
-    .overlay(
+        .overlay(
             RoundedRectangle(cornerRadius: 8)
                 .stroke(emojiState.wrappedValue ? GPleAsset.Color.main.swiftUIColor : GPleAsset.Color.gray1000.swiftUIColor, lineWidth: 1.5)
         )
+    }
 }
 
 #Preview {
