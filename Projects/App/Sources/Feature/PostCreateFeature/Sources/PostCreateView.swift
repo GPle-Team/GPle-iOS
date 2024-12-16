@@ -19,7 +19,7 @@ struct PostCreateView: View {
                         }
                         Spacer()
                     }
-                    Text("운동장")
+                    Text("사진 업로드")
                         .foregroundStyle(.white)
                         .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
                 }
