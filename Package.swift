@@ -1,8 +1,8 @@
 // swift-tools-version:5.9
-@preconcurrency import PackageDescription
+import PackageDescription
 #if TUIST
-@preconcurrency import ProjectDescription
-@preconcurrency import ProjectDescriptionHelpers
+import ProjectDescription
+import ProjectDescriptionHelpers
 
 let packageSetting = PackageSettings(
     baseSettings: .settings(
