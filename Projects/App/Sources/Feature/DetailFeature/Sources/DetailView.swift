@@ -3,7 +3,7 @@ import SwiftUI
 struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var topNavigationState: Bool = false
-    @State private var emojiName: [String] = ["RedHeart", "PartyPopper", "ThumbsUp", "ThinkingFace", "PileOfPoo", "FlagChina"]
+    @State private var emojiName: [String] = ["heart", "congrats", "thumbsup", "thinking", "poop", "china"]
     @State private var emojiStates: [Int] = [0, 2, 3, 400, 500, 600]
     @State private var test: [Bool] = [false, false, false, false, false, false]
     @State private var graySmileState: Bool = false
