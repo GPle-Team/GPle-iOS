@@ -445,7 +445,3 @@ func searchUserList(
         }
     }
 }
-
-#Preview {
-    PostCreateView()
-}
