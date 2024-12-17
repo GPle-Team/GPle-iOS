@@ -2,6 +2,8 @@ import SwiftUI
 
 struct PostCreateView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var titleTextField: String = ""
+    @State private var showError: Bool = false
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -23,7 +25,31 @@ struct PostCreateView: View {
                         .foregroundStyle(.white)
                         .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
                 }
-                .padding(.bottom, 16)            }
+                .padding(.bottom, 16)
+
+                GPleTextField(
+                    "제목을 입력해주세요",
+                    text: $titleTextField,
+                    title: "제목",
+                    textCount: titleTextField.count,
+                    useTextCount: true,
+                    errorText: "제목을 입력 해주세요.",
+                    isError: showError,
+                    onSubmit: {
+                        if titleTextField.isEmpty {
+                            showError = true
+                        } else {
+                            showError = false
+                        }
+                    }
+                )
+                
+                Spacer()
+            }
         }
     }
+}
+
+#Preview {
+    PostCreateView()
 }
