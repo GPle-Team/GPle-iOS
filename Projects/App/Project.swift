@@ -29,6 +29,7 @@ let targets: [Target] = [
         resources: ["Resources/**"],
         scripts: scripts,
         dependencies: [
+            .domain(target:.Domain),
             .SPM.Moya,
             .SPM.Firebase,
             .SPM.GoogleSignIn
