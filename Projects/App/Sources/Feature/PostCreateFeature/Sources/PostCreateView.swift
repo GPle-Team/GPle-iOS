@@ -5,9 +5,11 @@ struct PostCreateView: View {
     @State private var titleTextField: String = ""
     @State private var showError: Bool = false
     @State private var images: [UIImage?] = [nil, nil, nil]
-    @State private var showingImagePicker = false
-    @State private var imagesPickerIndex = 0
-    @State var showingSheet = false
+    @State private var showingImagePicker: Bool = false
+    @State private var imagesPickerIndex: Int = 0
+    @State var showingSheet: Bool = false
+    @State var locationInfo: Bool = false
+
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -117,6 +119,33 @@ struct PostCreateView: View {
                     }
                 )
                 .padding(.top, 32)
+
+                Text("위치")
+                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                    .foregroundStyle(GPleAsset.Color.gray400.swiftUIColor)
+                    .padding(.leading, 24)
+                    .padding(.top, 32)
+
+
+                HStack(spacing: 6) {
+                    Text("본관")
+                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
+                        .foregroundStyle(.white)
+
+                    GPleAsset.Assets.grayDown.swiftUIImage
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(locationInfo ? GPleAsset.Color.gray950.swiftUIColor : GPleAsset.Color.gray1000.swiftUIColor, lineWidth: 1.5)
+                )
+                .padding(.top, 4)
+                .padding(.leading, 20)
 
                 Spacer()
             }

@@ -68,7 +68,7 @@ struct GPleTextField: View {
                 .frame(height: 50)
                 .onSubmit(onSubmit)
                 .focused($isFocused)
-                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+                .foregroundStyle(GPleAsset.Color.gray100.swiftUIColor)
                 .accentColor(GPleAsset.Color.gray800.swiftUIColor)
                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                 .background(GPleAsset.Color.gray1000.swiftUIColor)

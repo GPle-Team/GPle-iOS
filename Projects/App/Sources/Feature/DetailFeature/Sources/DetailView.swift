@@ -175,3 +175,7 @@ func emojiComponent(
         )
     }
 }
+
+#Preview {
+    DetailView(viewModel: DetailViewModel())
+}
