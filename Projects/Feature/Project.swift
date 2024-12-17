@@ -3,14 +3,14 @@ import DependencyPlugin
 import ProjectDescriptionHelpers
 
 let project = Project.module(
-    name: ModulePaths.Feature.BaseFeature.rawValue,
+    name: ModulePaths.Feature.Feature.rawValue,
     targets: [
-        .implements(module: .feature(.BaseFeature), dependencies: [
+        .implements(module: .feature(.Feature), dependencies: [
             .userInterface(target: .DesignSystem),
             .shared(target: .GlobalThirdPartyLibrary)
         ]),
-        .tests(module: .feature(.BaseFeature), dependencies: [
-            .feature(target: .BaseFeature)
+        .tests(module: .feature(.Feature), dependencies: [
+            .feature(target: .Feature)
         ])
     ]
 )

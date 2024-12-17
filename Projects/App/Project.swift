@@ -30,7 +30,7 @@ let targets: [Target] = [
         scripts: scripts,
         dependencies: [
             .SPM.Moya,
-            .domain(target:.Domain),
+            .domain(target: .Domain),
             .SPM.Firebase,
             .SPM.GoogleSignIn
         ],
