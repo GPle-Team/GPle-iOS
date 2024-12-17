@@ -1,5 +1,6 @@
 @preconcurrency import ProjectDescription
 import EnvironmentPlugin
+import DependencyPlugin
 
 @MainActor
 let workspace = Workspace(

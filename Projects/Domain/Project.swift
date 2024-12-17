@@ -1,4 +1,7 @@
+import ConfigurationPlugin
 import DependencyPlugin
+import EnvironmentPlugin
+import Foundation
 @preconcurrency import ProjectDescription
 import ProjectDescriptionHelpers
 
