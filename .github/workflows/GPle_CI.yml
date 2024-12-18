@@ -15,7 +15,7 @@ jobs:
 
       - uses: swift-actions/setup-swift@v1
         with:
-          swift-version: '5.7' # 원하는 Swift 버전으로 변경하세요
+          swift-version: '5.9'
 
       - name: Build
         run: swift build
