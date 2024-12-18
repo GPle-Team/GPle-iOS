@@ -2,23 +2,21 @@ import SwiftUI
 
 struct PostCreateView: View {
     @Environment(\.dismiss) private var dismiss
+    @StateObject var viewModel: PostViewModel
     @State private var titleTextField: String = ""
     @State private var locationText: String = "본관"
-    @State private var showError: Bool = false
-    @State private var images: [UIImage?] = [nil, nil, nil]
-    @State private var showingImagePicker: Bool = false
+    @State private var userSearchTextField: String = ""
     @State private var imagesPickerIndex: Int = 0
     @State var showingSheet: Bool = false
     @State var locationInfo: Bool = false
     @State var showingBottomSheet: Bool = false
-    @State private var userSearchTextField: String = ""
+    @State private var showError: Bool = false
+    @State private var showingImagePicker: Bool = false
+    @State private var images: [UIImage?] = [nil, nil, nil]
     @State private var tagUserImages: [String] = ["", "", "", "", ""]
     @State private var tagUserName: [String] = ["", "", "", "", ""]
     @State private var tagUserYear: [Int] = [0, 0, 0, 0, 0]
-    @State private var testTagUserImages: [UIImage?] = [nil, nil, nil, nil, nil]
-    @State private var testTagUserName: [String] = ["", "", "", "", ""]
-    @State private var testTagUserId: [Int?] = Array(repeating: nil, count: 5)
-    @StateObject var viewModel: PostViewModel
+    @State private var tagUserId: [Int?] = Array(repeating: nil, count: 5)
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -330,7 +328,7 @@ struct PostCreateView: View {
 
                             if !images.isEmpty {
                                 let uiImages = images.compactMap { $0 }
-                                let userIdList = testTagUserId.compactMap { $0 }
+                                let userIdList = tagUserId.compactMap { $0 }
                                 viewModel.setupImage(images: uiImages)
                                 viewModel.setupTitle(title: titleTextField)
                                 viewModel.setupLocation(location: locationText)
@@ -410,7 +408,7 @@ struct PostCreateView: View {
                             userProfileImageList: $tagUserImages[tag],
                             userNameList: $tagUserName[tag],
                             userYearList: $tagUserYear[tag],
-                            testTagUserId: $testTagUserId[tag]
+                            tagUserId: $tagUserId[tag]
                         )
                     }
 
@@ -442,13 +440,13 @@ func searchUserList(
     userProfileImageList: Binding<String>,
     userNameList: Binding<String>,
     userYearList: Binding<Int>,
-    testTagUserId: Binding<Int?>
+    tagUserId: Binding<Int?>
 ) -> some View {
     Button {
         userProfileImageList.wrappedValue = userProfileImage
         userNameList.wrappedValue = userName
         userYearList.wrappedValue = userYear
-        testTagUserId.wrappedValue = userId
+        tagUserId.wrappedValue = userId
 
         print("추가: \(userId)")
         print("추가: \(userName)")
