@@ -15,7 +15,7 @@ extension PostAPI: TargetType {
     public var path: String {
         switch self {
         case .createPost:
-            return ""
+            return "/post"
         case .uploadImage:
             return "/image/images"
         case .allUserList:

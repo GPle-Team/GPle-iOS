@@ -12,7 +12,7 @@ struct PostCreateView: View {
     @State var locationInfo: Bool = false
     @State var showingBottomSheet: Bool = false
     @State private var userSearchTextField: String = ""
-    @State private var tagUserImages: [UIImage?] = [nil, nil, nil, nil, nil]
+    @State private var tagUserImages: [String] = ["", "", "", "", ""]
     @State private var tagUserName: [String] = ["", "", "", "", ""]
     @State private var tagUserYear: [Int] = [0, 0, 0, 0, 0]
     @State private var testTagUserImages: [UIImage?] = [nil, nil, nil, nil, nil]
@@ -236,12 +236,21 @@ struct PostCreateView: View {
                         ForEach(0..<5) { tag in
                             if tagUserName[tag] != "" && tagUserYear[tag] != 0 {
                                 HStack(spacing: 4) {
-                                    if let image = tagUserImages[tag] {
-                                        Image(uiImage: image)
-                                            .resizable()
-                                            .frame(width: 32, height: 32)
-                                            .clipShape(Circle())
-                                            .padding(.leading, 24)
+                                    if let url = URL(string: tagUserImages[tag]) {
+                                        AsyncImage(url: url) { image in
+                                            image
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 32, height: 32)
+                                                .clipShape(Circle())
+                                        } placeholder: {
+                                            GPleAsset.Assets.profile.swiftUIImage
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 32, height: 32)
+                                        }
+                                        .padding(.leading, 24)
+
                                     } else {
                                         GPleAsset.Assets.profile.swiftUIImage
                                             .resizable()
@@ -262,7 +271,7 @@ struct PostCreateView: View {
                                     Button {
                                         tagUserName[tag] = ""
                                         tagUserYear[tag] = 0
-                                        tagUserImages[tag] = nil
+                                        tagUserImages[tag] = ""
                                     } label: {
                                         HStack(spacing: 8) {
                                             GPleAsset.Assets.grayUserMinus.swiftUIImage
@@ -321,10 +330,17 @@ struct PostCreateView: View {
 
                             if !images.isEmpty {
                                 let uiImages = images.compactMap { $0 }
+                                let userIdList = testTagUserId.compactMap { $0 }
                                 viewModel.setupImage(images: uiImages)
+                                viewModel.setupTitle(title: titleTextField)
+                                viewModel.setupLocation(location: locationText)
+                                viewModel.setupUserList(userList: userIdList)
                                 viewModel.uploadImages { success in
                                     if success {
                                         print("이미지 업로드가 성공했습니다.")
+                                        viewModel.createPost { success in
+                                            print("Viewㅣ포스트 생성이 성공했습니다.")
+                                        }
                                     } else {
                                         print("Viewㅣ이미지 업로드 실패")
                                     }
@@ -387,7 +403,7 @@ struct PostCreateView: View {
                     ForEach(viewModel.allUserList.indices, id: \.self) { tag in
                         let student = viewModel.allUserList[tag]
                         searchUserList(
-                            userProfileImage: testTagUserImages[tag],
+                            userProfileImage: student.profileImage,
                             userName: student.name,
                             userYear: student.grade,
                             userId: student.id,
@@ -415,13 +431,15 @@ struct PostCreateView: View {
     }
 }
 
+import SwiftUI
+
 @ViewBuilder
 func searchUserList(
-    userProfileImage: UIImage?,
+    userProfileImage: String,
     userName: String,
     userYear: Int,
     userId: Int,
-    userProfileImageList: Binding<UIImage?>,
+    userProfileImageList: Binding<String>,
     userNameList: Binding<String>,
     userYearList: Binding<Int>,
     testTagUserId: Binding<Int?>
@@ -432,20 +450,29 @@ func searchUserList(
         userYearList.wrappedValue = userYear
         testTagUserId.wrappedValue = userId
 
-        print("추가ㅣ\(userId)")
-        print("추가ㅣ\(userName)")
-        print("추가ㅣ\(userYear)학년")
+        print("추가: \(userId)")
+        print("추가: \(userName)")
+        print("추가: \(userYear)학년")
     } label: {
         HStack(spacing: 4) {
-            if let image = userProfileImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                    .clipShape(Circle())
-                    .padding(.leading, 24)
+            if let url = URL(string: userProfileImage) {
+                AsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32, height: 32)
+                        .clipShape(Circle())
+                } placeholder: {
+                    GPleAsset.Assets.profile.swiftUIImage
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32, height: 32)
+                }
+                .padding(.leading, 24)
             } else {
                 GPleAsset.Assets.profile.swiftUIImage
                     .resizable()
+                    .scaledToFit()
                     .frame(width: 32, height: 32)
                     .padding(.leading, 24)
             }
@@ -454,6 +481,7 @@ func searchUserList(
                 .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
                 .foregroundStyle(.white)
                 .padding(.leading, 4)
+
             Text("· \(userYear)학년")
                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                 .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
@@ -477,3 +505,4 @@ func searchUserList(
         }
     }
 }
+
