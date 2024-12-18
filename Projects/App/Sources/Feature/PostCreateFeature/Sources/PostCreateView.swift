@@ -299,7 +299,6 @@ struct PostCreateView: View {
                                     print("Viewㅣ유저 리스트 불러오기 실패")
                                 }
                             }
-
                         } label: {
                             HStack(spacing: 8) {
                                 GPleAsset.Assets.plus.swiftUIImage
@@ -318,14 +317,13 @@ struct PostCreateView: View {
                             .padding(.leading, 20)
                         }
 
-                        ExpoButton(text: "완료",
-                                   horizontalPadding: 167,
+                        GPleButton(text: "완료",
+                                   horizontalPadding: 20,
                                    verticalPadding: 16,
                                    backColor: GPleAsset.Color.gray1000.swiftUIColor,
                                    buttonState: isFormValid,
                                    buttonOkColor: GPleAsset.Color.main.swiftUIColor
                         ){
-
                             if !images.isEmpty {
                                 let uiImages = images.compactMap { $0 }
                                 let userIdList = tagUserId.compactMap { $0 }
@@ -344,9 +342,8 @@ struct PostCreateView: View {
                                     }
                                 }
                             }
-
                         }
-                        .padding(.horizontal, 20)
+                        //.padding(.horizontal, 20)
                         .padding(.top, 93)
                         .disabled(!isFormValid)
                     }
@@ -396,19 +393,23 @@ struct PostCreateView: View {
                                 .padding(.trailing, 36)
                         }
                     }
-                    .padding(.top , 54)
+                    .padding(.top, 54)
 
-                    ForEach(viewModel.allUserList.indices, id: \.self) { tag in
-                        let student = viewModel.allUserList[tag]
+                    let filteredUsers = userSearchTextField.isEmpty ? viewModel.allUserList : viewModel.allUserList.filter { user in
+                        user.name.lowercased().contains(userSearchTextField.lowercased())
+                    }
+
+                    ForEach(filteredUsers.indices, id: \.self) { index in
+                        let student = filteredUsers[index]
                         searchUserList(
                             userProfileImage: student.profileImage,
                             userName: student.name,
                             userYear: student.grade,
                             userId: student.id,
-                            userProfileImageList: $tagUserImages[tag],
-                            userNameList: $tagUserName[tag],
-                            userYearList: $tagUserYear[tag],
-                            tagUserId: $tagUserId[tag]
+                            userProfileImageList: $tagUserImages[index],
+                            userNameList: $tagUserName[index],
+                            userYearList: $tagUserYear[index],
+                            tagUserId: $tagUserId[index]
                         )
                     }
 
@@ -428,8 +429,6 @@ struct PostCreateView: View {
         images[0] != nil
     }
 }
-
-import SwiftUI
 
 @ViewBuilder
 func searchUserList(

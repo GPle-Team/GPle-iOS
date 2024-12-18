@@ -7,4 +7,3 @@ public struct UploadRequest: Codable {
         self.files = files
     }
 }
-
