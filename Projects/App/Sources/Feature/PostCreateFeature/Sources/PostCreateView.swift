@@ -16,7 +16,7 @@ struct PostCreateView: View {
     @State private var tagUserName: [String] = ["", "", "", "", ""]
     @State private var tagUserYear: [Int] = [0, 0, 0, 0, 0]
     @State private var testTagUserImages: [UIImage?] = [nil, nil, nil, nil, nil]
-    @State private var testTagUserName: [String] = ["서지완", "한재형", "이승화", "김겸비", "김동학"]
+    @State private var testTagUserName: [String] = ["", "", "", "", ""]
     @State private var testTagUserYear: [Int] = [1, 2, 3, 1, 2]
 
     var body: some View {
