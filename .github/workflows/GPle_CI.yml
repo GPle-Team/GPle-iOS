@@ -13,9 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: swift-actions/setup-swift@v1
+      - uses: SwiftyLab/setup-swift@latest
+        env:
+          SWIFT_SETUP_SKIP_GPG: "true"
         with:
-          xcode-version: 16.0
+          swift-version: '5.9'
 
       - name: Build
         run: swift build
