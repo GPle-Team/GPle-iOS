@@ -47,9 +47,8 @@ extension PostAPI: TargetType {
 
     public var headers: [String : String]? {
         switch self {
-        case .createPost(_, let authorization):
-            return ["Authorization": authorization]
-        case .uploadImage(_, let authorization):
+        case .createPost(_, let authorization),
+                .uploadImage(_, let authorization):
             return ["Authorization": authorization]
         }
     }

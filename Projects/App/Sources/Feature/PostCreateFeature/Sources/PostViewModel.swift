@@ -34,7 +34,7 @@ public final class PostViewModel: ObservableObject {
         self.location = location
     }
 
-    func uploadImages() {
+    func uploadImages(completion: @escaping (Bool) -> Void) {
         authProvider.request(.uploadImage(files: imageDataArray, authorization: accessToken)) { result in
             switch result {
             case .success(let response):
@@ -44,7 +44,7 @@ public final class PostViewModel: ObservableObject {
                     let uploadedUrls = uploadResponse.urls
                     print("성공ㅣ이미지 업로드")
                     print("업로드 URL: \(uploadedUrls)")
-
+                    completion(true)
                 } catch {
                     let statusCode = response.statusCode
                     if let responseData = String(data: response.data, encoding: .utf8) {
@@ -53,10 +53,12 @@ public final class PostViewModel: ObservableObject {
                     } else {
                         print("실패ㅣ이미지 업로드 - 상태 코드: \(statusCode), 응답 데이터 없음")
                     }
+                    completion(false)
                 }
 
             case .failure(let error):
                 print("네트워크 요청 실패: \(error.localizedDescription)")
+                completion(false)
                 if let response = error.response {
                     let statusCode = response.statusCode
                     if let responseData = String(data: response.data, encoding: .utf8) {

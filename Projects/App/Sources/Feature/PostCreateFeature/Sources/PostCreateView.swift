@@ -315,7 +315,13 @@ struct PostCreateView: View {
                             if !images.isEmpty {
                                 let uiImages = images.compactMap { $0 }
                                 viewModel.setupImage(images: uiImages)
-                                viewModel.uploadImages()
+                                viewModel.uploadImages { success in
+                                    if success {
+                                        print("이미지 업로드가 성공했습니다.")
+                                    } else {
+                                        print("Viewㅣ이미지 업로드 실패")
+                                    }
+                                }
                             }
 
                         }
