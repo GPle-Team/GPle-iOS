@@ -31,7 +31,8 @@ let targets: [Target] = [
         dependencies: [
             .SPM.Moya,
             .SPM.Firebase,
-            .SPM.GoogleSignIn
+            .SPM.GoogleSignIn,
+            .domain(target: .Domain)
         ],
         settings: .settings(base: env.baseSetting)
     )
