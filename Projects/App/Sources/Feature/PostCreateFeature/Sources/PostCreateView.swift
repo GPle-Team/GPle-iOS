@@ -17,7 +17,7 @@ struct PostCreateView: View {
     @State private var tagUserYear: [Int] = [0, 0, 0, 0, 0]
     @State private var testTagUserImages: [UIImage?] = [nil, nil, nil, nil, nil]
     @State private var testTagUserName: [String] = ["", "", "", "", ""]
-    @State private var testTagUserYear: [Int] = [1, 2, 3, 1, 2]
+    @State private var testTagUserId: [Int?] = Array(repeating: nil, count: 5)
     @StateObject var viewModel: PostViewModel
 
     var body: some View {
@@ -285,7 +285,14 @@ struct PostCreateView: View {
                         }
 
                         Button {
-                            showingBottomSheet.toggle()
+                            viewModel.allUserList { success in
+                                if success {
+                                    showingBottomSheet.toggle()
+                                } else {
+                                    print("Viewㅣ유저 리스트 불러오기 실패")
+                                }
+                            }
+
                         } label: {
                             HStack(spacing: 8) {
                                 GPleAsset.Assets.plus.swiftUIImage
@@ -377,14 +384,17 @@ struct PostCreateView: View {
                     }
                     .padding(.top , 54)
 
-                    ForEach(0..<testTagUserName.count) { tag in
+                    ForEach(viewModel.allUserList.indices, id: \.self) { tag in
+                        let student = viewModel.allUserList[tag]
                         searchUserList(
                             userProfileImage: testTagUserImages[tag],
-                            userName: testTagUserName[tag],
-                            userYear: testTagUserYear[tag],
+                            userName: student.name,
+                            userYear: student.grade,
+                            userId: student.id,
                             userProfileImageList: $tagUserImages[tag],
                             userNameList: $tagUserName[tag],
-                            userYearList: $tagUserYear[tag]
+                            userYearList: $tagUserYear[tag],
+                            testTagUserId: $testTagUserId[tag]
                         )
                     }
 
@@ -410,14 +420,21 @@ func searchUserList(
     userProfileImage: UIImage?,
     userName: String,
     userYear: Int,
+    userId: Int,
     userProfileImageList: Binding<UIImage?>,
     userNameList: Binding<String>,
-    userYearList: Binding<Int>
+    userYearList: Binding<Int>,
+    testTagUserId: Binding<Int?>
 ) -> some View {
     Button {
         userProfileImageList.wrappedValue = userProfileImage
         userNameList.wrappedValue = userName
         userYearList.wrappedValue = userYear
+        testTagUserId.wrappedValue = userId
+
+        print("추가ㅣ\(userId)")
+        print("추가ㅣ\(userName)")
+        print("추가ㅣ\(userYear)학년")
     } label: {
         HStack(spacing: 4) {
             if let image = userProfileImage {

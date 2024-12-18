@@ -4,6 +4,7 @@ import Moya
 public enum PostAPI {
     case createPost(param: CreatePostRequest, authorization: String)
     case uploadImage(files: [Data], authorization: String)
+    case allUserList(authorization: String)
 }
 
 extension PostAPI: TargetType {
@@ -17,15 +18,17 @@ extension PostAPI: TargetType {
             return ""
         case .uploadImage:
             return "/image/images"
+        case .allUserList:
+            return "/user"
         }
     }
 
     public var method: Moya.Method {
         switch self {
-        case .createPost:
+        case .createPost, .uploadImage:
             return .post
-        case .uploadImage:
-            return .post
+        case .allUserList:
+            return .get
         }
     }
 
@@ -42,13 +45,14 @@ extension PostAPI: TargetType {
                 MultipartFormData(provider: .data(fileData), name: "files", fileName: "image.jpg", mimeType: "image/jpeg")
             }
             return .uploadMultipart(formData)
+        case .allUserList:
+            return .requestPlain
         }
     }
 
     public var headers: [String : String]? {
         switch self {
-        case .createPost(_, let authorization),
-                .uploadImage(_, let authorization):
+        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization):
             return ["Authorization": authorization]
         }
     }

@@ -13,6 +13,7 @@ public final class PostViewModel: ObservableObject {
     private var image: [UIImage] = []
     private var location: String = ""
     private var imageDataArray: [Data] = []
+    @Published public var allUserList: [UserListResponse] = []
 
     func setupTitle(title: String) {
         self.title = title
@@ -34,7 +35,27 @@ public final class PostViewModel: ObservableObject {
         self.location = location
     }
 
-    func uploadImages(completion: @escaping (Bool) -> Void) {
+    public func allUserList(completion: @escaping (Bool) -> Void) {
+        authProvider.request(.allUserList(authorization: accessToken)) { result in
+            switch result {
+            case let .success(response):
+                do {
+                    print("성공ㅣ유저 리스트 불러오기")
+                    self.allUserList = try JSONDecoder().decode([UserListResponse].self, from: response.data)
+                    completion(true)
+                } catch {
+                    print("Failed to decode JSON response")
+                    completion(false)
+                }
+            case let .failure(err):
+                print("Network request failed: \(err)")
+                completion(false)
+            }
+        }
+    }
+
+
+    public func uploadImages(completion: @escaping (Bool) -> Void) {
         authProvider.request(.uploadImage(files: imageDataArray, authorization: accessToken)) { result in
             switch result {
             case .success(let response):
