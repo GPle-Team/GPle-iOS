@@ -18,6 +18,7 @@ struct PostCreateView: View {
     @State private var testTagUserImages: [UIImage?] = [nil, nil, nil, nil, nil]
     @State private var testTagUserName: [String] = ["", "", "", "", ""]
     @State private var testTagUserYear: [Int] = [1, 2, 3, 1, 2]
+    @StateObject var viewModel: PostViewModel
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -309,7 +310,15 @@ struct PostCreateView: View {
                                    backColor: GPleAsset.Color.gray1000.swiftUIColor,
                                    buttonState: isFormValid,
                                    buttonOkColor: GPleAsset.Color.main.swiftUIColor
-                        )
+                        ){
+
+                            if !images.isEmpty {
+                                let uiImages = images.compactMap { $0 }
+                                viewModel.setupImage(images: uiImages)
+                                viewModel.uploadImages()
+                            }
+
+                        }
                         .padding(.horizontal, 20)
                         .padding(.top, 93)
                         .disabled(!isFormValid)
