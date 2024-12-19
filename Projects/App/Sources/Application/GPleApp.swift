@@ -14,12 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 @main
 struct GoogleSignInProjectApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject var authenticationViewModel: AuthenticationViewModel = AuthenticationViewModel()
+    @StateObject var loginViewModel: LoginViewModel = LoginViewModel()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(authenticationViewModel)
+                .environmentObject(loginViewModel)
         }
     }
 }

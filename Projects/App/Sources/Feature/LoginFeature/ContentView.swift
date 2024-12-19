@@ -2,23 +2,16 @@ import SwiftUI
 import FirebaseAuth
 
 struct ContentView: View {
-    @EnvironmentObject var authenticationViewModel: AuthenticationViewModel
+    @EnvironmentObject var loginViewModel: LoginViewModel
     
     var body: some View {
         VStack {
-            if authenticationViewModel.signState == .signIn {
+            if loginViewModel.signState == .signIn {
                 MineView()
             } else {
                 LoginView()
             }
         }
         .padding()
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-            .environmentObject(AuthenticationViewModel())
     }
 }

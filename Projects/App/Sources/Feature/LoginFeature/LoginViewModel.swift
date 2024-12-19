@@ -2,7 +2,7 @@ import Firebase
 import FirebaseAuth
 import GoogleSignIn
 
-class AuthenticationViewModel: ObservableObject {
+class LoginViewModel: ObservableObject {
     
     @Published var signState: signState = .signOut
     

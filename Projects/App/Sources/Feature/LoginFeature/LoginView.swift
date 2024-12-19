@@ -1,24 +1,17 @@
 import SwiftUI
 
 struct LoginView: View {
-    @EnvironmentObject var authenticationViewModel: AuthenticationViewModel
+    @EnvironmentObject var loginViewModel: LoginViewModel
     
     var body: some View {
         
         VStack {
             Button {
-                authenticationViewModel.signIn()
+                loginViewModel.signIn()
             } label: {
                 Text("Google Account Login")
             }
 
         }
-    }
-}
-
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView()
-            .environmentObject(AuthenticationViewModel())
     }
 }
