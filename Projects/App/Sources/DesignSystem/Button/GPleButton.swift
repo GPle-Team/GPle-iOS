@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct ExpoButton: View {
+public struct GPleButton: View {
     var text: String
     var horizontalPadding: CGFloat
     var verticalPadding: CGFloat
@@ -36,12 +36,13 @@ public struct ExpoButton: View {
             Text(text)
                 .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
                 .foregroundStyle(buttonState ? .white : GPleAsset.Color.gray600.swiftUIColor)
-                .padding(.horizontal, horizontalPadding)
+                .frame(maxWidth: .infinity)
                 .padding(.vertical, verticalPadding)
                 .background(
                     RoundedRectangle(cornerRadius: 6)
                         .fill(buttonState ? buttonOkColor : backColor)
                 )
+                .padding(.horizontal, horizontalPadding)
                 .scaleEffect(isPressed ? 0.9 : 1.0)
         }
         .buttonStyle(PlainButtonStyle())
