@@ -15,8 +15,8 @@ public struct Post: Codable, Identifiable {
     }
 
     public struct Tag: Codable {
-        public let username: String
-        public let userId: Int
+        public let name: String
+        public let id: Int
     }
 
     public struct EmojiList: Codable {

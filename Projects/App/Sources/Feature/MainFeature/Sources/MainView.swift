@@ -59,8 +59,9 @@ struct MainView: View {
                             grade: post.author.grade,
                             title: post.title,
                             place: post.location,
-                            tag: "@ 박미리",
-                            date: post.createdTime
+                            tag: post.tagList.map { $0.name },
+                            date: post.createdTime,
+                            imageURL: post.imageUrl
                         )
                     }
                     .padding(.top, 60)
@@ -106,8 +107,9 @@ struct MainView: View {
         grade: Int,
         title: String,
         place: String,
-        tag: String,
-        date: String
+        tag: [String],
+        date: String,
+        imageURL: [String]
     ) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 4) {
@@ -121,7 +123,7 @@ struct MainView: View {
                 Text("•")
                     .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
 
-                HStack {
+                HStack(spacing: 0) {
                     Text("\(grade)")
 
                     Text("학년")
@@ -139,16 +141,37 @@ struct MainView: View {
                 .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                 .padding(.top, 4)
-
-            GPleAsset.Assets.testImage.swiftUIImage
-                .resizable()
-                .cornerRadius(8)
-                .frame(width: 318, height: 318)
-                .padding(.top, 16)
+            
+            ForEach(imageURL, id: \.self) { imageURL in
+                AsyncImage(url: URL(string: imageURL)) { phase in
+                    switch phase {
+                        case .empty:
+                            ProgressView()
+                                .frame(width: 318, height: 318)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 318)
+                                .cornerRadius(8)
+                        case .failure:
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundColor(.red)
+                                .frame(width: 318, height: 318)
+                        @unknown default:
+                            EmptyView()
+                        }
+                }
+            }
+            .padding(.top, 16)
 
             HStack(spacing: 8) {
-                ForEach(0..<2) { _ in
-                    Text(tag)
+                ForEach(tag, id: \.self) { tag in
+                    HStack(spacing: 0) {
+                        Text("@")
+                        
+                        Text(tag)
+                    }
                 }
             }
             .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
