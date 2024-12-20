@@ -2,7 +2,7 @@ import Foundation
 import Moya
 
 public enum AuthAPI {
-    case login(code: String)
+    case login(idToken: String)
     case logout
     case refresh
 }

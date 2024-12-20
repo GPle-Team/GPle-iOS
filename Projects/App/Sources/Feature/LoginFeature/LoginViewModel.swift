@@ -15,7 +15,7 @@ class LoginViewModel: ObservableObject {
             return
         }
 
-        let configuration = GIDConfiguration(clientID: clientID)
+        _ = GIDConfiguration(clientID: clientID)
 
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let rootViewController = windowScene.windows.first?.rootViewController else { return }
@@ -33,6 +33,7 @@ class LoginViewModel: ObservableObject {
                 return
             }
 
+            print(idToken)
             // 서버로 ID Token 전송
             self?.sendIdTokenToServer(idToken)
         }

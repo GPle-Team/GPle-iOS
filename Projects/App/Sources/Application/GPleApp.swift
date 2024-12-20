@@ -18,7 +18,7 @@ struct GoogleSignInProjectApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginButton()
                 .environmentObject(loginViewModel)
         }
     }
