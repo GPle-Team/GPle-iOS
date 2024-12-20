@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct MainView: View {
+    @StateObject var viewModel = MainViewModel()
+
     var body: some View {
         ZStack {
             GPleAsset.Color.back.swiftUIColor
@@ -51,20 +53,23 @@ struct MainView: View {
                     }
                     .padding(.top, 40)
 
-                    ForEach(0..<3) { _ in
+                    ForEach(viewModel.allPostList) { post in
                         postList(
-                            name: "한재형",
-                            grade: "2학년",
-                            title: "유성이 없이 방송부원들과",
-                            place: "운동장",
-                            tag: "@박미리",
-                            date: "9월 12일"
+                            name: post.author.name,
+                            grade: post.author.grade,
+                            title: post.title,
+                            place: post.location,
+                            tag: "@ 박미리",
+                            date: post.createdTime
                         )
                     }
                     .padding(.top, 60)
 
                     Spacer()
                 }
+            }
+            .onAppear {
+                viewModel.fetchAllPostList()
             }
         }
     }
@@ -98,7 +103,7 @@ struct MainView: View {
     @ViewBuilder
     func postList(
         name: String,
-        grade: String,
+        grade: Int,
         title: String,
         place: String,
         tag: String,
@@ -116,9 +121,13 @@ struct MainView: View {
                 Text("•")
                     .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
 
-                Text(grade)
-                    .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                HStack {
+                    Text("\(grade)")
+
+                    Text("학년")
+                }
+                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
             }
 
             Text(title)

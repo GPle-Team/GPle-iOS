@@ -7,7 +7,7 @@ public enum MainAPI {
 
 extension MainAPI: TargetType {
     public var baseURL: URL {
-        return URL(string: "https://active-weasel-fluent.ngrok-free.app")!
+        return URL(string: "https://port-0-gple-backend-eg4e2alkoplc4q.sel4.cloudtype.app")!
     }
 
     public var path: String {
@@ -34,7 +34,7 @@ extension MainAPI: TargetType {
             return .requestPlain
         }
     }
-    
+
     public var headers: [String : String]? {
         switch self {
         case .fetchAllPostList(let authorization):
