@@ -2,17 +2,20 @@ import Moya
 import Foundation
 
 public protocol GPleAPI: TargetType, JwtAuthorizable {
-    associatedtype ErrorType: Error
+//    associatedtype ErrorType: Error
     var domain: GPleDomain { get }
     var urlPath: String { get }
-    var errorMap: [Int: ErrorType] { get }
 }
 
 public extension GPleAPI {
+//    var baseURL: URL {
+//        URL(
+//            string: Bundle.module.object(forInfoDictionaryKey: "BASE_URL") as? String ?? ""
+//        ) ?? URL(string: "https://www.google.com")!
+//    }
+    
     var baseURL: URL {
-        URL(
-            string: Bundle.module.object(forInfoDictionaryKey: "BASE_URL") as? String ?? ""
-        ) ?? URL(string: "https://www.google.com")!
+        return URL(string: "https://active-weasel-fluent.ngrok-free.app")!
     }
 
     var path: String {

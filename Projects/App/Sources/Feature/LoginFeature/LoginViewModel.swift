@@ -1,77 +1,62 @@
-import Firebase
-import FirebaseAuth
+import Foundation
 import GoogleSignIn
+import Moya
+import Domain
 
 class LoginViewModel: ObservableObject {
-    
-    @Published var signState: signState = .signOut
-    
-    enum signState {
-        case signIn
-        case signOut
-    }
-    
-    // google 로그인 절차
+    @Published var isSignedIn: Bool = false
+    @Published var errorMessage: String?
+
+    private let provider = MoyaProvider<AuthAPI>()
+
     func signIn() {
-        // 1
-        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
-            GIDSignIn.sharedInstance.restorePreviousSignIn { [unowned self] user, error in
-                authenticateUser(for: user, with: error)
-            }
-        } else {
-            // 2
-            guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-            
-            // 3
-            let configuration = GIDConfiguration(clientID: clientID)
-            GIDSignIn.sharedInstance.configuration = configuration
-            
-            // 4
-            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-            guard let rootViewController = windowScene.windows.first?.rootViewController else { return }
-            
-            // 5
-            GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) {[unowned self] result, error in
-                guard let result = result else { return }
-                authenticateUser(for: result.user, with: error)
-            }
-        }
-    }
-    
-    // firebase 로그인 절차
-    private func authenticateUser(for user: GIDGoogleUser?, with error: Error?) {
-        // 1
-        if let error = error {
-            print(error.localizedDescription)
+        guard let clientID = ProcessInfo.processInfo.environment["GOOGLE_CLIENT_ID"] else {
+            print("Google Client ID is missing.")
             return
         }
-        
-        // 2
-        guard let accessToken = user?.accessToken.tokenString, let idToken = user?.idToken?.tokenString else { return }
-        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
-        
-        // 3
-        Auth.auth().signIn(with: credential) { (_, error) in
+
+        let configuration = GIDConfiguration(clientID: clientID)
+
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootViewController = windowScene.windows.first?.rootViewController else { return }
+
+        // Google Sign-In 시작
+        GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { [weak self] result, error in
             if let error = error {
-                print(error.localizedDescription)
-            } else {
-                self.signState = .signIn
+                self?.errorMessage = "Sign-in error: \(error.localizedDescription)"
+                return
+            }
+
+            // ID Token 가져오기
+            guard let idToken = result?.user.idToken?.tokenString else {
+                self?.errorMessage = "Failed to retrieve ID Token."
+                return
+            }
+
+            // 서버로 ID Token 전송
+            self?.sendIdTokenToServer(idToken)
+        }
+    }
+
+    private func sendIdTokenToServer(_ idToken: String) {
+        provider.request(.login(idToken: idToken)) { [weak self] result in
+            switch result {
+            case .success(let response):
+                do {
+                    let responseData = try JSONSerialization.jsonObject(with: response.data, options: []) as? [String: Any]
+                    print("Response: \(String(describing: responseData))")
+                    self?.isSignedIn = true
+                } catch {
+                    self?.errorMessage = "Failed to parse response: \(error.localizedDescription)"
+                }
+            case .failure(let error):
+                self?.errorMessage = "Request failed: \(error.localizedDescription)"
             }
         }
     }
-    
-    // 로그아웃 절차
+
     func signOut() {
-        // 1
         GIDSignIn.sharedInstance.signOut()
-        
-        do {
-            // 2
-            try Auth.auth().signOut()
-            self.signState = .signOut
-        } catch {
-            print(error.localizedDescription)
-        }
+        isSignedIn = false
     }
-    
 }

@@ -2,17 +2,17 @@ import Foundation
 import Moya
 
 public enum AuthAPI {
-    case login(code: String, authorization: String)
-    case logout(authorization: String)
-    case refresh(authorization: String)
+    case login(code: String)
+    case logout
+    case refresh
 }
 
-extension AuthAPI: TargetType {
-    public var baseURL: URL {
-        return URL(string: "https://active-weasel-fluent.ngrok-free.app")!
+extension AuthAPI: GPleAPI {
+    public var domain: GPleDomain {
+        .auth
     }
-
-    public var path: String {
+    
+    public var urlPath: String {
         switch self {
         case .login:
             return "/google/login"
@@ -20,6 +20,16 @@ extension AuthAPI: TargetType {
             return "/logout"
         case .refresh:
             return "/"
+        }
+    }
+    
+    public var jwtTokenType: JwtTokenType {
+        switch self {
+        case .login, .refresh:
+            return .refreshToken
+            
+        case .logout:
+            return .accessToken
         }
     }
 
@@ -38,20 +48,13 @@ extension AuthAPI: TargetType {
 
     public var task: Task {
         switch self {
-        case let .login(code, _):
+        case let .login(code):
             return .requestParameters(parameters: [
                     "code" : code
                 ],
                 encoding: JSONEncoding.default)
-        case .logout(_), .refresh(_):
+        case .logout, .refresh:
             return .requestPlain
-        }
-    }
-
-    public var headers: [String : String]? {
-        switch self {
-        case .login(_, let authorization), .logout(let authorization), .refresh(let authorization):
-            return ["Authorization": authorization]
         }
     }
 }
