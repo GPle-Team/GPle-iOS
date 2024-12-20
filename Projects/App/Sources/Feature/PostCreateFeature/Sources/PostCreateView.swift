@@ -169,7 +169,7 @@ struct PostCreateView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                         .foregroundStyle(.white)
                                         .onTapGesture {
-                                            locationText = "본관"
+                                            locationText = "HOME"
                                             locationInfo.toggle()
                                         }
 
@@ -181,7 +181,7 @@ struct PostCreateView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                         .foregroundStyle(.white)
                                         .onTapGesture {
-                                            locationText = "금봉관"
+                                            locationText = "GYM"
                                             locationInfo.toggle()
                                         }
 
@@ -193,7 +193,7 @@ struct PostCreateView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                         .foregroundStyle(.white)
                                         .onTapGesture {
-                                            locationText = "동행관"
+                                            locationText = "DOMITORY"
                                             locationInfo.toggle()
                                         }
 
@@ -205,7 +205,19 @@ struct PostCreateView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                         .foregroundStyle(.white)
                                         .onTapGesture {
-                                            locationText = "산책로"
+                                            locationText = "WALKING_TRAIL"
+                                            locationInfo.toggle()
+                                        }
+
+                                    Divider()
+                                        .frame(width: 58, height: 1)
+                                        .overlay(GPleAsset.Color.gray950.swiftUIColor)
+
+                                    Text("운동장")
+                                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
+                                        .foregroundStyle(.white)
+                                        .onTapGesture {
+                                            locationText = "PLAYGROUND"
                                             locationInfo.toggle()
                                         }
                                 }
