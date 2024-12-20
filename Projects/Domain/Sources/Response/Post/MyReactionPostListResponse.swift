@@ -1,7 +1,8 @@
 import Foundation
 
-public struct MyReactionPostListResponse: Identifiable, Codable {
+public struct MyReactionPostListResponse: Codable {
     public let id: Int
+    public let author: ReactionAuthorInfo
     public let title: String
     public let imageUrl: [String]
     public let location: String
@@ -10,9 +11,15 @@ public struct MyReactionPostListResponse: Identifiable, Codable {
     public let createdTime: String
 }
 
+public struct ReactionAuthorInfo: Codable {
+    public let id: Int
+    public let name: String
+    public let grade: Int
+}
+
 public struct MyReactionPostListTaggedUser: Codable {
-    public let username: String
-    public let userId: Int
+    public let name: String
+    public let id: Int
 }
 
 public struct MyReactionPostListEmojiCounts: Codable {

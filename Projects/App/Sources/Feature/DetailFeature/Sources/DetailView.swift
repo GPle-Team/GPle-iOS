@@ -3,138 +3,190 @@ import SwiftUI
 struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var topNavigationState: Bool = false
-    @State private var emojiName: [String] = ["heart", "congrats", "thumbsup", "thinking", "poop", "china"]
+    @State private var emojiName: [String] = ["heart", "congrats", "ThumbsUp", "thinking", "poop", "china"]
     @State private var emojiStates: [Int] = [0, 2, 3, 400, 500, 600]
     @State private var test: [Bool] = [false, false, false, false, false, false]
     @State private var graySmileState: Bool = false
     @Environment(\.dismiss) private var dismiss
+    @StateObject var postViewModel: PostViewModel
+    @State public var postId: Int = 0
+    @State public var postType: Bool = true
+    @State private var isDataLoaded: Bool = false
 
     var body: some View {
-        ZStack(alignment: .leading) {
-            GPleAsset.Color.back.swiftUIColor
-                .ignoresSafeArea()
+        NavigationStack {
 
-            VStack(alignment: .leading, spacing: 0) {
-                ZStack {
-                    HStack {
-                        Button {
-                            dismiss()
-                        } label: {
-                            GPleAsset.Assets.chevronRight.swiftUIImage
-                                .padding(.leading, 20)
-                        }
-                        Spacer()
-                    }
-                    Text("운동장")
-                        .foregroundStyle(.white)
-                        .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
-                }
-                .padding(.bottom, 16)
+            ZStack(alignment: .leading) {
+                GPleAsset.Color.back.swiftUIColor
+                    .ignoresSafeArea()
 
-                ScrollView {
+                if isDataLoaded {
                     VStack(alignment: .leading, spacing: 0) {
-                        HStack(spacing: 4) {
-                            GPleAsset.Assets.profile.swiftUIImage
-                                .padding(.leading, 16)
-
-                            Text(viewModel.name)
-                                .foregroundStyle(.white)
-                                .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
-                                .padding(.leading, 4)
-
-                            Text("· \(viewModel.schoolYear)학년")
-                                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
-                                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-
-                            Spacer()
-                        }
-                        .padding(.top, 8)
-
-                        TabView(selection: $viewModel.imageCount) {
-                            ForEach(0..<viewModel.imageCount) { _ in
-                                GPleAsset.Assets.testimage2.swiftUIImage
-                                    .resizable()
-                                    .padding(.top, 12)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 381)
-                        .tabViewStyle(.page)
-
-                        Text(viewModel.title)
-                            .foregroundStyle(.white)
-                            .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
-                            .padding(.top, 16)
-                            .padding(.leading, 16)
-
-                        HStack(spacing: 8) {
-                            ForEach(viewModel.tagUser, id: \.self) { tag in
-                                Text("@\(tag)")
-                                    .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
-                                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                            }
-                        }
-                        .padding(.top, 6)
-                        .padding(.leading, 16)
-
-                        Text("\(viewModel.wwDay)월 \(viewModel.ddDay)일")
-                            .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                            .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                            .padding(.top, 6)
-                            .padding(.leading, 16)
-
-                        VStack(alignment: .leading, spacing: 0) {
-                            FlowLayout {
-                                Button(action: {
-                                    Haptic.impact(style: .soft)
-                                    graySmileState.toggle()
-                                }) {
-                                    GPleAsset.Assets.graySmile.swiftUIImage
-                                        .padding(.leading, 16)
+                        ZStack {
+                            HStack {
+                                Button {
+                                    dismiss()
+                                } label: {
+                                    GPleAsset.Assets.chevronRight.swiftUIImage
+                                        .padding(.leading, 20)
                                 }
+                                Spacer()
+                            }
 
-                                ForEach(0..<6) { tag in
-                                    if emojiStates[tag] != 0 {
-                                        emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiStates[tag], emojiState: $test[tag])
+
+                            Text(postType ? postViewModel.myPostList[postId].location : postViewModel.myReactionPostList[postId].location)
+                                .foregroundStyle(.white)
+                                .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
+
+                        }
+                        .padding(.bottom, 16)
+
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 0) {
+                                HStack(spacing: 4) {
+
+                                    GPleAsset.Assets.profile.swiftUIImage
+                                        .padding(.leading, 16)
+
+
+
+                                    Text(postViewModel.myPostList[postId].author.name)
+                                        .foregroundStyle(.white)
+                                        .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
+                                        .padding(.leading, 4)
+
+                                    Text("· \(postViewModel.myPostList[postId].author.grade)학년")
+                                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                                        .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+
+
+                                    Spacer()
+                                }
+                                .padding(.top, 8)
+
+                                TabView(selection: $viewModel.imageCount) {
+                                    ForEach(0..<postViewModel.myPostList[postId].imageUrl.count, id: \.self) { index in
+                                        if let imageUrl = URL(string: postViewModel.myPostList[postId].imageUrl[index]) {
+                                            AsyncImage(url: imageUrl) { image in
+                                                image
+                                                    .resizable()
+                                                    .padding(.top, 12)
+                                            } placeholder: {
+                                                ProgressView()
+                                                    .progressViewStyle(CircularProgressViewStyle())
+                                            }
+                                            .tag(index)
+                                        }
                                     }
                                 }
-                                .padding(.top, 2)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 381)
+                                .tabViewStyle(.page)
+
+
+
+                                Text(postViewModel.myPostList[postId].title)
+                                    .foregroundStyle(.white)
+                                    .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
+                                    .padding(.top, 16)
+                                    .padding(.leading, 16)
+
+
+                                HStack(spacing: 8) {
+                                    ForEach(0..<postViewModel.myPostList[postId].tagList.count, id: \.self) { tag in
+                                        Text("@\(postViewModel.myPostList[postId].tagList[tag].name)")
+                                            .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
+                                            .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                                    }
+                                }
+                                .padding(.top, 6)
+                                .padding(.leading, 16)
+
+
+                                let dateString = postType ? postViewModel.myPostList[postId].createdTime : postViewModel.myReactionPostList[postId].createdTime
+                                let components = dateString.split(separator: "-")
+                                let month = components[1]
+                                let day = components[2].prefix(2)
+
+                                Text("\(month)월 \(day)일")
+                                    .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+                                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                                    .padding(.top, 6)
+                                    .padding(.leading, 16)
+
+                                VStack(alignment: .leading, spacing: 0) {
+                                    FlowLayout {
+                                        Button(action: {
+                                            Haptic.impact(style: .soft)
+                                            graySmileState.toggle()
+                                        }) {
+                                            GPleAsset.Assets.graySmile.swiftUIImage
+                                                .padding(.leading, 16)
+                                        }
+
+                                        ForEach(0..<6) { tag in
+                                            if emojiStates[tag] != 0 {
+                                                emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiStates[tag], emojiState: $test[tag])
+                                            }
+                                        }
+                                        .padding(.top, 2)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.top, 8)
+
                             }
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, 8)
 
+                        Spacer()
                     }
-                }
+                    .padding(.top, 8)
 
-                Spacer()
+                    if graySmileState {
+                        HStack(spacing: 25) {
+                            ForEach(0..<6) { tag in
+                                Button(action: {
+                                    Haptic.impact(style: .soft)
+                                    test[tag].toggle()
+                                    if test[tag] {
+                                        emojiStates[tag] += 1
+                                    } else {
+                                        emojiStates[tag] -= 1
+                                    }
+                                }) {
+                                    Image(emojiName[tag])
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 5)
+                                .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
+                        )
+                        .padding(.leading, 20)
+                        .padding(.top, 490)
+                    }
+                } else {
+                    ProgressView("불러오는중...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .padding()
+                }
             }
-            .padding(.top, 8)
+        }
+        .navigationBarBackButtonHidden(true)
+        .onAppear {
+            loadPostData()
+        }
+    }
 
-            if graySmileState {
-                HStack(spacing: 25) {
-                    ForEach(0..<6) { tag in
-                        Button(action: {
-                            Haptic.impact(style: .soft)
-                            test[tag].toggle()
-                            if test[tag] {
-                                emojiStates[tag] += 1
-                            } else {
-                                emojiStates[tag] -= 1
-                            }
-                        }) {
-                            Image(emojiName[tag])
-                        }
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 10)
-                .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
-                )
-                .padding(.leading, 20)
-                .padding(.top, 490)
+    private func loadPostData() {
+        postViewModel.myPostList { success in
+            if success {
+                isDataLoaded = true // Set to true once data is loaded
+                print("게시물 목록 로드 성공!")
+            } else {
+                print("게시물 목록 로드 실패!")
             }
         }
     }

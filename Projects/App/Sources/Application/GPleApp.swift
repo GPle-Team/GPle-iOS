@@ -4,7 +4,8 @@ import SwiftUI
 struct GPleApp: App {
     var body: some Scene {
         WindowGroup {
-            PostCreateView(viewModel: PostViewModel())
+            MyPageView(viewModel: MyPageViewModel(), postViewModel: PostViewModel())
+            //PostCreateView(viewModel: PostViewModel())
         }
     }
 }

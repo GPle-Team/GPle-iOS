@@ -11,7 +11,7 @@ public enum PostAPI {
 
 extension PostAPI: TargetType {
     public var baseURL: URL {
-        return URL(string: "https://active-weasel-fluent.ngrok-free.app")!
+        return URL(string: "https://port-0-gple-backend-eg4e2alkoplc4q.sel4.cloudtype.app")!
     }
 
     public var path: String {
@@ -19,7 +19,7 @@ extension PostAPI: TargetType {
         case .createPost:
             return "/post"
         case .uploadImage:
-            return "/image/images"
+            return "/file/images"
         case .allUserList:
             return "/user"
         case .myPostList:
