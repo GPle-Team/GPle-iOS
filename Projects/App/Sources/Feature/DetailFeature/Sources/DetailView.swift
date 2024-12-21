@@ -64,7 +64,6 @@ struct DetailView: View {
                                     .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                                     .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
 
-
                                 Spacer()
                             }
                             .padding(.top, 8)
