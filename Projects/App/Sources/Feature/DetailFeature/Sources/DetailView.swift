@@ -21,158 +21,158 @@ struct DetailView: View {
                     .ignoresSafeArea()
 
                 if isDataLoaded {
-                    VStack(alignment: .leading, spacing: 0) {
-                        ZStack {
-                            HStack {
-                                Button {
-                                    dismiss()
-                                } label: {
-                                    GPleAsset.Assets.chevronRight.swiftUIImage
-                                        .padding(.leading, 20)
-                                }
-                                Spacer()
+                VStack(alignment: .leading, spacing: 0) {
+                    ZStack {
+                        HStack {
+                            Button {
+                                dismiss()
+                            } label: {
+                                GPleAsset.Assets.chevronRight.swiftUIImage
+                                    .padding(.leading, 20)
                             }
+                            Spacer()
+                        }
 
 
-                            Text(postType ? postViewModel.myPostList[postId].location : postViewModel.myReactionPostList[postId].location)
+                        Text(postType ? postViewModel.myPostList[postId].location : postViewModel.myReactionPostList[postId].location)
                                 .foregroundStyle(.white)
                                 .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
 
-                        }
-                        .padding(.bottom, 16)
+                    }
+                    .padding(.bottom, 16)
 
-                        ScrollView {
-                            VStack(alignment: .leading, spacing: 0) {
-                                HStack(spacing: 4) {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack(spacing: 4) {
 
-                                    GPleAsset.Assets.profile.swiftUIImage
-                                        .padding(.leading, 16)
-
-
-
-                                    Text(postViewModel.myPostList[postId].author.name)
-                                        .foregroundStyle(.white)
-                                        .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
-                                        .padding(.leading, 4)
-
-                                    Text("· \(postViewModel.myPostList[postId].author.grade)학년")
-                                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                                        .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-
-
-                                    Spacer()
-                                }
-                                .padding(.top, 8)
-
-                                TabView(selection: $viewModel.imageCount) {
-                                    ForEach(0..<postViewModel.myPostList[postId].imageUrl.count, id: \.self) { index in
-                                        if let imageUrl = URL(string: postViewModel.myPostList[postId].imageUrl[index]) {
-                                            AsyncImage(url: imageUrl) { image in
-                                                image
-                                                    .resizable()
-                                                    .padding(.top, 12)
-                                            } placeholder: {
-                                                ProgressView()
-                                                    .progressViewStyle(CircularProgressViewStyle())
-                                            }
-                                            .tag(index)
-                                        }
-                                    }
-                                }
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 381)
-                                .tabViewStyle(.page)
+                                        GPleAsset.Assets.profile.swiftUIImage
+                                            .padding(.leading, 16)
 
 
 
-                                Text(postViewModel.myPostList[postId].title)
+                                Text(postViewModel.myPostList[postId].author.name)
                                     .foregroundStyle(.white)
-                                    .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
-                                    .padding(.top, 16)
-                                    .padding(.leading, 16)
+                                    .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
+                                    .padding(.leading, 4)
+
+                                Text("· \(postViewModel.myPostList[postId].author.grade)학년")
+                                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                                    .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
 
 
-                                HStack(spacing: 8) {
-                                    ForEach(0..<postViewModel.myPostList[postId].tagList.count, id: \.self) { tag in
-                                        Text("@\(postViewModel.myPostList[postId].tagList[tag].name)")
-                                            .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
-                                            .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                                Spacer()
+                            }
+                            .padding(.top, 8)
+
+                            TabView(selection: $viewModel.imageCount) {
+                                ForEach(0..<postViewModel.myPostList[postId].imageUrl.count, id: \.self) { index in
+                                    if let imageUrl = URL(string: postViewModel.myPostList[postId].imageUrl[index]) {
+                                        AsyncImage(url: imageUrl) { image in
+                                            image
+                                                .resizable()
+                                                .padding(.top, 12)
+                                        } placeholder: {
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle())
+                                        }
+                                        .tag(index)
                                     }
                                 }
-                                .padding(.top, 6)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 381)
+                            .tabViewStyle(.page)
+
+
+
+                            Text(postViewModel.myPostList[postId].title)
+                                .foregroundStyle(.white)
+                                .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
+                                .padding(.top, 16)
                                 .padding(.leading, 16)
 
 
-                                let dateString = postType ? postViewModel.myPostList[postId].createdTime : postViewModel.myReactionPostList[postId].createdTime
-                                let components = dateString.split(separator: "-")
-                                let month = components[1]
-                                let day = components[2].prefix(2)
-
-                                Text("\(month)월 \(day)일")
-                                    .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                                    .padding(.top, 6)
-                                    .padding(.leading, 16)
-
-                                VStack(alignment: .leading, spacing: 0) {
-                                    FlowLayout {
-                                        Button(action: {
-                                            Haptic.impact(style: .soft)
-                                            graySmileState.toggle()
-                                        }) {
-                                            GPleAsset.Assets.graySmile.swiftUIImage
-                                                .padding(.leading, 16)
-                                        }
-
-                                        ForEach(0..<6) { tag in
-                                            if emojiStates[tag] != 0 {
-                                                emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiStates[tag], emojiState: $test[tag])
-                                            }
-                                        }
-                                        .padding(.top, 2)
-                                    }
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.top, 8)
-
-                            }
-                        }
-
-                        Spacer()
-                    }
-                    .padding(.top, 8)
-
-                    if graySmileState {
-                        HStack(spacing: 25) {
-                            ForEach(0..<6) { tag in
-                                Button(action: {
-                                    Haptic.impact(style: .soft)
-                                    test[tag].toggle()
-                                    if test[tag] {
-                                        emojiStates[tag] += 1
-                                    } else {
-                                        emojiStates[tag] -= 1
-                                    }
-                                }) {
-                                    Image(emojiName[tag])
+                            HStack(spacing: 8) {
+                                ForEach(0..<postViewModel.myPostList[postId].tagList.count, id: \.self) { tag in
+                                    Text("@\(postViewModel.myPostList[postId].tagList[tag].name)")
+                                        .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
+                                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                                 }
                             }
+                            .padding(.top, 6)
+                            .padding(.leading, 16)
+
+
+                            let dateString = postType ? postViewModel.myPostList[postId].createdTime : postViewModel.myReactionPostList[postId].createdTime
+                            let components = dateString.split(separator: "-")
+                            let month = components[1]
+                            let day = components[2].prefix(2)
+
+                            Text("\(month)월 \(day)일")
+                                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+                                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                                .padding(.top, 6)
+                                .padding(.leading, 16)
+
+                            VStack(alignment: .leading, spacing: 0) {
+                                FlowLayout {
+                                    Button(action: {
+                                        Haptic.impact(style: .soft)
+                                        graySmileState.toggle()
+                                    }) {
+                                        GPleAsset.Assets.graySmile.swiftUIImage
+                                            .padding(.leading, 16)
+                                    }
+
+                                    ForEach(0..<6) { tag in
+                                        if emojiStates[tag] != 0 {
+                                            emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiStates[tag], emojiState: $test[tag])
+                                        }
+                                    }
+                                    .padding(.top, 2)
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top, 8)
+
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(
-                            RoundedRectangle(cornerRadius: 5)
-                                .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
-                        )
-                        .padding(.leading, 20)
-                        .padding(.top, 490)
                     }
-                } else {
-                    ProgressView("불러오는중...")
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .padding()
+
+                    Spacer()
                 }
+                .padding(.top, 8)
+
+                if graySmileState {
+                    HStack(spacing: 25) {
+                        ForEach(0..<6) { tag in
+                            Button(action: {
+                                Haptic.impact(style: .soft)
+                                test[tag].toggle()
+                                if test[tag] {
+                                    emojiStates[tag] += 1
+                                } else {
+                                    emojiStates[tag] -= 1
+                                }
+                            }) {
+                                Image(emojiName[tag])
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
+                    )
+                    .padding(.leading, 20)
+                    .padding(.top, 490)
+                }
+            } else {
+                ProgressView("불러오는중...")
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .padding()
             }
+        }
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {

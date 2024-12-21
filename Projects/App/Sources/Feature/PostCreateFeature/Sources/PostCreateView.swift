@@ -9,6 +9,7 @@ struct PostCreateView: View {
     @State private var imagesPickerIndex: Int = 0
     @State var showingSheet: Bool = false
     @State var locationInfo: Bool = false
+    @State private var locationCommunicationText: String = "본관"
     @State var showingBottomSheet: Bool = false
     @State private var showError: Bool = false
     @State private var showingImagePicker: Bool = false
@@ -169,7 +170,8 @@ struct PostCreateView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                         .foregroundStyle(.white)
                                         .onTapGesture {
-                                            locationText = "HOME"
+                                            locationText = "본관"
+                                            locationCommunicationText = "HOME"
                                             locationInfo.toggle()
                                         }
 
@@ -181,7 +183,8 @@ struct PostCreateView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                         .foregroundStyle(.white)
                                         .onTapGesture {
-                                            locationText = "GYM"
+                                            locationText = "금봉관"
+                                            locationCommunicationText = "GYM"
                                             locationInfo.toggle()
                                         }
 
@@ -193,7 +196,8 @@ struct PostCreateView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                         .foregroundStyle(.white)
                                         .onTapGesture {
-                                            locationText = "DOMITORY"
+                                            locationText = "동행관"
+                                            locationCommunicationText = "DOMITORY"
                                             locationInfo.toggle()
                                         }
 
@@ -205,7 +209,8 @@ struct PostCreateView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                         .foregroundStyle(.white)
                                         .onTapGesture {
-                                            locationText = "WALKING_TRAIL"
+                                            locationText = "산책로"
+                                            locationCommunicationText = "WALKING_TRAIL"
                                             locationInfo.toggle()
                                         }
 
@@ -217,7 +222,8 @@ struct PostCreateView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                         .foregroundStyle(.white)
                                         .onTapGesture {
-                                            locationText = "PLAYGROUND"
+                                            locationText = "운동장"
+                                            locationCommunicationText = "PLAYGROUND"
                                             locationInfo.toggle()
                                         }
                                 }
@@ -341,7 +347,7 @@ struct PostCreateView: View {
                                 let userIdList = tagUserId.compactMap { $0 }
                                 viewModel.setupImage(images: uiImages)
                                 viewModel.setupTitle(title: titleTextField)
-                                viewModel.setupLocation(location: locationText)
+                                viewModel.setupLocation(location: locationCommunicationText)
                                 viewModel.setupUserList(userList: userIdList)
                                 viewModel.uploadImages { success in
                                     if success {
