@@ -10,7 +10,7 @@ struct DetailView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject var postViewModel: PostViewModel
     @State public var postId: Int = 0
-    @State public var postType: Bool = true
+    @State public var postType: Bool = false
     @State private var isDataLoaded: Bool = false
 
     var body: some View {
@@ -50,12 +50,12 @@ struct DetailView: View {
 
 
 
-                                Text(postViewModel.myPostList[postId].author.name)
+                                Text(postType ? postViewModel.myPostList[postId].author.name : postViewModel.myReactionPostList[postId].author.name)
                                     .foregroundStyle(.white)
                                     .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
                                     .padding(.leading, 4)
 
-                                Text("· \(postViewModel.myPostList[postId].author.grade)학년")
+                                Text("· \(postType ? postViewModel.myPostList[postId].author.grade : postViewModel.myReactionPostList[postId].author.grade)학년")
                                     .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                                     .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
 
