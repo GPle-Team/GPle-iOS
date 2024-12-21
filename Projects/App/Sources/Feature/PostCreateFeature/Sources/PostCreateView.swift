@@ -18,6 +18,8 @@ struct PostCreateView: View {
     @State private var tagUserName: [String] = ["", "", "", "", ""]
     @State private var tagUserYear: [Int] = [0, 0, 0, 0, 0]
     @State private var tagUserId: [Int?] = Array(repeating: nil, count: 5)
+    @State private var toast: FancyToast? = nil
+    @State private var boolState: Bool = false
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -342,6 +344,9 @@ struct PostCreateView: View {
                                    buttonState: isFormValid,
                                    buttonOkColor: GPleAsset.Color.main.swiftUIColor
                         ){
+
+                            toast = FancyToast(type: .info, title: "업로드 중...", message: "해당 게시물의 업로드가 진행중입니다. 잠시만 기다려주세요.")
+
                             if !images.isEmpty {
                                 let uiImages = images.compactMap { $0 }
                                 let userIdList = tagUserId.compactMap { $0 }
@@ -349,19 +354,29 @@ struct PostCreateView: View {
                                 viewModel.setupTitle(title: titleTextField)
                                 viewModel.setupLocation(location: locationCommunicationText)
                                 viewModel.setupUserList(userList: userIdList)
-                                viewModel.uploadImages { success in
-                                    if success {
+                                viewModel.uploadImages { imageSuccess in
+                                    if imageSuccess {
                                         print("이미지 업로드가 성공했습니다.")
-                                        viewModel.createPost { success in
-                                            print("Viewㅣ포스트 생성이 성공했습니다.")
+                                        viewModel.createPost { postSuccess in
+                                            if postSuccess {
+                                                print("Viewㅣ포스트 생성이 성공했습니다.")
+
+                                                toast = FancyToast(type: .success, title: "업로드 성공!", message: "해당 게시물의 업로드가 성공 했습니다. 잠시 후 메인 화면으로 이동합니다.")
+
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                                    dismiss()
+                                                }
+                                            } else {
+                                                toast = FancyToast(type: .error, title: "이미지 업로드 실패!", message: "해당 이미지의 업로드가 실패했습니다. 개발팀에 문의해주세요.")
+                                            }
                                         }
                                     } else {
                                         print("Viewㅣ이미지 업로드 실패")
+                                        toast = FancyToast(type: .error, title: "게시물 업로드 실패", message: "해당 게시물의 업로드가 실패했습니다. 개발팀에 문의해주세요.")
                                     }
                                 }
                             }
                         }
-                        //.padding(.horizontal, 20)
                         .padding(.top, 93)
                         .disabled(!isFormValid)
                     }
@@ -440,6 +455,7 @@ struct PostCreateView: View {
             }
 
         }
+        .toastView(toast: $toast)
     }
 
     private var isFormValid: Bool {
