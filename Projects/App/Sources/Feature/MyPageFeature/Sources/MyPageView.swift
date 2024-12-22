@@ -80,7 +80,7 @@ struct MyPageView: View {
                         Spacer()
 
                         Button {
-                            postViewModel.myReactionPostList{ success in
+                            postViewModel.myReactionPostList { success in
                                 if success {
                                     topNavigationState = true
                                     print("Viewㅣ게시물 불러오기 성공~!!!")
@@ -118,7 +118,16 @@ struct MyPageView: View {
                             LazyVGrid(columns: columns, spacing: 2) {
                                 ForEach(0..<postViewModel.myPostList.count, id: \.self) { post in
 
-                                    NavigationLink(destination: DetailView(viewModel: DetailViewModel(), postViewModel: PostViewModel(),postId: post, postType: true)) {
+                                    let emojiArray = [
+                                        postViewModel.myPostList[post].emojiList.heartCount,
+                                        postViewModel.myPostList[post].emojiList.congCount,
+                                        postViewModel.myPostList[post].emojiList.thumbsCount,
+                                        postViewModel.myPostList[post].emojiList.thinkCount,
+                                        postViewModel.myPostList[post].emojiList.poopCount,
+                                        postViewModel.myPostList[post].emojiList.chinaCount
+                                    ]
+
+                                    NavigationLink(destination: DetailView(viewModel: DetailViewModel(), postViewModel: PostViewModel(),location: postViewModel.myPostList[post].location,title: postViewModel.myPostList[post].title, name: postViewModel.myPostList[post].author.name, grade: postViewModel.myPostList[post].author.grade,imageUrl: postViewModel.myPostList[post].imageUrl ,tagList: postViewModel.myPostList[post].tagList.map { ($0.name, $0.id) },emojiList: emojiArray, createTime: postViewModel.myPostList[post].createdTime)) {
 
 
                                         if let imageUrl = postViewModel.myPostList[post].imageUrl.first {
@@ -152,7 +161,17 @@ struct MyPageView: View {
                         ScrollView {
                             LazyVGrid(columns: columns1, spacing: 2) {
                                 ForEach(0..<postViewModel.myReactionPostList.count, id: \.self) { post in
-                                    NavigationLink(destination: DetailView(viewModel: DetailViewModel(), postViewModel: PostViewModel(),postId: post, postType: false)) {
+
+                                    let emojiArray = [
+                                        postViewModel.myReactionPostList[post].emojiList.heartCount,
+                                        postViewModel.myReactionPostList[post].emojiList.congCount,
+                                        postViewModel.myReactionPostList[post].emojiList.thumbsCount,
+                                        postViewModel.myReactionPostList[post].emojiList.thinkCount,
+                                        postViewModel.myReactionPostList[post].emojiList.poopCount,
+                                        postViewModel.myReactionPostList[post].emojiList.chinaCount
+                                    ]
+
+                                    NavigationLink(destination: DetailView(viewModel: DetailViewModel(), postViewModel: PostViewModel(),location: postViewModel.myReactionPostList[post].location,title: postViewModel.myReactionPostList[post].title, name: postViewModel.myReactionPostList[post].author.name, grade: postViewModel.myReactionPostList[post].author.grade,imageUrl: postViewModel.myReactionPostList[post].imageUrl ,tagList: postViewModel.myReactionPostList[post].tagList.map { ($0.name, $0.id) }, emojiList: emojiArray, createTime: postViewModel.myReactionPostList[post].createdTime)) {
 
                                     if let imageUrl = postViewModel.myReactionPostList[post].imageUrl.first {
                                         AsyncImage(url: URL(string: imageUrl)) { image in

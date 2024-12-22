@@ -102,7 +102,7 @@ public final class PostViewModel: ObservableObject {
                         // 각 게시물의 ID와 위치를 출력
                         for post in decodedResponse {
                             print("게시물 ID: \(post.id), 위치: \(post.location)")
-                            print("이미지: \(post.imageUrl[0])")
+                            print("이미지: \(post.imageUrl)")
                         }
 
                         completion(true)
