@@ -7,6 +7,11 @@ public final class MainViewModel: ObservableObject {
     private var accessToken: String = "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzM0NjYyNTg4LCJleHAiOjE3NDQ2NjI1ODh9.FG4FVQ4oikC4HNy5h7gq0QyCIjVZtceIOKwAMnkULAt4y0lX5gGIF1s2Mdj9qr1H"
 
     @Published public var allPostList: [Post] = []
+    @Published public var gymPostList: [Post] = []
+    @Published public var homePostList: [Post] = []
+    @Published public var playgroundPostList: [Post] = []
+    @Published public var domitoryPostList: [Post] = []
+    @Published public var walkingTrailPostList: [Post] = []
 
     @MainActor
     public func fetchAllPostList() {
@@ -20,6 +25,40 @@ public final class MainViewModel: ObservableObject {
                     let responseModel = try JSONDecoder().decode([Post].self, from: res.data)
                     self.allPostList = responseModel
                     print("성공ㅣ전체 게시물 불러오기")
+                } catch {
+                    print("JSON 디코딩 에러: \(error)")
+                }
+            case let .failure(err):
+                print("Network request failed: \(err)")
+            }
+        }
+    }
+    
+    @MainActor
+    public func fetchPostListByLocation(type: String) {
+        authProvider.request(.fetchPostListByLocation(type: type, authorization: accessToken)) { result in
+            switch result {
+            case let .success(res):
+                do {
+                    if let responseString = String(data: res.data, encoding: .utf8) {
+                        print("서버 응답 데이터: \(responseString)")
+                    }
+                    let responseModel = try JSONDecoder().decode([Post].self, from: res.data)
+                    switch type {
+                    case "금봉관":
+                        self.gymPostList = responseModel
+                    case "본관":
+                        self.homePostList = responseModel
+                    case "운동장":
+                        self.playgroundPostList = responseModel
+                    case "기숙사":
+                        self.domitoryPostList = responseModel
+                    case "산책로":
+                        self.walkingTrailPostList = responseModel
+                    default:
+                        break
+                    }
+                    print("\(type) 게시물 불러오기 성공")
                 } catch {
                     print("JSON 디코딩 에러: \(error)")
                 }

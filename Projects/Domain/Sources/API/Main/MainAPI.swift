@@ -3,11 +3,12 @@ import Moya
 
 public enum MainAPI {
     case fetchAllPostList(authorization: String)
-    case fetchGym(authorization: String)
-    case fetchHome(authorization: String)
-    case fetchPlayGround(authorization: String)
-    case fetchDomitory(authorization: String)
-    case fetchWalkingTrail(authorization: String)
+    case fetchPostListByLocation(type: String, authorization: String)
+//    case fetchGym(authorization: String)
+//    case fetchHome(authorization: String)
+//    case fetchPlayGround(authorization: String)
+//    case fetchDomitory(authorization: String)
+//    case fetchWalkingTrail(authorization: String)
 }
 
 extension MainAPI: TargetType {
@@ -19,14 +20,18 @@ extension MainAPI: TargetType {
         switch self {
         case .fetchAllPostList:
             return "/post"
-        case .fetchGym, .fetchHome, .fetchPlayGround, .fetchDomitory, .fetchWalkingTrail:
-            return "/post/location?type"
+//        case .fetchGym, .fetchHome, .fetchPlayGround, .fetchDomitory, .fetchWalkingTrail:
+//            return "/post/location?type"
+        case .fetchPostListByLocation:
+            return "/post/location"
         }
     }
 
     public var method: Moya.Method {
         switch self {
-        case .fetchAllPostList, .fetchGym, .fetchHome, .fetchPlayGround, .fetchDomitory, .fetchWalkingTrail:
+//        case .fetchAllPostList, .fetchGym, .fetchHome, .fetchPlayGround, .fetchDomitory, .fetchWalkingTrail:
+//            return .get
+        case .fetchAllPostList, .fetchPostListByLocation:
             return .get
         }
     }
@@ -39,37 +44,43 @@ extension MainAPI: TargetType {
         switch self {
             case .fetchAllPostList:
                 return .requestPlain
-            case .fetchGym, .fetchHome, .fetchPlayGround, .fetchDomitory, .fetchWalkingTrail:
-                return .requestParameters(parameters: ["type": getLocationType()], encoding: URLEncoding.default)
+            case .fetchPostListByLocation(let type, let authorization):
+                return .requestParameters(
+                    parameters: ["type": type],
+                    encoding: URLEncoding.default
+                )
+//            case .fetchGym, .fetchHome, .fetchPlayGround, .fetchDomitory, .fetchWalkingTrail:
+//                return .requestParameters(parameters: ["type": getLocationType()], encoding: URLEncoding.default)
             }
     }
 
     public var headers: [String : String]? {
         switch self {
         case .fetchAllPostList(let authorization),
-                .fetchGym(let authorization),
-                .fetchHome(let authorization),
-                .fetchPlayGround(let authorization),
-                .fetchDomitory(let authorization),
-                .fetchWalkingTrail(let authorization):
+                .fetchPostListByLocation(_, let authorization):
+//                .fetchGym(let authorization),
+//                .fetchHome(let authorization),
+//                .fetchPlayGround(let authorization),
+//                .fetchDomitory(let authorization),
+//                .fetchWalkingTrail(let authorization):
             return ["Authorization": authorization]
         }
     }
     
-    private func getLocationType() -> String {
-            switch self {
-            case .fetchGym:
-                return "금봉관"
-            case .fetchHome:
-                return "본관"
-            case .fetchPlayGround:
-                return "운동장"
-            case .fetchDomitory:
-                return "동행관"
-            case .fetchWalkingTrail:
-                return "산책로"
-            case .fetchAllPostList:
-                return ""
-            }
-        }
+//    private func getLocationType() -> String {
+//            switch self {
+//            case .fetchGym:
+//                return "금봉관"
+//            case .fetchHome:
+//                return "본관"
+//            case .fetchPlayGround:
+//                return "운동장"
+//            case .fetchDomitory:
+//                return "동행관"
+//            case .fetchWalkingTrail:
+//                return "산책로"
+//            case .fetchAllPostList:
+//                return ""
+//            }
+//        }
 }
