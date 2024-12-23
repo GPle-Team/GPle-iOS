@@ -36,16 +36,6 @@ struct MainView: View {
                     }
                     .padding(.top, 8)
 
-                    HStack(spacing: 16) {
-                        Spacer()
-
-                        GPleAsset.Assets.zoomOut.swiftUIImage
-
-                        GPleAsset.Assets.zoomIn.swiftUIImage
-                    }
-                    .padding(.top, 19)
-                    .padding(.trailing, 24)
-
                     HStack(spacing: 36) {
                         rankButton()
 
