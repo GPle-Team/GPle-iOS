@@ -9,7 +9,7 @@ struct PostCreateView: View {
     @State private var imagesPickerIndex: Int = 0
     @State var showingSheet: Bool = false
     @State var locationInfo: Bool = false
-    @State private var locationCommunicationText: String = "본관"
+    @State private var locationCommunicationText: String = "HOME"
     @State var showingBottomSheet: Bool = false
     @State private var showError: Bool = false
     @State private var showingImagePicker: Bool = false
@@ -20,6 +20,7 @@ struct PostCreateView: View {
     @State private var tagUserId: [Int?] = Array(repeating: nil, count: 5)
     @State private var toast: FancyToast? = nil
     @State private var boolState: Bool = false
+    @State private var buttonState: Bool = true
 
     var body: some View {
         NavigationStack {
@@ -342,10 +343,12 @@ struct PostCreateView: View {
                                        horizontalPadding: 20,
                                        verticalPadding: 16,
                                        backColor: GPleAsset.Color.gray1000.swiftUIColor,
-                                       buttonState: isFormValid,
+                                       buttonState: isFormValid && buttonState,
                                        buttonOkColor: GPleAsset.Color.main.swiftUIColor
                             ){
 
+                                print("클릭")
+                                buttonState = false
                                 toast = FancyToast(type: .info, title: "업로드 중...", message: "해당 게시물의 업로드가 진행중입니다. 잠시만 기다려주세요.")
 
                                 if !images.isEmpty {
@@ -369,17 +372,21 @@ struct PostCreateView: View {
                                                     }
                                                 } else {
                                                     toast = FancyToast(type: .error, title: "이미지 업로드 실패!", message: "해당 이미지의 업로드가 실패했습니다. 개발팀에 문의해주세요.")
+
+                                                    buttonState = true
                                                 }
                                             }
                                         } else {
                                             print("Viewㅣ이미지 업로드 실패")
                                             toast = FancyToast(type: .error, title: "게시물 업로드 실패", message: "해당 게시물의 업로드가 실패했습니다. 개발팀에 문의해주세요.")
+
+                                            buttonState = true
                                         }
                                     }
                                 }
                             }
                             .padding(.top, 93)
-                            .disabled(!isFormValid)
+                            .disabled(!isFormValid || !buttonState)
                         }
                     }
 

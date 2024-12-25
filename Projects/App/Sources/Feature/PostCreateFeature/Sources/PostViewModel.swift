@@ -208,6 +208,9 @@ public final class PostViewModel: ObservableObject {
                     if let responseData = String(data: response.data, encoding: .utf8) {
                         print("실패ㅣ게시물 생성 - 상태 코드: \(statusCode)")
                         print("응답 데이터: \(responseData)")
+                        print(self.title)
+                        print(self.location)
+                        print(self.userList)
                     } else {
                         print("실패ㅣ게시물 생성 - 상태 코드: \(statusCode), 응답 데이터 없음")
                     }
