@@ -17,20 +17,15 @@ extension PostAPI: TargetType {
 
     public var path: String {
         switch self {
-        case .createPost:
+        case .createPost, .myPostList, .myReactionPostList, .popularityPostlist:
             return "/post"
         case .uploadImage:
             return "/file/images"
         case .allUserList:
             return "/user"
-        case .myPostList:
-            return "/post?type=MY"
-        case .myReactionPostList:
-            return "/post?type=REACTED"
-        case .popularityPostlist:
-            return "/post?sort=POPULAR"
         }
     }
+
 
     public var method: Moya.Method {
         switch self {
@@ -54,8 +49,14 @@ extension PostAPI: TargetType {
                 MultipartFormData(provider: .data(fileData), name: "files", fileName: "image.jpg", mimeType: "image/jpeg")
             }
             return .uploadMultipart(formData)
-        case .allUserList, .myPostList, .myReactionPostList, .popularityPostlist:
+        case .allUserList:
             return .requestPlain
+        case .myPostList:
+            return .requestParameters(parameters: ["type": "MY"], encoding: URLEncoding.queryString)
+        case .myReactionPostList:
+            return .requestParameters(parameters: ["type": "REACTED"], encoding: URLEncoding.queryString)
+        case .popularityPostlist:
+            return .requestParameters(parameters: ["sort": "POPULAR"], encoding: URLEncoding.queryString)
         }
     }
 
