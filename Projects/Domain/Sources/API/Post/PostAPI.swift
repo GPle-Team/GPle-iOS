@@ -23,9 +23,9 @@ extension PostAPI: TargetType {
         case .allUserList:
             return "/user"
         case .myPostList:
-            return "/post/my"
+            return "/post?type=MY"
         case .myReactionPostList:
-            return "/post/react"
+            return "/post?type=REACTED"
         }
     }
 
