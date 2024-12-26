@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LoginButton: View {
-    @EnvironmentObject var loginViewModel: LoginViewModel
+    @StateObject var loginViewModel: LoginViewModel
     
     var body: some View {
         Button {
@@ -23,8 +23,11 @@ struct LoginButton: View {
                 .padding(.vertical, 12)
                 
             }
-            .padding(.horizontal, 20)
+            .background(GPleAsset.Color.white.swiftUIColor)
             .cornerRadius(12)
+            .padding(.horizontal, 20)
+            
         }
+        
     }
 }
