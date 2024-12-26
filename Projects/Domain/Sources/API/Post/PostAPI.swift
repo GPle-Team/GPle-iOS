@@ -5,11 +5,13 @@ public enum PostAPI {
     case createPost(param: CreatePostRequest, authorization: String)
     case uploadImage(files: [Data], authorization: String)
     case allUserList(authorization: String)
+    case myPostList(authorization: String)
+    case myReactionPostList(authorization: String)
 }
 
 extension PostAPI: TargetType {
     public var baseURL: URL {
-        return URL(string: "https://active-weasel-fluent.ngrok-free.app")!
+        return URL(string: "https://port-0-gple-backend-eg4e2alkoplc4q.sel4.cloudtype.app")!
     }
 
     public var path: String {
@@ -17,9 +19,13 @@ extension PostAPI: TargetType {
         case .createPost:
             return "/post"
         case .uploadImage:
-            return "/image/images"
+            return "/file/images"
         case .allUserList:
             return "/user"
+        case .myPostList:
+            return "/post/my"
+        case .myReactionPostList:
+            return "/post/react"
         }
     }
 
@@ -27,7 +33,7 @@ extension PostAPI: TargetType {
         switch self {
         case .createPost, .uploadImage:
             return .post
-        case .allUserList:
+        case .allUserList, .myPostList, .myReactionPostList:
             return .get
         }
     }
@@ -45,14 +51,14 @@ extension PostAPI: TargetType {
                 MultipartFormData(provider: .data(fileData), name: "files", fileName: "image.jpg", mimeType: "image/jpeg")
             }
             return .uploadMultipart(formData)
-        case .allUserList:
+        case .allUserList, .myPostList, .myReactionPostList:
             return .requestPlain
         }
     }
 
     public var headers: [String : String]? {
         switch self {
-        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization):
+        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization), .myPostList(let authorization), .myReactionPostList(let authorization):
             return ["Authorization": authorization]
         }
     }
