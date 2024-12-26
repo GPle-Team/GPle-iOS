@@ -7,6 +7,7 @@ public enum PostAPI {
     case allUserList(authorization: String)
     case myPostList(authorization: String)
     case myReactionPostList(authorization: String)
+    case popularityPostlist(authorization: String)
 }
 
 extension PostAPI: TargetType {
@@ -26,6 +27,8 @@ extension PostAPI: TargetType {
             return "/post?type=MY"
         case .myReactionPostList:
             return "/post?type=REACTED"
+        case .popularityPostlist:
+            return "/post?sort=POPULAR"
         }
     }
 
@@ -33,7 +36,7 @@ extension PostAPI: TargetType {
         switch self {
         case .createPost, .uploadImage:
             return .post
-        case .allUserList, .myPostList, .myReactionPostList:
+        case .allUserList, .myPostList, .myReactionPostList, .popularityPostlist:
             return .get
         }
     }
@@ -51,14 +54,14 @@ extension PostAPI: TargetType {
                 MultipartFormData(provider: .data(fileData), name: "files", fileName: "image.jpg", mimeType: "image/jpeg")
             }
             return .uploadMultipart(formData)
-        case .allUserList, .myPostList, .myReactionPostList:
+        case .allUserList, .myPostList, .myReactionPostList, .popularityPostlist:
             return .requestPlain
         }
     }
 
     public var headers: [String : String]? {
         switch self {
-        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization), .myPostList(let authorization), .myReactionPostList(let authorization):
+        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization), .myPostList(let authorization), .myReactionPostList(let authorization), .popularityPostlist(let authorization):
             return ["Authorization": authorization]
         }
     }
