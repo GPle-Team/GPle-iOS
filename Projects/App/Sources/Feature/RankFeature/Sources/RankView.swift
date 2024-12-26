@@ -2,7 +2,8 @@ import SwiftUI
 
 struct RankView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject var viewModel: DetailViewModel
+    @StateObject var detailViewModel: DetailViewModel
+//    @StateObject var postViewModel: PostViewModel
     
     var body: some View {
         ZStack(alignment: .leading) {
@@ -74,7 +75,7 @@ struct RankView: View {
                     .padding(.horizontal, 15)
                     .padding(.bottom, 28)
                     
-                    DetailView(viewModel: DetailViewModel())
+//                    DetailView(viewModel: DetailViewModel(), postViewModel: PostViewModel())
                 }
             }
         }
