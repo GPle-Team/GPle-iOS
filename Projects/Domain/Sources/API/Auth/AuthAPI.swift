@@ -48,9 +48,9 @@ extension AuthAPI: GPleAPI {
 
     public var task: Task {
         switch self {
-        case let .login(code):
+        case let .login(idToken):
             return .requestParameters(parameters: [
-                    "code" : code
+                "idTonek" : idToken
                 ],
                 encoding: JSONEncoding.default)
         case .logout, .refresh:
