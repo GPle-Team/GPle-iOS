@@ -1,69 +1,82 @@
 import SwiftUI
 
 struct MainView: View {
+    @StateObject var viewModel = MainViewModel()
+    @StateObject var postViewModel: PostViewModel
+
     var body: some View {
-        ZStack {
-            GPleAsset.Color.back.swiftUIColor
-                .ignoresSafeArea()
+        NavigationStack {
+            ZStack {
+                GPleAsset.Color.back.swiftUIColor
+                    .ignoresSafeArea()
 
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    HStack(spacing: 0) {
-                        GPleAsset.Assets.gpleBigLogo.swiftUIImage
-                            .padding(.leading, 20)
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        HStack(spacing: 0) {
+                            GPleAsset.Assets.gpleBigLogo.swiftUIImage
+                                .padding(.leading, 20)
+
+                            Spacer()
+
+                            NavigationLink(destination: MyPageView(viewModel: MyPageViewModel(), postViewModel: PostViewModel())) {
+                                GPleAsset.Assets.profile.swiftUIImage
+                                    .padding(.trailing, 20)
+                            }
+                        }
+                        .padding(.top, 16)
+
+                        GPleAsset.Assets.backyard.swiftUIImage
+                            .padding(.top, 61)
+
+                        GPleAsset.Assets.bongwan.swiftUIImage
+                            .padding(.top, 6)
+
+                        HStack(spacing: 13) {
+                            GPleAsset.Assets.geumbongGwan.swiftUIImage
+
+                            GPleAsset.Assets.playground.swiftUIImage
+
+                            GPleAsset.Assets.dongHaengGwan.swiftUIImage
+                        }
+                        .padding(.top, 8)
+
+                        HStack(spacing: 16) {
+                            Spacer()
+
+                            GPleAsset.Assets.zoomOut.swiftUIImage
+
+                            GPleAsset.Assets.zoomIn.swiftUIImage
+                        }
+                        .padding(.top, 19)
+                        .padding(.trailing, 24)
+
+                        HStack(spacing: 36) {
+                            rankButton()
+
+                            NavigationLink(destination: PostCreateView(viewModel: PostViewModel())) {
+                                imageUploadButton()
+                            }
+                        }
+                        .padding(.top, 40)
+
+                        ForEach(viewModel.allPostList) { post in
+                            postList(
+                                name: post.author.name,
+                                grade: post.author.grade,
+                                title: post.title,
+                                place: post.location,
+                                tag: post.tagList.map { $0.name },
+                                date: post.createdTime,
+                                imageURL: post.imageUrl
+                            )
+                        }
+                        .padding(.top, 60)
 
                         Spacer()
-
-                        GPleAsset.Assets.profile.swiftUIImage
-                            .padding(.trailing, 20)
                     }
-                    .padding(.top, 16)
-
-                    GPleAsset.Assets.backyard.swiftUIImage
-                        .padding(.top, 61)
-
-                    GPleAsset.Assets.bongwan.swiftUIImage
-                        .padding(.top, 6)
-
-                    HStack(spacing: 13) {
-                        GPleAsset.Assets.geumbongGwan.swiftUIImage
-
-                        GPleAsset.Assets.playground.swiftUIImage
-
-                        GPleAsset.Assets.dongHaengGwan.swiftUIImage
-                    }
-                    .padding(.top, 8)
-
-                    HStack(spacing: 16) {
-                        Spacer()
-
-                        GPleAsset.Assets.zoomOut.swiftUIImage
-
-                        GPleAsset.Assets.zoomIn.swiftUIImage
-                    }
-                    .padding(.top, 19)
-                    .padding(.trailing, 24)
-
-                    HStack(spacing: 36) {
-                        rankButton()
-
-                        imageUploadButton()
-                    }
-                    .padding(.top, 40)
-
-                    ForEach(0..<3) { _ in
-                        postList(
-                            name: "한재형",
-                            grade: "2학년",
-                            title: "유성이 없이 방송부원들과",
-                            place: "운동장",
-                            tag: "@박미리",
-                            date: "9월 12일"
-                        )
-                    }
-                    .padding(.top, 60)
-
-                    Spacer()
+                }
+                .onAppear {
+                    viewModel.fetchAllPostList()
                 }
             }
         }
@@ -98,11 +111,12 @@ struct MainView: View {
     @ViewBuilder
     func postList(
         name: String,
-        grade: String,
+        grade: Int,
         title: String,
         place: String,
-        tag: String,
-        date: String
+        tag: [String],
+        date: String,
+        imageURL: [String]
     ) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 4) {
@@ -116,9 +130,13 @@ struct MainView: View {
                 Text("•")
                     .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
 
-                Text(grade)
-                    .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                HStack(spacing: 0) {
+                    Text("\(grade)")
+
+                    Text("학년")
+                }
+                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
             }
 
             Text(title)
@@ -131,15 +149,36 @@ struct MainView: View {
                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                 .padding(.top, 4)
 
-            GPleAsset.Assets.testImage.swiftUIImage
-                .resizable()
-                .cornerRadius(8)
-                .frame(width: 318, height: 318)
-                .padding(.top, 16)
+            ForEach(imageURL, id: \.self) { imageURL in
+                AsyncImage(url: URL(string: imageURL)) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .frame(width: 318, height: 318)
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 318)
+                            .cornerRadius(8)
+                    case .failure:
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(.red)
+                            .frame(width: 318, height: 318)
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
+            }
+            .padding(.top, 16)
 
             HStack(spacing: 8) {
-                ForEach(0..<2) { _ in
-                    Text(tag)
+                ForEach(tag, id: \.self) { tag in
+                    HStack(spacing: 0) {
+                        Text("@")
+
+                        Text(tag)
+                    }
                 }
             }
             .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
