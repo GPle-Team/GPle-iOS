@@ -62,7 +62,6 @@ struct MyPageView: View {
                                 .padding(.trailing, 20)
                                 .padding(.top, 8)
                         }
-
                     }
 
                     VStack(alignment: topNavigationState ? .trailing : .leading, spacing: 0) {
@@ -121,8 +120,8 @@ struct MyPageView: View {
 
                             ScrollView {
                                 LazyVGrid(columns: columns, spacing: 2) {
-                                    ForEach(0..<postViewModel.myPostList.count, id: \.self) { post in
-                                        let myPost = postViewModel.myPostList[post]
+                                    ForEach(postViewModel.myPostList.indices, id: \.self) { index in
+                                        let myPost = postViewModel.myPostList[index]
 
                                         let myPostEmojiArray = [
                                             myPost.emojiList.heartCount,
@@ -133,26 +132,27 @@ struct MyPageView: View {
                                             myPost.emojiList.chinaCount
                                         ]
 
-                                        let myPostCheckEmojiArray = [
-                                            myPost.checkEmoji.heart,
-                                            myPost.checkEmoji.cong,
-                                            myPost.checkEmoji.thumbs,
-                                            myPost.checkEmoji.think,
-                                            myPost.checkEmoji.poop,
-                                            myPost.checkEmoji.china
-                                        ]
-
-                                        NavigationLink(destination: DetailView(viewModel: DetailViewModel(), postViewModel: PostViewModel(),location: postViewModel.myPostList[post].location,title: postViewModel.myPostList[post].title, name: postViewModel.myPostList[post].author.name, grade: postViewModel.myPostList[post].author.grade,imageUrl: postViewModel.myPostList[post].imageUrl , tagList: postViewModel.myPostList[post].tagList.map { ($0.name, $0.id) }, emojiList: myPostEmojiArray, checkEmojiList: myPostCheckEmojiArray ,createTime: postViewModel.myPostList[post].createdTime)) {
-
-
-                                            if let imageUrl = postViewModel.myPostList[post].imageUrl.first {
+                                        NavigationLink(destination: DetailView(
+                                            viewModel: DetailViewModel(),
+                                            postViewModel: PostViewModel(),
+                                            postId: myPost.id,
+                                            location: myPost.location,
+                                            title: myPost.title,
+                                            name: myPost.author.name,
+                                            grade: myPost.author.grade,
+                                            imageUrl: myPost.imageUrl,
+                                            tagList: myPost.tagList.map { ($0.name, $0.id) },
+                                            emojiList: myPostEmojiArray,
+                                            checkEmojiList: myPost.checkEmoji,
+                                            createTime: myPost.createdTime
+                                        )) {
+                                            if let imageUrl = myPost.imageUrl.first {
                                                 AsyncImage(url: URL(string: imageUrl)) { image in
                                                     image
                                                         .resizable()
                                                         .aspectRatio(contentMode: .fill)
                                                         .frame(width: 135, height: 135)
                                                         .clipped()
-
                                                 } placeholder: {
                                                     Rectangle()
                                                         .frame(width: 135, height: 135)
@@ -173,9 +173,9 @@ struct MyPageView: View {
 
                             ScrollView {
                                 LazyVGrid(columns: columns1, spacing: 2) {
-                                    ForEach(0..<postViewModel.myReactionPostList.count, id: \.self) { post in
+                                    ForEach(postViewModel.myReactionPostList.indices, id: \.self) { index in
+                                        let rtPost = postViewModel.myReactionPostList[index]
 
-                                        let rtPost = postViewModel.myReactionPostList[post]
                                         let emojiArray = [
                                             rtPost.emojiList.heartCount,
                                             rtPost.emojiList.congCount,
@@ -185,25 +185,27 @@ struct MyPageView: View {
                                             rtPost.emojiList.chinaCount
                                         ]
 
-                                        let checkEmojiArray = [
-                                            rtPost.checkEmoji.heart,
-                                            rtPost.checkEmoji.cong,
-                                            rtPost.checkEmoji.thumbs,
-                                            rtPost.checkEmoji.think,
-                                            rtPost.checkEmoji.poop,
-                                            rtPost.checkEmoji.china
-                                        ]
-
-                                        NavigationLink(destination: DetailView(viewModel: DetailViewModel(), postViewModel: PostViewModel(), location: postViewModel.myReactionPostList[post].location, title: postViewModel.myReactionPostList[post].title, name: postViewModel.myReactionPostList[post].author.name, grade: postViewModel.myReactionPostList[post].author.grade, imageUrl: postViewModel.myReactionPostList[post].imageUrl, tagList: postViewModel.myReactionPostList[post].tagList.map { ($0.name, $0.id) }, emojiList: emojiArray, checkEmojiList: checkEmojiArray, createTime: postViewModel.myReactionPostList[post].createdTime)) {
-
-                                            if let imageUrl = postViewModel.myReactionPostList[post].imageUrl.first {
+                                        NavigationLink(destination: DetailView(
+                                            viewModel: DetailViewModel(),
+                                            postViewModel: PostViewModel(),
+                                            postId: rtPost.id,
+                                            location: rtPost.location,
+                                            title: rtPost.title,
+                                            name: rtPost.author.name,
+                                            grade: rtPost.author.grade,
+                                            imageUrl: rtPost.imageUrl,
+                                            tagList: rtPost.tagList.map { ($0.name, $0.id) },
+                                            emojiList: emojiArray,
+                                            checkEmojiList: rtPost.checkEmoji,
+                                            createTime: rtPost.createdTime
+                                        )) {
+                                            if let imageUrl = rtPost.imageUrl.first {
                                                 AsyncImage(url: URL(string: imageUrl)) { image in
                                                     image
                                                         .resizable()
                                                         .aspectRatio(contentMode: .fill)
                                                         .frame(width: 135, height: 135)
                                                         .clipped()
-
                                                 } placeholder: {
                                                     Rectangle()
                                                         .frame(width: 135, height: 135)
@@ -214,7 +216,6 @@ struct MyPageView: View {
                                     }
                                 }
                             }
-
                             .tag(true)
                         }
                         .tabViewStyle(.page(indexDisplayMode: .never))
@@ -227,19 +228,18 @@ struct MyPageView: View {
             }
         }
         .onAppear {
-            postViewModel.myPostList{ success in
+            postViewModel.myPostList { success in
                 if success {
-                    print("Viewㅣ게시물 불러오기 성공~!!!")
+                    print("내 게시물 최신화 성공")
                 } else {
-                    print("Viewㅣ게시물 불러오기 실패")
+                    print("내 게시물 최신화 실패")
                 }
             }
-
             postViewModel.myReactionPostList { success in
                 if success {
-                    print("Viewㅣ게시물 불러오기 성공~!!!")
+                    print("반응 게시물 최신화 성공")
                 } else {
-                    print("Viewㅣ게시물 불러오기 실패")
+                    print("반응 게시물 최신화 실패")
                 }
             }
         }

@@ -8,7 +8,7 @@ public struct MyPostListResponse: Codable {
     public let location: String
     public let tagList: [MyPostListTaggedUser]
     public let emojiList: MyPostListEmojiCounts
-    public let checkEmoji: MyPostListEmojiState
+    public let checkEmoji: [Bool]
     public let createdTime: String
 }
 
@@ -30,13 +30,4 @@ public struct MyPostListEmojiCounts: Codable {
     public let thinkCount: Int
     public let poopCount: Int
     public let chinaCount: Int
-}
-
-public struct MyPostListEmojiState: Codable {
-    public let heart: Bool
-    public let cong: Bool
-    public let thumbs: Bool
-    public let think: Bool
-    public let poop: Bool
-    public let china: Bool
 }

@@ -3,7 +3,8 @@ import SwiftUI
 struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var topNavigationState: Bool = false
-    @State private var emojiName: [String] = ["heart", "congrats", "ThumbsUp", "thinking", "poop", "china"]
+    @State private var emojiName: [String] = ["heart", "congrats", "thumbsUp", "thinking", "poop", "china"]
+    @State private var emojiServerName: [String] = ["HEART", "CONGRATUATION", "THUMBSUP", "THINKING", "POOP", "CHINA"]
     @State private var emojiStates: [Int] = [0, 2, 3, 400, 500, 600]
     @State private var test: [Bool] = [false, false, false, false, false, false]
     @State private var graySmileState: Bool = false
@@ -21,7 +22,7 @@ struct DetailView: View {
     @State public var emojiList: [Int] = []
     @State public var checkEmojiList: [Bool] = []
     @State public var createTime: String = ""
-    @State private var topNavigationBar: Bool = true
+    @State public var topNavigationBar: Bool = true
 
     var body: some View {
         NavigationStack {
@@ -31,7 +32,7 @@ struct DetailView: View {
 
                 VStack(alignment: .leading, spacing: 0) {
                     ZStack {
-                        if topNavigationBar {
+                        if !location.isEmpty {
                             HStack {
                                 Button {
                                     dismiss()
@@ -42,7 +43,6 @@ struct DetailView: View {
 
                                 Spacer()
                             }
-
 
                             Text(location)
                                 .foregroundStyle(.white)
@@ -120,7 +120,6 @@ struct DetailView: View {
                                         .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                                         .padding(.top, 6)
                                         .padding(.leading, 16)
-
                                 }
                             }
 
@@ -136,7 +135,7 @@ struct DetailView: View {
 
                                     ForEach(0..<6) { tag in
                                         if emojiList[tag] != 0 {
-                                            emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiList[tag], emojiState: $test[tag])
+                                            emojiComponent(emojiName: emojiName[tag], emojiCount: $emojiList[tag], emojiState: $checkEmojiList[tag], emojiServerName: emojiServerName[tag])
                                         }
                                     }
                                     .padding(.top, 2)
@@ -156,11 +155,19 @@ struct DetailView: View {
                         ForEach(0..<6) { tag in
                             Button(action: {
                                 Haptic.impact(style: .soft)
-                                test[tag].toggle()
-                                if test[tag] {
-                                    emojiStates[tag] += 1
-                                } else {
-                                    emojiStates[tag] -= 1
+                                postViewModel.setupPostId(postId: postId)
+                                postViewModel.setupEmojiType(emojiType: emojiServerName[tag])
+
+                                postViewModel.postEmoji { success in
+                                    print("\(emojiName[tag]) 성공")
+
+                                    if checkEmojiList[tag] == true {
+                                        emojiList[tag] -= 1
+                                        checkEmojiList[tag].toggle()
+                                    } else {
+                                        emojiList[tag] = 1
+                                        checkEmojiList[tag].toggle()
+                                    }
                                 }
                             }) {
                                 Image(emojiName[tag])
@@ -180,40 +187,66 @@ struct DetailView: View {
         }
         .navigationBarBackButtonHidden(true)
     }
-}
 
-@ViewBuilder
-func emojiComponent(
-    emojiName: String,
-    emojiCount: Binding<Int>,
-    emojiState: Binding<Bool>
-) -> some View {
-    Button(action: {
-        Haptic.impact(style: .soft)
-        emojiState.wrappedValue.toggle()
-        if emojiState.wrappedValue {
-            emojiCount.wrappedValue += 1
-        } else {
-            emojiCount.wrappedValue -= 1
+    @ViewBuilder
+    func emojiComponent(
+        emojiName: String,
+        emojiCount: Binding<Int>,
+        emojiState: Binding<Bool>,
+        emojiServerName: String
+    ) -> some View {
+        Button(action: {
+            Haptic.impact(style: .soft)
+
+            postViewModel.setupPostId(postId: postId)
+            postViewModel.setupEmojiType(emojiType: emojiServerName)
+
+            if emojiState.wrappedValue {
+                postViewModel.postEmoji { success in
+                    if success {
+                        emojiCount.wrappedValue -= 1
+                        emojiState.wrappedValue = false
+                    }
+                }
+            } else {
+                postViewModel.postEmoji { success in
+                    if success {
+                        emojiCount.wrappedValue += 1
+                        emojiState.wrappedValue = true
+                    }
+                }
+            }
+
+            if emojiCount.wrappedValue < 0 {
+                emojiCount.wrappedValue = 0
+            }
+
+            postViewModel.myPostList { success in
+                print("내 게시물 불러옴")
+            }
+
+            postViewModel.myReactionPostList { success in
+                print("반응 게시물 불러옴")
+            }
+        }) {
+            HStack(spacing: 6) {
+                Image(emojiName)
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                Text("\(emojiCount.wrappedValue)")
+                    .foregroundStyle(.white)
+                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .foregroundStyle(emojiState.wrappedValue ? GPleAsset.Color.secondary2.swiftUIColor : GPleAsset.Color.gray1000.swiftUIColor)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(emojiState.wrappedValue ? GPleAsset.Color.main.swiftUIColor : GPleAsset.Color.gray1000.swiftUIColor, lineWidth: 1.5)
+            )
         }
-    }) {
-        HStack(spacing: 6) {
-            Image(emojiName)
-                .resizable()
-                .frame(width: 16, height: 16)
-            Text("\(emojiCount.wrappedValue)")
-                .foregroundStyle(.white)
-                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .foregroundStyle(emojiState.wrappedValue ? GPleAsset.Color.secondary2.swiftUIColor : GPleAsset.Color.gray1000.swiftUIColor)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(emojiState.wrappedValue ? GPleAsset.Color.main.swiftUIColor : GPleAsset.Color.gray1000.swiftUIColor, lineWidth: 1.5)
-        )
     }
 }

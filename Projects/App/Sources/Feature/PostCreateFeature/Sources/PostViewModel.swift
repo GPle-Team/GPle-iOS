@@ -5,6 +5,9 @@ import Foundation
 
 public final class PostViewModel: ObservableObject {
     private let authProvider = MoyaProvider<PostAPI>()
+    private let emojiProvider = MoyaProvider<EmojiAPI>(
+        plugins: [NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))]
+    )
     private var title: String = ""
     private var accessToken: String = "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzM0NjYyNTg4LCJleHAiOjE3NDQ2NjI1ODh9.FG4FVQ4oikC4HNy5h7gq0QyCIjVZtceIOKwAMnkULAt4y0lX5gGIF1s2Mdj9qr1H"
     private var userList: [Int] = []
@@ -13,6 +16,9 @@ public final class PostViewModel: ObservableObject {
     private var image: [UIImage] = []
     private var location: String = ""
     private var imageDataArray: [Data] = []
+    private var userId: Int = 0
+    private var postId: Int = 0
+    private var emojiType: String = ""
     @Published public var allUserList: [UserListResponse] = []
     @Published var myPostList: [MyPostListResponse] = []
     @Published var myReactionPostList: [MyReactionPostListResponse] = []
@@ -41,6 +47,18 @@ public final class PostViewModel: ObservableObject {
 
     func setupLocation(location: String) {
         self.location = location
+    }
+
+    func setupEmojiType(emojiType: String) {
+        self.emojiType = emojiType
+    }
+
+    func setupPostId(postId: Int) {
+        self.postId = postId
+    }
+
+    func setupUserId(userId: Int) {
+        self.userId = userId
     }
 
     public func myReactionPostList(completion: @escaping (Bool) -> Void) {
@@ -92,14 +110,9 @@ public final class PostViewModel: ObservableObject {
                 switch result {
                 case let .success(response):
                     do {
-                        // JSON 데이터를 디코딩하여 myPostList에 저장
                         let decodedResponse = try JSONDecoder().decode([MyPostListResponse].self, from: response.data)
                         self.myPostList = decodedResponse
 
-                        // 디버깅 로그 출력: 데이터를 확인
-                        //print("데이터가 잘 저장되었습니다: \(self.myPostList[0])")
-
-                        // 각 게시물의 ID와 위치를 출력
                         for post in decodedResponse {
                             print("게시물 ID: \(post.id), 위치: \(post.location)")
                             print("이미지: \(post.imageUrl)")
@@ -116,9 +129,6 @@ public final class PostViewModel: ObservableObject {
                 }
             }
         }
-
-
-
 
     public func allUserList(completion: @escaping (Bool) -> Void) {
         authProvider.request(.allUserList(authorization: accessToken)) { result in
@@ -229,6 +239,33 @@ public final class PostViewModel: ObservableObject {
                         print("오류ㅣ상태 코드: \(statusCode), 오류 응답 데이터 없음")
                     }
                 }
+            }
+        }
+    }
+
+    public func postEmoji(completion: @escaping (Bool) -> Void) {
+        let emojiRequest = EmojiRequest(postId: postId, emojiType: emojiType)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+
+        if let requestBody = try? encoder.encode(emojiRequest) {
+            print("Request Body: \(String(data: requestBody, encoding: .utf8) ?? "Invalid JSON")")
+        }
+
+        emojiProvider.request(.emojiPost(param: emojiRequest, authorization: accessToken)) { result in
+            switch result {
+            case let .success(response):
+                do {
+                    print(response)
+                    print("\(self.emojiType) 반응 성공")
+                    completion(true)
+                } catch {
+                    print("Failed to decode JSON response")
+                    completion(false)
+                }
+            case let .failure(err):
+                print("Network request failed: \(err)")
+                completion(false)
             }
         }
     }

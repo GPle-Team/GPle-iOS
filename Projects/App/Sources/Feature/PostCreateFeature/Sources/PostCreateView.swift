@@ -440,18 +440,20 @@ struct PostCreateView: View {
                             user.name.lowercased().contains(userSearchTextField.lowercased())
                         }
 
-                        ForEach(filteredUsers.indices, id: \.self) { index in
-                            let student = filteredUsers[index]
-                            searchUserList(
-                                userProfileImage: student.profileImage,
-                                userName: student.name,
-                                userYear: student.grade,
-                                userId: student.id,
-                                userProfileImageList: $tagUserImages[index],
-                                userNameList: $tagUserName[index],
-                                userYearList: $tagUserYear[index],
-                                tagUserId: $tagUserId[index]
-                            )
+                        ScrollView {
+                            ForEach(filteredUsers.indices, id: \.self) { index in
+                                let student = filteredUsers[index]
+                                searchUserList(
+                                    userProfileImage: student.profileImage,
+                                    userName: student.name,
+                                    userYear: student.grade,
+                                    userId: student.id,
+                                    userProfileImageList: $tagUserImages[index],
+                                    userNameList: $tagUserName[index],
+                                    userYearList: $tagUserYear[index],
+                                    tagUserId: $tagUserId[index]
+                                )
+                            }
                         }
 
                         Spacer()
