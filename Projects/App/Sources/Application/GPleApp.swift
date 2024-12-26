@@ -4,7 +4,8 @@ import SwiftUI
 struct GPleApp: App {
     var body: some Scene {
         WindowGroup {
-            MyPageView(viewModel: MyPageViewModel(), postViewModel: PostViewModel())
+//            RankView(detailViewModel: DetailViewModel(), postViewModel: PostViewModel())
+            RankView(detailViewModel: DetailViewModel())
         }
     }
 }
