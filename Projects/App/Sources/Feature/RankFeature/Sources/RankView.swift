@@ -58,7 +58,6 @@ struct RankView: View {
                                 }
                                 .padding(.bottom, 8)
 
-
                                 GPleAsset.Assets.second.swiftUIImage
                             }
 
