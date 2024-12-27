@@ -8,6 +8,7 @@ public final class PostViewModel: ObservableObject {
     private let emojiProvider = MoyaProvider<EmojiAPI>(
         plugins: [NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))]
     )
+    private let userProvider = MoyaProvider<UserAPI>()
     private var title: String = ""
     private var accessToken: String = "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzM0NjYyNTg4LCJleHAiOjE3NDQ2NjI1ODh9.FG4FVQ4oikC4HNy5h7gq0QyCIjVZtceIOKwAMnkULAt4y0lX5gGIF1s2Mdj9qr1H"
     private var userList: [Int] = []
@@ -24,6 +25,7 @@ public final class PostViewModel: ObservableObject {
     @Published var myPostList: [MyPostListResponse] = []
     @Published var myReactionPostList: [MyReactionPostListResponse] = []
     @Published var popularityPostList: [PopularityResponse] = []
+    @Published public var myInfo: MyInfoResponse?
     private var imageUploadResponse: ImageUploadResponse?
 
 
@@ -202,18 +204,13 @@ public final class PostViewModel: ObservableObject {
     }
 
     public func myInfo(completion: @escaping (Bool) -> Void) {
-        authProvider.request(.popularityUserList(authorization: accessToken)) { result in
+        userProvider.request(.userInfoInput(authorization: accessToken)) { result in
             switch result {
             case let .success(response):
                 do {
                     print("성공: 유저 리스트 불러오기")
 
-                    self.popularityUserList = try JSONDecoder().decode([PopularityRankingUserListResponse].self, from: response.data)
-
-                    print("불러온 유저 리스트:")
-                    for (index, user) in self.popularityUserList.enumerated() {
-                        print("[\(index)] \(user)")
-                    }
+                    self.myInfo = try JSONDecoder().decode(MyInfoResponse.self, from: response.data)
 
                     completion(true)
                 } catch {
