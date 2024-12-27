@@ -33,13 +33,25 @@ struct LocationPostView: View {
                     switch locationType {
                     case "GYM":
                         ForEach(viewModel.gymPostList) { post in
-                            postComponent(
+                            DetailView(
+                                viewModel: DetailViewModel(),
+                                postViewModel: PostViewModel(),
+                                postId: post.id,
+                                title: post.title,
                                 name: post.author.name,
                                 grade: post.author.grade,
-                                title: post.title,
-                                createdTime: post.createdTime,
-                                tag: post.tagList.map { $0.name },
-                                imageURL: post.imageUrl
+                                imageUrl: post.imageUrl,
+                                tagList: post.tagList.map{ ($0.name, $0.id) },
+                                emojiList: [
+                                    post.emojiList.chinaCount,
+                                    post.emojiList.congCount,
+                                    post.emojiList.heartCount,
+                                    post.emojiList.poopCount,
+                                    post.emojiList.thinkCount,
+                                    post.emojiList.thumbsCount
+                                ],
+                                checkEmojiList: post.checkEmoji,
+                                createTime: post.createdTime
                             )
                             
                             Rectangle()
@@ -49,13 +61,25 @@ struct LocationPostView: View {
                         }
                     case "HOME":
                         ForEach(viewModel.homePostList) { post in
-                            postComponent(
+                            DetailView(
+                                viewModel: DetailViewModel(),
+                                postViewModel: PostViewModel(),
+                                postId: post.id,
+                                title: post.title,
                                 name: post.author.name,
                                 grade: post.author.grade,
-                                title: post.title,
-                                createdTime: post.createdTime,
-                                tag: post.tagList.map { $0.name },
-                                imageURL: post.imageUrl
+                                imageUrl: post.imageUrl,
+                                tagList: post.tagList.map{ ($0.name, $0.id) },
+                                emojiList: [
+                                    post.emojiList.chinaCount,
+                                    post.emojiList.congCount,
+                                    post.emojiList.heartCount,
+                                    post.emojiList.poopCount,
+                                    post.emojiList.thinkCount,
+                                    post.emojiList.thumbsCount
+                                ],
+                                checkEmojiList: post.checkEmoji,
+                                createTime: post.createdTime
                             )
                             
                             Rectangle()
@@ -65,13 +89,25 @@ struct LocationPostView: View {
                         }
                     case "PLAYGROUND":
                         ForEach(viewModel.playgroundPostList) { post in
-                            postComponent(
+                            DetailView(
+                                viewModel: DetailViewModel(),
+                                postViewModel: PostViewModel(),
+                                postId: post.id,
+                                title: post.title,
                                 name: post.author.name,
                                 grade: post.author.grade,
-                                title: post.title,
-                                createdTime: post.createdTime,
-                                tag: post.tagList.map { $0.name },
-                                imageURL: post.imageUrl
+                                imageUrl: post.imageUrl,
+                                tagList: post.tagList.map{ ($0.name, $0.id) },
+                                emojiList: [
+                                    post.emojiList.chinaCount,
+                                    post.emojiList.congCount,
+                                    post.emojiList.heartCount,
+                                    post.emojiList.poopCount,
+                                    post.emojiList.thinkCount,
+                                    post.emojiList.thumbsCount
+                                ],
+                                checkEmojiList: post.checkEmoji,
+                                createTime: post.createdTime
                             )
                             
                             Rectangle()
@@ -81,13 +117,25 @@ struct LocationPostView: View {
                         }
                     case "DOMITORY":
                         ForEach(viewModel.domitoryPostList) { post in
-                            postComponent(
+                            DetailView(
+                                viewModel: DetailViewModel(),
+                                postViewModel: PostViewModel(),
+                                postId: post.id,
+                                title: post.title,
                                 name: post.author.name,
                                 grade: post.author.grade,
-                                title: post.title,
-                                createdTime: post.createdTime,
-                                tag: post.tagList.map { $0.name },
-                                imageURL: post.imageUrl
+                                imageUrl: post.imageUrl,
+                                tagList: post.tagList.map{ ($0.name, $0.id) },
+                                emojiList: [
+                                    post.emojiList.chinaCount,
+                                    post.emojiList.congCount,
+                                    post.emojiList.heartCount,
+                                    post.emojiList.poopCount,
+                                    post.emojiList.thinkCount,
+                                    post.emojiList.thumbsCount
+                                ],
+                                checkEmojiList: post.checkEmoji,
+                                createTime: post.createdTime
                             )
                             
                             Rectangle()
@@ -97,13 +145,25 @@ struct LocationPostView: View {
                         }
                     case "WALKING_TRAIL":
                         ForEach(viewModel.walkingTrailPostList) { post in
-                            postComponent(
+                            DetailView(
+                                viewModel: DetailViewModel(),
+                                postViewModel: PostViewModel(),
+                                postId: post.id,
+                                title: post.title,
                                 name: post.author.name,
                                 grade: post.author.grade,
-                                title: post.title,
-                                createdTime: post.createdTime,
-                                tag: post.tagList.map { $0.name },
-                                imageURL: post.imageUrl
+                                imageUrl: post.imageUrl,
+                                tagList: post.tagList.map{ ($0.name, $0.id) },
+                                emojiList: [
+                                    post.emojiList.chinaCount,
+                                    post.emojiList.congCount,
+                                    post.emojiList.heartCount,
+                                    post.emojiList.poopCount,
+                                    post.emojiList.thinkCount,
+                                    post.emojiList.thumbsCount
+                                ],
+                                checkEmojiList: post.checkEmoji,
+                                createTime: post.createdTime
                             )
                             
                             Rectangle()
@@ -142,78 +202,6 @@ struct LocationPostView: View {
             return "산책로"
         default:
             return ""
-        }
-    }
-
-    @ViewBuilder
-    func postComponent(
-        name: String,
-        grade: Int,
-        title: String,
-        createdTime: String,
-        tag: [String],
-        imageURL: [String]
-    ) -> some View {
-        VStack(spacing: 0) {
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 4) {
-                    GPleAsset.Assets.profile.swiftUIImage
-
-                    Text(name)
-                        .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
-                        .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
-                        .padding(.leading, 4)
-
-                    Text("•  \(grade)학년")
-                        .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-
-                    Spacer()
-                }
-            }
-            .padding(.leading, 16)
-
-            ForEach(imageURL, id: \.self) { imageURL in
-                AsyncImage(url: URL(string: imageURL)) { phase in
-                    switch phase {
-                    case .empty, .failure:
-                        EmptyView()
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFit()
-                    @unknown default:
-                        EmptyView()
-                    }
-                }
-            }
-            .padding(.top, 16)
-
-            HStack {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(title)
-                        .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
-                        .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
-                        .padding(.top, 16)
-
-                    HStack(spacing: 8) {
-                        ForEach(tag, id: \.self) { tag in
-                                Text("@\(tag)")
-                        }
-                    }
-                    .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
-                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                    .padding(.top, 12)
-
-                    Text(createdTime)
-                        .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                        .padding(.top, 4)
-                }
-                .padding(.leading, 16)
-
-                Spacer()
-            }
         }
     }
 }
