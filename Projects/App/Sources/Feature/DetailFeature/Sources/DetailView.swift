@@ -18,7 +18,7 @@ struct DetailView: View {
     @State public var name: String = ""
     @State public var grade: Int = 0
     @State public var imageUrl: [String] = []
-    @State public var tagList: [(name: String, id: Int)]
+    @State public var tagList: [(name: String, id: Int)] = []
     @State public var emojiList: [Int] = []
     @State public var checkEmojiList: [Bool] = []
     @State public var createTime: String = ""
