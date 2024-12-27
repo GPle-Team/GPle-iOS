@@ -106,7 +106,6 @@ public final class PostViewModel: ObservableObject {
         }
     }
 
-
     public func myPostList(completion: @escaping (Bool) -> Void) {
             authProvider.request(.myPostList(authorization: accessToken)) { result in
                 switch result {
@@ -183,10 +182,8 @@ public final class PostViewModel: ObservableObject {
                 do {
                     print("성공: 유저 리스트 불러오기")
 
-                    // JSON 디코딩
                     self.popularityUserList = try JSONDecoder().decode([PopularityRankingUserListResponse].self, from: response.data)
 
-                    // 불러온 값 출력 (배열 인덱스 포함)
                     print("불러온 유저 리스트:")
                     for (index, user) in self.popularityUserList.enumerated() {
                         print("[\(index)] \(user)")
