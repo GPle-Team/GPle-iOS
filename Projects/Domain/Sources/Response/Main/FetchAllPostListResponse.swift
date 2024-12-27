@@ -6,6 +6,7 @@ public struct Post: Codable, Identifiable {
     public let location: String
     public let tagList: [Tag]
     public let emojiList: EmojiList
+    public let checkEmoji: [Bool]
     public let createdTime: String
 
     public struct Author: Codable, Identifiable {
