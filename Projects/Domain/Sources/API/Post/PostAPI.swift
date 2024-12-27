@@ -7,6 +7,8 @@ public enum PostAPI {
     case allUserList(authorization: String)
     case myPostList(authorization: String)
     case myReactionPostList(authorization: String)
+    case popularityPostList(authorization: String)
+    case popularityUserList(authorization: String)
 }
 
 extension PostAPI: TargetType {
@@ -16,24 +18,23 @@ extension PostAPI: TargetType {
 
     public var path: String {
         switch self {
-        case .createPost:
+        case .createPost, .myPostList, .myReactionPostList, .popularityPostList:
             return "/post"
         case .uploadImage:
             return "/file/images"
         case .allUserList:
             return "/user"
-        case .myPostList:
-            return "/post/my"
-        case .myReactionPostList:
-            return "/post/react"
+        case .popularityUserList:
+            return "/user/popularity"
         }
     }
+
 
     public var method: Moya.Method {
         switch self {
         case .createPost, .uploadImage:
             return .post
-        case .allUserList, .myPostList, .myReactionPostList:
+        case .allUserList, .myPostList, .myReactionPostList, .popularityPostList, .popularityUserList:
             return .get
         }
     }
@@ -51,14 +52,20 @@ extension PostAPI: TargetType {
                 MultipartFormData(provider: .data(fileData), name: "files", fileName: "image.jpg", mimeType: "image/jpeg")
             }
             return .uploadMultipart(formData)
-        case .allUserList, .myPostList, .myReactionPostList:
+        case .allUserList, .popularityUserList:
             return .requestPlain
+        case .myPostList:
+            return .requestParameters(parameters: ["type": "MY"], encoding: URLEncoding.queryString)
+        case .myReactionPostList:
+            return .requestParameters(parameters: ["type": "REACTED"], encoding: URLEncoding.queryString)
+        case .popularityPostList:
+            return .requestParameters(parameters: ["sort": "POPULAR"], encoding: URLEncoding.queryString)
         }
     }
 
     public var headers: [String : String]? {
         switch self {
-        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization), .myPostList(let authorization), .myReactionPostList(let authorization):
+        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization), .myPostList(let authorization), .myReactionPostList(let authorization), .popularityPostList(let authorization), .popularityUserList(let authorization):
             return ["Authorization": authorization]
         }
     }
