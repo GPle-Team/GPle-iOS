@@ -208,7 +208,7 @@ public final class PostViewModel: ObservableObject {
             switch result {
             case let .success(response):
                 do {
-                    print("성공: 유저 리스트 불러오기")
+                    print("성공: 내 정보 불러오기")
 
                     self.myInfo = try JSONDecoder().decode(MyInfoResponse.self, from: response.data)
 

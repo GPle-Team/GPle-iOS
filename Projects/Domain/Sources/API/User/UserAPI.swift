@@ -13,7 +13,7 @@ extension UserAPI: TargetType {
     public var path: String {
         switch self {
         case .userInfoInput:
-            return "/User/profile"
+            return "/user/profile"
         }
     }
 
