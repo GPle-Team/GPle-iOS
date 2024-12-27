@@ -22,6 +22,7 @@ public final class PostViewModel: ObservableObject {
     @Published public var allUserList: [UserListResponse] = []
     @Published var myPostList: [MyPostListResponse] = []
     @Published var myReactionPostList: [MyReactionPostListResponse] = []
+    @Published var popularityPostList: [PopularityResponse] = []
     private var imageUploadResponse: ImageUploadResponse?
 
 
@@ -112,6 +113,31 @@ public final class PostViewModel: ObservableObject {
                     do {
                         let decodedResponse = try JSONDecoder().decode([MyPostListResponse].self, from: response.data)
                         self.myPostList = decodedResponse
+
+                        for post in decodedResponse {
+                            print("게시물 ID: \(post.id), 위치: \(post.location)")
+                            print("이미지: \(post.imageUrl)")
+                        }
+
+                        completion(true)
+                    } catch {
+                        print("JSON 디코딩 실패: \(error)")
+                        completion(false)
+                    }
+                case let .failure(err):
+                    print("네트워크 요청 실패: \(err)")
+                    completion(false)
+                }
+            }
+        }
+
+    public func popularityPostList(completion: @escaping (Bool) -> Void) {
+        authProvider.request(.popularityPostlist(authorization: accessToken)) { result in
+                switch result {
+                case let .success(response):
+                    do {
+                        let decodedResponse = try JSONDecoder().decode([PopularityResponse].self, from: response.data)
+                        self.popularityPostList = decodedResponse
 
                         for post in decodedResponse {
                             print("게시물 ID: \(post.id), 위치: \(post.location)")

@@ -143,46 +143,82 @@ struct DetailView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
+
+                            if graySmileState {
+                                HStack(spacing: 25) {
+                                    ForEach(0..<6) { tag in
+                                        Button(action: {
+                                            Haptic.impact(style: .soft)
+                                            postViewModel.setupPostId(postId: postId)
+                                            postViewModel.setupEmojiType(emojiType: emojiServerName[tag])
+
+                                            postViewModel.postEmoji { success in
+                                                print("\(emojiName[tag]) 성공")
+
+                                                if checkEmojiList[tag] == true {
+                                                    emojiList[tag] -= 1
+                                                    checkEmojiList[tag].toggle()
+                                                } else {
+                                                    emojiList[tag] = 1
+                                                    checkEmojiList[tag].toggle()
+                                                }
+                                            }
+                                        }) {
+                                            Image(emojiName[tag])
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
+                                )
+                                .padding(.leading, 20)
+                                .padding(.top, 10)
+                            }
+
                         }
                     }
+
 
                     Spacer()
                 }
                 .padding(.top, 8)
 
-                if graySmileState {
-                    HStack(spacing: 25) {
-                        ForEach(0..<6) { tag in
-                            Button(action: {
-                                Haptic.impact(style: .soft)
-                                postViewModel.setupPostId(postId: postId)
-                                postViewModel.setupEmojiType(emojiType: emojiServerName[tag])
-
-                                postViewModel.postEmoji { success in
-                                    print("\(emojiName[tag]) 성공")
-
-                                    if checkEmojiList[tag] == true {
-                                        emojiList[tag] -= 1
-                                        checkEmojiList[tag].toggle()
-                                    } else {
-                                        emojiList[tag] = 1
-                                        checkEmojiList[tag].toggle()
-                                    }
-                                }
-                            }) {
-                                Image(emojiName[tag])
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 5)
-                            .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
-                    )
-                    .padding(.leading, 20)
-                    .padding(.top, 490)
-                }
+//                if graySmileState {
+//                    HStack(spacing: 25) {
+//                        ForEach(0..<6) { tag in
+//                            Button(action: {
+//                                Haptic.impact(style: .soft)
+//                                postViewModel.setupPostId(postId: postId)
+//                                postViewModel.setupEmojiType(emojiType: emojiServerName[tag])
+//
+//                                postViewModel.postEmoji { success in
+//                                    print("\(emojiName[tag]) 성공")
+//
+//                                    if checkEmojiList[tag] == true {
+//                                        emojiList[tag] -= 1
+//                                        checkEmojiList[tag].toggle()
+//                                    } else {
+//                                        emojiList[tag] = 1
+//                                        checkEmojiList[tag].toggle()
+//                                    }
+//                                }
+//                            }) {
+//                                Image(emojiName[tag])
+//                            }
+//                        }
+//                    }
+//                    .padding(.horizontal, 16)
+//                    .padding(.vertical, 10)
+//                    .background(
+//                        RoundedRectangle(cornerRadius: 5)
+//                            .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
+//                    )
+//                    .padding(.leading, 20)
+//                    //.padding(.top, 490)
+//                }
             }
         }
         .navigationBarBackButtonHidden(true)
