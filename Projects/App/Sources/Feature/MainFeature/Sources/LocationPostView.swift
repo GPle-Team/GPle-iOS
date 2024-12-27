@@ -3,10 +3,6 @@ import SwiftUI
 struct LocationPostView: View {
     @StateObject var viewModel: LocationPostViewModel
     @State private var topNavigationState: Bool = false
-    @State private var emojiName: [String] = ["heart", "congrats", "thumbsup", "thinking", "poop", "china"]
-    @State private var emojiStates: [Int] = [0, 2, 3, 400, 500, 600]
-    @State private var test: [Bool] = [false, false, false, false, false, false]
-    @State private var graySmileState: Bool = false
     @Environment(\.dismiss) private var dismiss
 
     var locationType: String
@@ -15,7 +11,7 @@ struct LocationPostView: View {
         ZStack {
             GPleAsset.Color.back.swiftUIColor
                 .ignoresSafeArea()
-
+            
             VStack(alignment: .leading, spacing: 0) {
                 ZStack {
                     HStack {
@@ -27,12 +23,12 @@ struct LocationPostView: View {
                         }
                         Spacer()
                     }
-                    Text(locationType)
+                    Text(locationTypeText())
                         .foregroundStyle(.white)
                         .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
                 }
                 .padding(.bottom, 16)
-
+                
                 ScrollView {
                     switch locationType {
                     case "GYM":
@@ -45,7 +41,7 @@ struct LocationPostView: View {
                                 tag: post.tagList.map { $0.name },
                                 imageURL: post.imageUrl
                             )
-
+                            
                             Rectangle()
                                 .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
                                 .frame(height: 3)
@@ -93,7 +89,7 @@ struct LocationPostView: View {
                                 tag: post.tagList.map { $0.name },
                                 imageURL: post.imageUrl
                             )
-
+                            
                             Rectangle()
                                 .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
                                 .frame(height: 3)
@@ -109,7 +105,7 @@ struct LocationPostView: View {
                                 tag: post.tagList.map { $0.name },
                                 imageURL: post.imageUrl
                             )
-
+                            
                             Rectangle()
                                 .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
                                 .frame(height: 3)
@@ -119,13 +115,34 @@ struct LocationPostView: View {
                         EmptyView()
                     }
                 }
+                .padding(.top, 8)
             }
-            .padding(.top, 8)
+            .navigationBarBackButtonHidden()
+            .onAppear {
+                viewModel.fetchGymList()
+                viewModel.fetchDomitoryList()
+                viewModel.fetchHomeList()
+                viewModel.fetchPlayGroundList()
+                viewModel.fetchWalkingTrailList()
+            }
         }
-        .onAppear {
-            viewModel.fetchPostListByLocation(type: locationType)
+    }
+    
+    func locationTypeText() -> String {
+        switch locationType {
+        case "GYM":
+            return "금봉관"
+        case "DOMITORY":
+            return "동행관"
+        case "HOME":
+            return "본관"
+        case "PLAYGROUND":
+            return "운동장"
+        case "WALKING_TRAIL":
+            return "산책로"
+        default:
+            return ""
         }
-        .navigationBarBackButtonHidden()
     }
 
     @ViewBuilder
