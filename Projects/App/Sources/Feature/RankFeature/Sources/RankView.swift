@@ -37,10 +37,27 @@ struct RankView: View {
                                     .foregroundStyle(GPleAsset.Color.gray400.swiftUIColor)
                                     .padding(.top, 16.5)
 
-                                Text("한재형")
+                                Text(postViewModel.popularityUserList.indices.contains(1) ? postViewModel.popularityUserList[1].name : "")
                                     .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                                     .foregroundStyle(GPleAsset.Color.gray400.swiftUIColor)
-                                    .padding(.bottom, 8)
+
+                                AsyncImage(
+                                    url: postViewModel.popularityUserList.indices.contains(1) ?
+                                         URL(string: postViewModel.popularityUserList[1].profileImage ?? "") : nil
+                                ) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 40, height: 40)
+                                        .clipShape(Circle())
+                                } placeholder: {
+                                    GPleAsset.Assets.profile.swiftUIImage
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 40, height: 40)
+                                }
+                                .padding(.bottom, 8)
+
 
                                 GPleAsset.Assets.second.swiftUIImage
                             }
@@ -50,10 +67,24 @@ struct RankView: View {
                                     .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
                                     .foregroundStyle(GPleAsset.Color.rank1.swiftUIColor)
 
-                                Text("한재형")
+                                Text(postViewModel.popularityUserList.first?.name ?? "")
                                     .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                                     .foregroundStyle(GPleAsset.Color.gray400.swiftUIColor)
-                                    .padding(.bottom, 8)
+
+                                AsyncImage(
+                                    url: URL(string: postViewModel.popularityUserList.first?.profileImage ?? "")) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 40, height: 40)
+                                        .clipShape(Circle())
+                                } placeholder: {
+                                    GPleAsset.Assets.profile.swiftUIImage
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 40, height: 40)
+                                }
+                                .padding(.bottom, 8)
 
                                 GPleAsset.Assets.first.swiftUIImage
                             }
@@ -64,10 +95,26 @@ struct RankView: View {
                                     .foregroundStyle(GPleAsset.Color.rank2.swiftUIColor)
                                     .padding(.top, 28)
 
-                                Text("한재형")
+                                Text(postViewModel.popularityUserList.indices.contains(2) ? postViewModel.popularityUserList[2].name : "")
                                     .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                                     .foregroundStyle(GPleAsset.Color.gray400.swiftUIColor)
-                                    .padding(.bottom, 8)
+
+                                AsyncImage(
+                                    url: postViewModel.popularityUserList.indices.contains(2) ?
+                                         URL(string: postViewModel.popularityUserList[2].profileImage ?? "") : nil
+                                ) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 40, height: 40)
+                                        .clipShape(Circle())
+                                } placeholder: {
+                                    GPleAsset.Assets.profile.swiftUIImage
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 40, height: 40)
+                                }
+                                .padding(.bottom, 8)
 
                                 GPleAsset.Assets.third.swiftUIImage
                             }
@@ -112,6 +159,14 @@ struct RankView: View {
                     print("인기순위 게시물 불러오기 성공")
                 } else {
                     print("인기순위 게시물 불러오기 실패")
+                }
+            }
+
+            postViewModel.popularityUserList { success in
+                if success {
+                    print("인기순위 리스트 불러오기 성공")
+                } else {
+                    print("인기순위 리스트 불러오기 실패")
                 }
             }
         }

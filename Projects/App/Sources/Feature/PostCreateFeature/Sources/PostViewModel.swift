@@ -20,7 +20,7 @@ public final class PostViewModel: ObservableObject {
     private var postId: Int = 0
     private var emojiType: String = ""
     @Published public var allUserList: [UserListResponse] = []
-    @Published public var PopularityUserList: [PopularityRankingUserListResponse] = []
+    @Published public var popularityUserList: [PopularityRankingUserListResponse] = []
     @Published var myPostList: [MyPostListResponse] = []
     @Published var myReactionPostList: [MyReactionPostListResponse] = []
     @Published var popularityPostList: [PopularityResponse] = []
@@ -177,15 +177,24 @@ public final class PostViewModel: ObservableObject {
     }
 
     public func popularityUserList(completion: @escaping (Bool) -> Void) {
-        authProvider.request(.allUserList(authorization: accessToken)) { result in
+        authProvider.request(.popularityUserList(authorization: accessToken)) { result in
             switch result {
             case let .success(response):
                 do {
-                    print("성공ㅣ유저 리스트 불러오기")
-                    self.PopularityUserList = try JSONDecoder().decode([PopularityRankingUserListResponse].self, from: response.data)
+                    print("성공: 유저 리스트 불러오기")
+
+                    // JSON 디코딩
+                    self.popularityUserList = try JSONDecoder().decode([PopularityRankingUserListResponse].self, from: response.data)
+
+                    // 불러온 값 출력 (배열 인덱스 포함)
+                    print("불러온 유저 리스트:")
+                    for (index, user) in self.popularityUserList.enumerated() {
+                        print("[\(index)] \(user)")
+                    }
+
                     completion(true)
                 } catch {
-                    print("Failed to decode JSON response")
+                    print("Failed to decode JSON response: \(error)")
                     completion(false)
                 }
             case let .failure(err):
@@ -194,6 +203,7 @@ public final class PostViewModel: ObservableObject {
             }
         }
     }
+
 
 
     public func uploadImages(completion: @escaping (Bool) -> Void) {
