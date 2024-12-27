@@ -201,6 +201,32 @@ public final class PostViewModel: ObservableObject {
         }
     }
 
+    public func myInfo(completion: @escaping (Bool) -> Void) {
+        authProvider.request(.popularityUserList(authorization: accessToken)) { result in
+            switch result {
+            case let .success(response):
+                do {
+                    print("성공: 유저 리스트 불러오기")
+
+                    self.popularityUserList = try JSONDecoder().decode([PopularityRankingUserListResponse].self, from: response.data)
+
+                    print("불러온 유저 리스트:")
+                    for (index, user) in self.popularityUserList.enumerated() {
+                        print("[\(index)] \(user)")
+                    }
+
+                    completion(true)
+                } catch {
+                    print("Failed to decode JSON response: \(error)")
+                    completion(false)
+                }
+            case let .failure(err):
+                print("Network request failed: \(err)")
+                completion(false)
+            }
+        }
+    }
+
 
 
     public func uploadImages(completion: @escaping (Bool) -> Void) {
