@@ -52,7 +52,9 @@ struct MainView: View {
                             .padding(.top, 8)
 
                             HStack(spacing: 36) {
-                                rankButton()
+                                NavigationLink(destination: RankView(postViewModel: PostViewModel())) {
+                                    rankButton()
+                                }
 
                                 NavigationLink(destination: PostCreateView(viewModel: PostViewModel())) {
                                     imageUploadButton()
