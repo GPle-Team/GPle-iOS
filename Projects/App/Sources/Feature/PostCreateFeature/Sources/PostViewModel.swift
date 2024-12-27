@@ -132,7 +132,7 @@ public final class PostViewModel: ObservableObject {
         }
 
     public func popularityPostList(completion: @escaping (Bool) -> Void) {
-        authProvider.request(.popularityPostlist(authorization: accessToken)) { result in
+        authProvider.request(.popularityPostList(authorization: accessToken)) { result in
                 switch result {
                 case let .success(response):
                     do {

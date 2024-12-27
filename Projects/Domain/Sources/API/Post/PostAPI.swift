@@ -7,7 +7,7 @@ public enum PostAPI {
     case allUserList(authorization: String)
     case myPostList(authorization: String)
     case myReactionPostList(authorization: String)
-    case popularityPostlist(authorization: String)
+    case popularityPostList(authorization: String)
 }
 
 extension PostAPI: TargetType {
@@ -17,7 +17,7 @@ extension PostAPI: TargetType {
 
     public var path: String {
         switch self {
-        case .createPost, .myPostList, .myReactionPostList, .popularityPostlist:
+        case .createPost, .myPostList, .myReactionPostList, .popularityPostList:
             return "/post"
         case .uploadImage:
             return "/file/images"
@@ -31,7 +31,7 @@ extension PostAPI: TargetType {
         switch self {
         case .createPost, .uploadImage:
             return .post
-        case .allUserList, .myPostList, .myReactionPostList, .popularityPostlist:
+        case .allUserList, .myPostList, .myReactionPostList, .popularityPostList:
             return .get
         }
     }
@@ -55,14 +55,14 @@ extension PostAPI: TargetType {
             return .requestParameters(parameters: ["type": "MY"], encoding: URLEncoding.queryString)
         case .myReactionPostList:
             return .requestParameters(parameters: ["type": "REACTED"], encoding: URLEncoding.queryString)
-        case .popularityPostlist:
+        case .popularityPostList:
             return .requestParameters(parameters: ["sort": "POPULAR"], encoding: URLEncoding.queryString)
         }
     }
 
     public var headers: [String : String]? {
         switch self {
-        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization), .myPostList(let authorization), .myReactionPostList(let authorization), .popularityPostlist(let authorization):
+        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization), .myPostList(let authorization), .myReactionPostList(let authorization), .popularityPostList(let authorization):
             return ["Authorization": authorization]
         }
     }
