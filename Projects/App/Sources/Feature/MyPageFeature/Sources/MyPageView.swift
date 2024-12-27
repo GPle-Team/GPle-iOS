@@ -31,7 +31,7 @@ struct MyPageView: View {
 
                     HStack(spacing: 0) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(viewModel.name)님,")
+                            Text("\(postViewModel.myInfo?.name ?? "")님,")
                                 .foregroundStyle(.white)
                                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 20))
 
@@ -240,6 +240,14 @@ struct MyPageView: View {
                     print("반응 게시물 최신화 성공")
                 } else {
                     print("반응 게시물 최신화 실패")
+                }
+            }
+
+            postViewModel.myInfo { success in
+                if success {
+                    print("내 정보 불러오기 성공")
+                } else {
+                    print("내 정보 불러오기 실패")
                 }
             }
         }
