@@ -20,6 +20,7 @@ public final class PostViewModel: ObservableObject {
     private var postId: Int = 0
     private var emojiType: String = ""
     @Published public var allUserList: [UserListResponse] = []
+    @Published public var PopularityUserList: [PopularityRankingUserListResponse] = []
     @Published var myPostList: [MyPostListResponse] = []
     @Published var myReactionPostList: [MyReactionPostListResponse] = []
     @Published var popularityPostList: [PopularityResponse] = []
@@ -163,6 +164,25 @@ public final class PostViewModel: ObservableObject {
                 do {
                     print("성공ㅣ유저 리스트 불러오기")
                     self.allUserList = try JSONDecoder().decode([UserListResponse].self, from: response.data)
+                    completion(true)
+                } catch {
+                    print("Failed to decode JSON response")
+                    completion(false)
+                }
+            case let .failure(err):
+                print("Network request failed: \(err)")
+                completion(false)
+            }
+        }
+    }
+
+    public func popularityUserList(completion: @escaping (Bool) -> Void) {
+        authProvider.request(.allUserList(authorization: accessToken)) { result in
+            switch result {
+            case let .success(response):
+                do {
+                    print("성공ㅣ유저 리스트 불러오기")
+                    self.PopularityUserList = try JSONDecoder().decode([PopularityRankingUserListResponse].self, from: response.data)
                     completion(true)
                 } catch {
                     print("Failed to decode JSON response")
