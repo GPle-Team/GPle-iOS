@@ -8,6 +8,7 @@ public enum PostAPI {
     case myPostList(authorization: String)
     case myReactionPostList(authorization: String)
     case popularityPostList(authorization: String)
+    case popularityUserList(authorization: String)
 }
 
 extension PostAPI: TargetType {
@@ -23,6 +24,8 @@ extension PostAPI: TargetType {
             return "/file/images"
         case .allUserList:
             return "/user"
+        case .popularityUserList:
+            return "/user/popularity"
         }
     }
 
@@ -31,7 +34,7 @@ extension PostAPI: TargetType {
         switch self {
         case .createPost, .uploadImage:
             return .post
-        case .allUserList, .myPostList, .myReactionPostList, .popularityPostList:
+        case .allUserList, .myPostList, .myReactionPostList, .popularityPostList, .popularityUserList:
             return .get
         }
     }
@@ -49,7 +52,7 @@ extension PostAPI: TargetType {
                 MultipartFormData(provider: .data(fileData), name: "files", fileName: "image.jpg", mimeType: "image/jpeg")
             }
             return .uploadMultipart(formData)
-        case .allUserList:
+        case .allUserList, .popularityUserList:
             return .requestPlain
         case .myPostList:
             return .requestParameters(parameters: ["type": "MY"], encoding: URLEncoding.queryString)
@@ -62,7 +65,7 @@ extension PostAPI: TargetType {
 
     public var headers: [String : String]? {
         switch self {
-        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization), .myPostList(let authorization), .myReactionPostList(let authorization), .popularityPostList(let authorization):
+        case .createPost(_, let authorization), .uploadImage(_, let authorization), .allUserList(let authorization), .myPostList(let authorization), .myReactionPostList(let authorization), .popularityPostList(let authorization), .popularityUserList(let authorization):
             return ["Authorization": authorization]
         }
     }
