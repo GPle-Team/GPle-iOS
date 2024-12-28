@@ -2,7 +2,6 @@ import SwiftUI
 import Domain
 
 struct MyPageView: View {
-    @StateObject var viewModel: MyPageViewModel
     @State private var topNavigationState = false
     @StateObject var postViewModel: PostViewModel
     @Environment(\.dismiss) private var dismiss

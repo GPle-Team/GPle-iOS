@@ -19,10 +19,12 @@ struct MainView: View {
 
                                 Spacer()
 
-                                NavigationLink(destination: MyPageView(viewModel: MyPageViewModel(), postViewModel: PostViewModel())) {
-                                    GPleAsset.Assets.profile.swiftUIImage
-                                        .padding(.trailing, 20)
-                                }
+                                NavigationLink(destination:
+                                                MyPageView(
+                                                    postViewModel: PostViewModel())) {
+                                                        GPleAsset.Assets.profile.swiftUIImage
+                                                            .padding(.trailing, 20)
+                                                    }
                             }
                             .padding(.top, 16)
 
