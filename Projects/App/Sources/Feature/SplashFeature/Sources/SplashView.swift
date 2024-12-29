@@ -7,7 +7,7 @@ struct SplashView: View {
         ZStack {
             if isActive {
                 MainView(viewModel: MainViewModel(), postViewModel: PostViewModel())
-                    .transition(.opacity) // 페이드 효과
+                    .transition(.opacity)
             } else {
                 ZStack {
                     GPleAsset.Color.back.swiftUIColor
@@ -17,6 +17,7 @@ struct SplashView: View {
                         GPleAsset.Assets.gpleBigLogo.swiftUIImage
                             .resizable()
                             .frame(width: 160, height: 70)
+                            .padding(.bottom, 40)
                     }
                 }
                 .transition(.opacity)
