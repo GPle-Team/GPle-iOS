@@ -3,7 +3,7 @@ import SwiftUI
 struct MainView: View {
     @StateObject var viewModel = MainViewModel()
     @StateObject var postViewModel: PostViewModel
-    
+
     var body: some View {
         NavigationView {
             NavigationStack {
@@ -64,15 +64,37 @@ struct MainView: View {
                             .padding(.top, 16)
 
                             ForEach(viewModel.allPostList) { post in
-                                postList(
+                                NavigationLink(destination: DetailView(
+                                    viewModel: DetailViewModel(),
+                                    postViewModel: PostViewModel(),
+                                    postId: post.id,
+                                    location: post.location,
+                                    title: post.title,
                                     name: post.author.name,
                                     grade: post.author.grade,
-                                    title: post.title,
-                                    place: post.location,
-                                    tag: post.tagList.map { $0.name },
-                                    date: post.createdTime,
-                                    imageURL: post.imageUrl
-                                )
+                                    imageUrl: post.imageUrl,
+                                    tagList: post.tagList.map { ($0.name, $0.id) },
+                                    emojiList: [
+                                        post.emojiList.heartCount,
+                                        post.emojiList.congCount,
+                                        post.emojiList.thumbsCount,
+                                        post.emojiList.thinkCount,
+                                        post.emojiList.poopCount,
+                                        post.emojiList.chinaCount
+                                    ],
+                                    checkEmojiList: post.checkEmoji,
+                                    createTime: post.createdTime
+                                )) {
+                                    postList(
+                                        name: post.author.name,
+                                        grade: post.author.grade,
+                                        title: post.title,
+                                        place: post.location,
+                                        tag: post.tagList.map { $0.name },
+                                        date: post.createdTime,
+                                        imageURL: post.imageUrl
+                                    )
+                                }
                             }
                             .padding(.top, 60)
 
@@ -87,118 +109,118 @@ struct MainView: View {
         }
     }
 
-        @ViewBuilder
-        func rankButton() -> some View {
-            HStack {
-                GPleAsset.Assets.chart.swiftUIImage
+    @ViewBuilder
+    func rankButton() -> some View {
+        HStack {
+            GPleAsset.Assets.chart.swiftUIImage
 
-                Text("인기 순위")
-                    .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
-            }
-            .padding(.all, 12)
-            .background(GPleAsset.Color.gray1000.swiftUIColor)
-            .cornerRadius(8)
+            Text("인기 순위")
+                .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
         }
+        .padding(.all, 12)
+        .background(GPleAsset.Color.gray1000.swiftUIColor)
+        .cornerRadius(8)
+    }
 
-        @ViewBuilder
-        func imageUploadButton() -> some View {
-            HStack {
-                GPleAsset.Assets.download.swiftUIImage
+    @ViewBuilder
+    func imageUploadButton() -> some View {
+        HStack {
+            GPleAsset.Assets.download.swiftUIImage
 
-                Text("사진 업로드")
-                    .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
-            }
-            .padding(.all, 12)
-            .background(GPleAsset.Color.gray1000.swiftUIColor)
-            .cornerRadius(8)
+            Text("사진 업로드")
+                .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
         }
+        .padding(.all, 12)
+        .background(GPleAsset.Color.gray1000.swiftUIColor)
+        .cornerRadius(8)
+    }
 
-        @ViewBuilder
-        func postList(
-            name: String,
-            grade: Int,
-            title: String,
-            place: String,
-            tag: [String],
-            date: String,
-            imageURL: [String]
-        ) -> some View {
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 4) {
-                    GPleAsset.Assets.profile.swiftUIImage
+    @ViewBuilder
+    func postList(
+        name: String,
+        grade: Int,
+        title: String,
+        place: String,
+        tag: [String],
+        date: String,
+        imageURL: [String]
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 4) {
+                GPleAsset.Assets.profile.swiftUIImage
 
-                    Text(name)
-                        .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
-                        .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
-                        .padding(.leading, 4)
+                Text(name)
+                    .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
+                    .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
+                    .padding(.leading, 4)
 
-                    Text("•")
-                        .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-
-                    HStack(spacing: 0) {
-                        Text("\(grade)")
-
-                        Text("학년")
-                    }
+                Text("•")
                     .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+
+                HStack(spacing: 0) {
+                    Text("\(grade)")
+
+                    Text("학년")
                 }
+                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+            }
 
-                Text(title)
-                    .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
-                    .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
-                    .padding(.top, 16)
-
-                Text(place)
-                    .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
-                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                    .padding(.top, 4)
-
-                ForEach(imageURL, id: \.self) { imageURL in
-                    AsyncImage(url: URL(string: imageURL)) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                                .frame(width: 318, height: 318)
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 318)
-                                .cornerRadius(8)
-                        case .failure:
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .foregroundColor(.red)
-                                .frame(width: 318, height: 318)
-                        @unknown default:
-                            EmptyView()
-                        }
-                    }
-                }
+            Text(title)
+                .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
+                .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
                 .padding(.top, 16)
 
-                HStack(spacing: 8) {
-                    ForEach(tag, id: \.self) { tag in
-                        HStack(spacing: 0) {
-                            Text("@")
-
-                            Text(tag)
-                        }
-                    }
-                }
+            Text(place)
                 .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                .padding(.top, 12)
+                .padding(.top, 4)
 
-                Text(date)
-                    .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                    .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                    .padding(.top, 4)
-
+            ForEach(imageURL, id: \.self) { imageURL in
+                AsyncImage(url: URL(string: imageURL)) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .frame(width: 318, height: 318)
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 318)
+                            .cornerRadius(8)
+                    case .failure:
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(.red)
+                            .frame(width: 318, height: 318)
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
             }
-            .padding(.vertical, 20)
-            .padding(.horizontal, 16)
-            .background(GPleAsset.Color.gray1000.swiftUIColor)
-            .cornerRadius(12)
+            .padding(.top, 16)
+
+            HStack(spacing: 8) {
+                ForEach(tag, id: \.self) { tag in
+                    HStack(spacing: 0) {
+                        Text("@")
+
+                        Text(tag)
+                    }
+                }
+            }
+            .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
+            .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+            .padding(.top, 12)
+
+            Text(date)
+                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                .padding(.top, 4)
+
         }
+        .padding(.vertical, 20)
+        .padding(.horizontal, 16)
+        .background(GPleAsset.Color.gray1000.swiftUIColor)
+        .cornerRadius(12)
     }
+}
