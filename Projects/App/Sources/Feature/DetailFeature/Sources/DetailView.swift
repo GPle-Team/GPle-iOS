@@ -5,7 +5,6 @@ struct DetailView: View {
     @State private var topNavigationState: Bool = false
     @State private var emojiName: [String] = ["heart", "congrats", "ThumbsUp", "thinking", "poop", "china"]
     @State private var emojiServerName: [String] = ["HEART", "CONGRATUATION", "THUMBSUP", "THINKING", "POOP", "CHINA"]
-    @State private var test: [Bool] = [false, false, false, false, false, false]
     @State private var graySmileState: Bool = false
     @Environment(\.dismiss) private var dismiss
     @StateObject var postViewModel: PostViewModel
