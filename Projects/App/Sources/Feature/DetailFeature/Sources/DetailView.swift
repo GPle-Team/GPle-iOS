@@ -3,9 +3,8 @@ import SwiftUI
 struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var topNavigationState: Bool = false
-    @State private var emojiName: [String] = ["heart", "congrats", "thumbsUp", "thinking", "poop", "china"]
+    @State private var emojiName: [String] = ["heart", "congrats", "ThumbsUp", "thinking", "poop", "china"]
     @State private var emojiServerName: [String] = ["HEART", "CONGRATUATION", "THUMBSUP", "THINKING", "POOP", "CHINA"]
-    @State private var emojiStates: [Int] = [0, 2, 3, 400, 500, 600]
     @State private var test: [Bool] = [false, false, false, false, false, false]
     @State private var graySmileState: Bool = false
     @Environment(\.dismiss) private var dismiss
@@ -96,7 +95,6 @@ struct DetailView: View {
                                 .padding(.top, 16)
                                 .padding(.leading, 16)
 
-
                             HStack(spacing: 8) {
                                 ForEach(tagList.indices, id: \.self) { tag in
                                     Text("@\(tagList[tag].name)")
@@ -106,7 +104,6 @@ struct DetailView: View {
                             }
                             .padding(.top, 6)
                             .padding(.leading, 16)
-
 
                             let dateString = createTime.split(separator: "T").first
                             if let dateString = dateString {
@@ -155,12 +152,14 @@ struct DetailView: View {
                                             postViewModel.postEmoji { success in
                                                 print("\(emojiName[tag]) 성공")
 
-                                                if checkEmojiList[tag] == true {
-                                                    emojiList[tag] -= 1
-                                                    checkEmojiList[tag].toggle()
-                                                } else {
-                                                    emojiList[tag] = 1
-                                                    checkEmojiList[tag].toggle()
+                                                if success {
+                                                    if checkEmojiList[tag] == true {
+                                                        emojiList[tag] -= 1
+                                                        checkEmojiList[tag].toggle()
+                                                    } else {
+                                                        emojiList[tag] = 1
+                                                        checkEmojiList[tag].toggle()
+                                                    }
                                                 }
                                             }
                                         }) {
@@ -177,10 +176,8 @@ struct DetailView: View {
                                 .padding(.leading, 20)
                                 .padding(.top, 10)
                             }
-
                         }
                     }
-
 
                     Spacer()
                 }

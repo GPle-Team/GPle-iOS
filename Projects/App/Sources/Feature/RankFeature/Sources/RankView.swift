@@ -169,5 +169,6 @@ struct RankView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
