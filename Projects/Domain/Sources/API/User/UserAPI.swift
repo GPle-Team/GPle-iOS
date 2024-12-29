@@ -29,31 +29,28 @@ extension UserAPI: TargetType {
     }
 
     public var task: Task {
-            switch self {
-            case let .userInfoInput(authorization, name, number, file):
-                // Form data (name, number) and file upload using multipart
-                var formData: [MultipartFormData] = [
-                    MultipartFormData(provider: .data(name.data(using: .utf8)!), name: "name"),
-                    MultipartFormData(provider: .data(number.data(using: .utf8)!), name: "number")
-                ]
-                
-                // 이미지가 존재하면 추가
-                if let fileData = file {
-                    let fileFormData = MultipartFormData(provider: .data(fileData), name: "image", fileName: "profile_image.jpg", mimeType: "image/jpeg")
-                    formData.append(fileFormData)
-                }
-                
-                return .uploadMultipart(formData)
+        switch self {
+        case let .userInfoInput(_, name, number, file):
+            var formData: [MultipartFormData] = [
+                MultipartFormData(provider: .data(name.data(using: .utf8)!), name: "name"),
+                MultipartFormData(provider: .data(number.data(using: .utf8)!), name: "number")
+            ]
+            
+            if let fileData = file {
+                let fileFormData = MultipartFormData(provider: .data(fileData), name: "image", fileName: "profile_image.jpg", mimeType: "image/jpeg")
+                formData.append(fileFormData)
             }
+            
+            return .uploadMultipart(formData)
         }
+    }
 
-        public var headers: [String : String]? {
-            switch self {
-            case .userInfoInput(let authorization, _, _, _):
-                return [
-                    "Authorization": "Bearer \(authorization)", // Authorization token
-                    "Content-Type": "multipart/form-data" // Set content type for multipart requests
-                ]
-            }
+    public var headers: [String : String]? {
+        switch self {
+        case .userInfoInput(let authorization, _, _, _):
+            return [
+                "Authorization": authorization
+            ]
         }
+    }
 }

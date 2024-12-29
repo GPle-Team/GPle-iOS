@@ -33,10 +33,9 @@ struct LoginView: View {
                 LoginButton(loginViewModel: viewModel)
                     .padding(.bottom, 40)
             }
-            
-            if viewModel.isSignedIn == true {
-                UserInfoView(viewModel: UserInfoViewModel())
-            }
+        }
+        .fullScreenCover(isPresented: $viewModel.isSignedIn) {
+            UserInfoView(viewModel: UserInfoViewModel())
         }
     }
 }
