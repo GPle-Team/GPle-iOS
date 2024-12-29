@@ -163,19 +163,28 @@ public final class PostViewModel: ObservableObject {
             switch result {
             case let .success(response):
                 do {
-                    print("성공ㅣ유저 리스트 불러오기")
+                    // 응답 데이터를 String으로 변환하여 출력
+                    if let responseString = String(data: response.data, encoding: .utf8) {
+                        print("Response Data as String: \(responseString)")
+                    }
+
+                    // JSON 디코딩
+                    print("성공: 유저 리스트 불러오기")
                     self.allUserList = try JSONDecoder().decode([UserListResponse].self, from: response.data)
                     completion(true)
                 } catch {
-                    print("Failed to decode JSON response")
+                    // 디코딩 실패 시 에러 출력
+                    print("Failed to decode JSON response: \(error)")
                     completion(false)
                 }
             case let .failure(err):
+                // 네트워크 요청 실패 시 에러 출력
                 print("Network request failed: \(err)")
                 completion(false)
             }
         }
     }
+
 
     public func popularityUserList(completion: @escaping (Bool) -> Void) {
         authProvider.request(.popularityUserList(authorization: accessToken)) { result in

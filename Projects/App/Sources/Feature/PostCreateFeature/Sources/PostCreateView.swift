@@ -19,7 +19,6 @@ struct PostCreateView: View {
     @State private var tagUserYear: [Int] = [0, 0, 0, 0, 0]
     @State private var tagUserId: [Int?] = Array(repeating: nil, count: 5)
     @State private var toast: FancyToast? = nil
-    @State private var boolState: Bool = false
     @State private var buttonState: Bool = true
 
     var body: some View {
@@ -346,7 +345,6 @@ struct PostCreateView: View {
                                        buttonState: isFormValid && buttonState,
                                        buttonOkColor: GPleAsset.Color.main.swiftUIColor
                             ){
-
                                 print("클릭")
                                 buttonState = false
                                 toast = FancyToast(type: .info, title: "업로드 중...", message: "해당 게시물의 업로드가 진행중입니다. 잠시만 기다려주세요.")
@@ -447,14 +445,12 @@ struct PostCreateView: View {
                                     userProfileImage: student.profileImage,
                                     userName: student.name,
                                     userYear: student.grade,
-                                    userId: student.id,
-                                    userProfileImageList: $tagUserImages[index],
-                                    userNameList: $tagUserName[index],
-                                    userYearList: $tagUserYear[index],
-                                    tagUserId: $tagUserId[index]
+                                    userId: student.id
                                 )
+                                .padding(.bottom, 20)
                             }
                         }
+
 
                         Spacer()
                     }
@@ -470,81 +466,84 @@ struct PostCreateView: View {
         .navigationBarBackButtonHidden(true)
     }
 
-    private var isFormValid: Bool {
-        return !titleTextField.isEmpty &&
-        images[0] != nil
-    }
-}
+    @ViewBuilder
+    func searchUserList(
+        userProfileImage: String,
+        userName: String,
+        userYear: Int,
+        userId: Int
+    ) -> some View {
+        Button {
+            if let emptyIndex = tagUserName.firstIndex(of: "") {
+                tagUserImages[emptyIndex] = userProfileImage
+                tagUserName[emptyIndex] = userName
+                tagUserYear[emptyIndex] = userYear
+                tagUserId[emptyIndex] = userId
 
-@ViewBuilder
-func searchUserList(
-    userProfileImage: String,
-    userName: String,
-    userYear: Int,
-    userId: Int,
-    userProfileImageList: Binding<String>,
-    userNameList: Binding<String>,
-    userYearList: Binding<Int>,
-    tagUserId: Binding<Int?>
-) -> some View {
-    Button {
-        userProfileImageList.wrappedValue = userProfileImage
-        userNameList.wrappedValue = userName
-        userYearList.wrappedValue = userYear
-        tagUserId.wrappedValue = userId
-
-        print("추가: \(userId)")
-        print("추가: \(userName)")
-        print("추가: \(userYear)학년")
-    } label: {
-        HStack(spacing: 4) {
-            if let url = URL(string: userProfileImage) {
-                AsyncImage(url: url) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 32, height: 32)
-                        .clipShape(Circle())
-                } placeholder: {
+                print("추가된 유저 ID: \(userId)")
+                print("추가된 유저 이름: \(userName)")
+                print("추가된 유저 학년: \(userYear)")
+            } else {
+                tagUserImages[4] = userProfileImage
+                tagUserName[4] = userName
+                tagUserYear[4] = userYear
+                tagUserId[4] = userId
+            }
+        } label: {
+            HStack(spacing: 4) {
+                if let url = URL(string: userProfileImage) {
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32, height: 32)
+                            .clipShape(Circle())
+                    } placeholder: {
+                        GPleAsset.Assets.profile.swiftUIImage
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32, height: 32)
+                    }
+                    .padding(.leading, 24)
+                } else {
                     GPleAsset.Assets.profile.swiftUIImage
                         .resizable()
                         .scaledToFit()
                         .frame(width: 32, height: 32)
+                        .padding(.leading, 24)
                 }
-                .padding(.leading, 24)
-            } else {
-                GPleAsset.Assets.profile.swiftUIImage
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 32, height: 32)
-                    .padding(.leading, 24)
-            }
 
-            Text(userName)
-                .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
-                .foregroundStyle(.white)
-                .padding(.leading, 4)
+                Text(userName)
+                    .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 16))
+                    .foregroundStyle(.white)
+                    .padding(.leading, 4)
 
-            Text("· \(userYear)학년")
-                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-
-            Spacer()
-
-            HStack(spacing: 8) {
-                GPleAsset.Assets.grayUserPlus.swiftUIImage
-
-                Text("추가하기")
+                Text("· \(userYear)학년")
                     .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                    .foregroundStyle(GPleAsset.Color.gray400.swiftUIColor)
+                    .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+
+                Spacer()
+
+                HStack(spacing: 8) {
+                    GPleAsset.Assets.grayUserPlus.swiftUIImage
+
+                    Text("추가하기")
+                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                        .foregroundStyle(GPleAsset.Color.gray400.swiftUIColor)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
+                )
+                .padding(.trailing, 20)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
-            )
-            .padding(.trailing, 20)
         }
+    }
+
+    private var isFormValid: Bool {
+        return !titleTextField.isEmpty &&
+        images[0] != nil
     }
 }
