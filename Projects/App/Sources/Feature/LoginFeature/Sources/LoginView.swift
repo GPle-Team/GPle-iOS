@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject var viewModel: LoginViewModel
+    @StateObject var userInfoViewModel: UserInfoViewModel
 
     var body: some View {
         ZStack {
@@ -31,6 +32,10 @@ struct LoginView: View {
                 
                 LoginButton(loginViewModel: viewModel)
                     .padding(.bottom, 40)
+            }
+            
+            if viewModel.isSignedIn == true {
+                UserInfoView(viewModel: UserInfoViewModel())
             }
         }
     }

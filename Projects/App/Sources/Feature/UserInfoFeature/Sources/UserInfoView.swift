@@ -82,7 +82,9 @@ struct UserInfoView: View {
                            backColor: GPleAsset.Color.gray1000.swiftUIColor,
                            buttonState: viewModel.name.isEmpty == false && viewModel.number.isEmpty == false,
                            buttonOkColor: GPleAsset.Color.main.swiftUIColor
-                )
+                ) {
+                    viewModel.submitUserInfo()
+                }
                 .padding(.bottom, 12)
             }
         }

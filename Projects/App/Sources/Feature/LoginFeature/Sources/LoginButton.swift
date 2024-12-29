@@ -6,6 +6,7 @@ struct LoginButton: View {
     var body: some View {
         Button {
             loginViewModel.signIn()
+            
         } label: {
             VStack {
                 HStack(spacing: 12) {
@@ -26,8 +27,6 @@ struct LoginButton: View {
             .background(GPleAsset.Color.white.swiftUIColor)
             .cornerRadius(12)
             .padding(.horizontal, 20)
-            
         }
-        
     }
 }

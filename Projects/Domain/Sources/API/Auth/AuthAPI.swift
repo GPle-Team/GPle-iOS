@@ -3,33 +3,23 @@ import Moya
 
 public enum AuthAPI {
     case login(idToken: String)
-    case logout
-    case refresh
+    case logout(refreshToken: String)
+    case refresh(idToken: String)
 }
 
-extension AuthAPI: GPleAPI {
-    public var domain: GPleDomain {
-        .auth
+extension AuthAPI: TargetType {
+    public var baseURL: URL {
+        return URL(string: "https://port-0-gple-backend-eg4e2alkoplc4q.sel4.cloudtype.app")!
     }
     
-    public var urlPath: String {
+    public var path: String {
         switch self {
         case .login:
-            return "/google/login"
+            return "/auth/google/token"
         case .logout:
-            return "/logout"
+            return "/auth/logout"
         case .refresh:
-            return "/"
-        }
-    }
-    
-    public var jwtTokenType: JwtTokenType {
-        switch self {
-        case .login, .refresh:
-            return .refreshToken
-            
-        case .logout:
-            return .accessToken
+            return "/auth/"
         }
     }
 
@@ -48,13 +38,23 @@ extension AuthAPI: GPleAPI {
 
     public var task: Task {
         switch self {
-        case let .login(idToken):
+        case let .login(idToken), let .refresh(idToken):
             return .requestParameters(parameters: [
-                "idTonek" : idToken
+                "idToken" : idToken
                 ],
                 encoding: JSONEncoding.default)
-        case .logout, .refresh:
+        case .logout:
             return .requestPlain
+        }
+    }
+    
+    public var headers: [String : String]? {
+        switch self {
+        case
+            .logout(let refreshToken):
+            return ["Content-Type": "application/json", "refreshToken": refreshToken]
+        default:
+            return ["Content-Type": "application/json"]
         }
     }
 }

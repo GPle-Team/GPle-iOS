@@ -10,15 +10,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-
 @main
 struct GoogleSignInProjectApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var viewModel: LoginViewModel = LoginViewModel()
     @StateObject var userInfoViewModel: UserInfoViewModel = UserInfoViewModel()
     
     var body: some Scene {
         WindowGroup {
-            UserInfoView(viewModel: UserInfoViewModel())
+            LoginView(viewModel: LoginViewModel(), userInfoViewModel: userInfoViewModel)
         }
     }
 }
