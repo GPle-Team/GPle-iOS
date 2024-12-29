@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct DetailView: View {
-    @StateObject var viewModel: DetailViewModel
     @State private var topNavigationState: Bool = false
     @State private var emojiName: [String] = ["heart", "congrats", "ThumbsUp", "thinking", "poop", "china"]
     @State private var emojiServerName: [String] = ["HEART", "CONGRATUATION", "THUMBSUP", "THINKING", "POOP", "CHINA"]
@@ -21,6 +20,7 @@ struct DetailView: View {
     @State public var checkEmojiList: [Bool] = []
     @State public var createTime: String = ""
     @State public var topNavigationBar: Bool = true
+    @State private var selectedIndex = 0
 
     var body: some View {
         NavigationStack {
@@ -69,7 +69,7 @@ struct DetailView: View {
                             }
                             .padding(.top, 8)
 
-                            TabView(selection: $viewModel.imageCount) {
+                            TabView(selection: $selectedIndex) {
                                 ForEach(imageUrl.indices, id: \.self) { index in
                                     if let imageUrl = URL(string: imageUrl[index]) {
                                         AsyncImage(url: imageUrl) { image in

@@ -123,7 +123,6 @@ struct MyPageView: View {
                                     ForEach(postViewModel.myPostList, id: \.id) { myPost in
 
                                         NavigationLink(destination: DetailView(
-                                            viewModel: DetailViewModel(),
                                             postViewModel: PostViewModel(),
                                             postId: myPost.id,
                                             location: myPost.location,
@@ -173,7 +172,6 @@ struct MyPageView: View {
                                     ForEach(postViewModel.myReactionPostList, id: \.id) { rtPost in
 
                                         NavigationLink(destination: DetailView(
-                                            viewModel: DetailViewModel(),
                                             postViewModel: PostViewModel(),
                                             postId: rtPost.id,
                                             location: rtPost.location,

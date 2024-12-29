@@ -65,7 +65,6 @@ struct MainView: View {
 
                             ForEach(viewModel.allPostList) { post in
                                 NavigationLink(destination: DetailView(
-                                    viewModel: DetailViewModel(),
                                     postViewModel: PostViewModel(),
                                     postId: post.id,
                                     location: post.location,

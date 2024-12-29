@@ -128,7 +128,6 @@ struct RankView: View {
                                 .padding(.top, 15)
 
                             DetailView(
-                                viewModel: DetailViewModel(),
                                 postViewModel: PostViewModel(),
                                 postId: popularityPost.id,
                                 title: popularityPost.title,

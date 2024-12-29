@@ -34,7 +34,6 @@ struct LocationPostView: View {
                     case "GYM":
                         ForEach(viewModel.gymPostList) { post in
                             DetailView(
-                                viewModel: DetailViewModel(),
                                 postViewModel: PostViewModel(),
                                 postId: post.id,
                                 title: post.title,
@@ -62,7 +61,6 @@ struct LocationPostView: View {
                     case "HOME":
                         ForEach(viewModel.homePostList) { post in
                             DetailView(
-                                viewModel: DetailViewModel(),
                                 postViewModel: PostViewModel(),
                                 postId: post.id,
                                 title: post.title,
@@ -90,7 +88,6 @@ struct LocationPostView: View {
                     case "PLAYGROUND":
                         ForEach(viewModel.playgroundPostList) { post in
                             DetailView(
-                                viewModel: DetailViewModel(),
                                 postViewModel: PostViewModel(),
                                 postId: post.id,
                                 title: post.title,
@@ -118,7 +115,6 @@ struct LocationPostView: View {
                     case "DOMITORY":
                         ForEach(viewModel.domitoryPostList) { post in
                             DetailView(
-                                viewModel: DetailViewModel(),
                                 postViewModel: PostViewModel(),
                                 postId: post.id,
                                 title: post.title,
@@ -146,7 +142,6 @@ struct LocationPostView: View {
                     case "WALKING_TRAIL":
                         ForEach(viewModel.walkingTrailPostList) { post in
                             DetailView(
-                                viewModel: DetailViewModel(),
                                 postViewModel: PostViewModel(),
                                 postId: post.id,
                                 title: post.title,
