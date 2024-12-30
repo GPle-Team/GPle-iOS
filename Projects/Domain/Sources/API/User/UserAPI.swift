@@ -3,6 +3,7 @@ import Moya
 
 public enum UserAPI {
     case userInfoInput(authorization: String, name: String, number: String, file: Data?)
+    case myInfo(authorization: String)
 }
 
 extension UserAPI: TargetType {
@@ -12,7 +13,7 @@ extension UserAPI: TargetType {
 
     public var path: String {
         switch self {
-        case .userInfoInput:
+        case .userInfoInput, .myInfo:
             return "/user/profile"
         }
     }
@@ -21,6 +22,8 @@ extension UserAPI: TargetType {
         switch self {
         case .userInfoInput:
             return .post
+        case .myInfo:
+            return .get
         }
     }
 
@@ -42,12 +45,14 @@ extension UserAPI: TargetType {
             }
             
             return .uploadMultipart(formData)
+        case .myInfo:
+            return .requestPlain
         }
     }
 
     public var headers: [String : String]? {
         switch self {
-        case .userInfoInput(let authorization, _, _, _):
+        case .userInfoInput(let authorization, _, _, _), .myInfo(let authorization):
             return [
                 "Authorization": "Bearer \(authorization)"
             ]
