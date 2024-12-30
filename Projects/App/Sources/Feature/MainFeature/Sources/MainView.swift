@@ -213,10 +213,19 @@ struct MainView: View {
             .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
             .padding(.top, 12)
 
-            Text(date)
-                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                .padding(.top, 4)
+            let dateString = date.split(separator: "T").first
+            if let dateString = dateString {
+                let components = dateString.split(separator: "-")
+                if components.count >= 3 {
+                    var month = String(components[1])
+                    var day = String(components[2])
+
+                    Text("\(month)월 \(day)일")
+                        .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                        .padding(.top, 6)
+                }
+            }
 
         }
         .padding(.vertical, 20)
