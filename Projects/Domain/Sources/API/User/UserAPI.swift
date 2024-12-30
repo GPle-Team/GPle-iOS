@@ -49,7 +49,7 @@ extension UserAPI: TargetType {
         switch self {
         case .userInfoInput(let authorization, _, _, _):
             return [
-                "Authorization": authorization
+                "Authorization": "Bearer \(authorization)"
             ]
         }
     }

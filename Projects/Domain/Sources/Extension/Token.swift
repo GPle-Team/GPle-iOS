@@ -5,7 +5,6 @@ import Foundation
 // 토큰과 만료 기간을 포함하는 구조체
 struct TokenData: Codable {
     let token: String
-    let expirationDate: Date
 }
 
 public class KeyChain {
@@ -29,7 +28,7 @@ public class KeyChain {
     // 토큰과 만료 기간을 JSON으로 저장하기
     public func saveTokenWithExpiration(key: String, token: String, expiresIn: TimeInterval) {
         let expirationDate = Date().addingTimeInterval(expiresIn)  // 만료일 계산
-        let tokenData = TokenData(token: token, expirationDate: expirationDate)
+        let tokenData = TokenData(token: token)
 
         if let encodedData = try? JSONEncoder().encode(tokenData),
            let tokenString = String(data: encodedData, encoding: .utf8) {
@@ -40,7 +39,6 @@ public class KeyChain {
         }
     }
 
-    // 저장된 토큰 읽기 (만료 기간 포함)
     public func read(key: String) -> String? {
         let query: NSDictionary = [
             kSecClass: kSecClassGenericPassword,
@@ -54,13 +52,16 @@ public class KeyChain {
 
         if status == errSecSuccess {
             if let retrievedData: Data = dataTypeRef as? Data {
-                let value = String(data: retrievedData, encoding: .utf8)
-                return value
-            } else { return nil }
+                if let tokenData = try? JSONDecoder().decode(TokenData.self, from: retrievedData) {
+                    return tokenData.token
+                } else {
+                    return String(data: retrievedData, encoding: .utf8)
+                }
+            }
         } else {
-            print("failed to loading, status code = \(status)")
-            return nil
+            print("failed to load token, status code = \(status)")
         }
+        return nil
     }
 
     // 토큰과 만료 기간을 함께 읽기
@@ -70,14 +71,6 @@ public class KeyChain {
             return try? JSONDecoder().decode(TokenData.self, from: tokenData)
         }
         return nil
-    }
-
-    // 만료 여부 확인
-    func isTokenExpired(key: String) -> Bool {
-        if let tokenData = loadTokenWithExpiration(key: key) {
-            return tokenData.expirationDate < Date()  // 현재 시간과 만료일 비교
-        }
-        return true  // 토큰이 없으면 만료된 것으로 간주
     }
 
     // 토큰 업데이트하기

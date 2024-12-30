@@ -7,7 +7,6 @@ final class UserInfoViewModel: ObservableObject {
     @Published var name: String = ""
     @Published var number: String = ""
 
-    @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
 
     private let provider = MoyaProvider<UserAPI>()
@@ -17,17 +16,14 @@ final class UserInfoViewModel: ObservableObject {
     }
     
     func submitUserInfo() {
-        isLoading = true
         errorMessage = nil
         print("name: \(name), number: \(number)")
         
         guard let authorizationToken = fetchAccessToken() else { return }
 
         provider.request(.userInfoInput(authorization: authorizationToken, name: name, number: number, file: nil)) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-            }
-
+            print("요청 전달")
+            
             switch result {
             case .success(let response):
                 if (200...299).contains(response.statusCode) {
