@@ -5,7 +5,7 @@ public enum MainAPI {
     case fetchAllPostList(authorization: String)
     case fetchGymPostList(authorization: String)
     case fetchPlaygroundPostList(authorization: String)
-    case fetchDommitoryPostList(authorization: String)
+    case fetchDomitoryPostList(authorization: String)
     case fetchHomePostList(authorization: String)
     case fetchWalkingTrailPostList(authorization: String)
 }
@@ -17,14 +17,14 @@ extension MainAPI: TargetType {
 
     public var path: String {
         switch self {
-        case .fetchAllPostList, .fetchGymPostList, .fetchDommitoryPostList, .fetchHomePostList, .fetchPlaygroundPostList, .fetchWalkingTrailPostList:
+        case .fetchAllPostList, .fetchGymPostList, .fetchDomitoryPostList, .fetchHomePostList, .fetchPlaygroundPostList, .fetchWalkingTrailPostList:
             return "/post"
         }
     }
 
     public var method: Moya.Method {
         switch self {
-        case .fetchAllPostList, .fetchGymPostList, .fetchDommitoryPostList, .fetchHomePostList, .fetchPlaygroundPostList, .fetchWalkingTrailPostList:
+        case .fetchAllPostList, .fetchGymPostList, .fetchDomitoryPostList, .fetchHomePostList, .fetchPlaygroundPostList, .fetchWalkingTrailPostList:
             return .get
         }
     }
@@ -41,8 +41,8 @@ extension MainAPI: TargetType {
             return .requestParameters(parameters: ["location" : "GYM"], encoding: URLEncoding.queryString)
         case .fetchPlaygroundPostList(authorization: let authorization):
             return .requestParameters(parameters: ["location" : "PLAYGROUND"], encoding: URLEncoding.queryString)
-        case .fetchDommitoryPostList(authorization: let authorization):
-            return .requestParameters(parameters: ["location" : "DOMITORRY"], encoding: URLEncoding.queryString)
+        case .fetchDomitoryPostList(authorization: let authorization):
+            return .requestParameters(parameters: ["location" : "DOMITORY"], encoding: URLEncoding.queryString)
         case .fetchHomePostList(authorization: let authorization):
             return .requestParameters(parameters: ["location" : "HOME"], encoding: URLEncoding.queryString)
         case .fetchWalkingTrailPostList(authorization: let authorization):
@@ -52,7 +52,7 @@ extension MainAPI: TargetType {
 
     public var headers: [String : String]? {
         switch self {
-        case .fetchAllPostList(let authorization), .fetchGymPostList(let authorization), .fetchPlaygroundPostList(let authorization), .fetchDommitoryPostList(let authorization), .fetchHomePostList(let authorization), .fetchWalkingTrailPostList(let authorization):
+        case .fetchAllPostList(let authorization), .fetchGymPostList(let authorization), .fetchPlaygroundPostList(let authorization), .fetchDomitoryPostList(let authorization), .fetchHomePostList(let authorization), .fetchWalkingTrailPostList(let authorization):
             return ["Authorization": "Bearer \(authorization)"]
         }
     }

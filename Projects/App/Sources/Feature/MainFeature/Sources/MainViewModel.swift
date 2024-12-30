@@ -12,6 +12,7 @@ public final class MainViewModel: ObservableObject {
     @Published public var playgroundPostList: [Post] = []
     @Published public var domitoryPostList: [Post] = []
     @Published public var walkingTrailPostList: [Post] = []
+    @Published var selectedIndices: [String: Int] = [:]
 
     @MainActor
     public func fetchAllPostList() {
@@ -32,5 +33,16 @@ public final class MainViewModel: ObservableObject {
                 print("Network request failed: \(err)")
             }
         }
+        
+//        self.allPostList = fetchPostsFromServer()
+//        self.selectedIndices = Dictionary(uniqueKeysWithValues: allPostList.map { ($0.id, 0) })
     }
+    
+//    private func fetchPostsFromServer() -> [Post] {
+//            // 서버에서 게시글 목록 가져오기 (예제)
+//            return [
+//                Post(id: "1", title: "Post 1", location: "Location 1", author: Author(name: "Author 1", grade: 1), imageUrl: ["https://example.com/image1.jpg"], tagList: [], emojiList: EmojiList(), checkEmoji: [], createdTime: "2024-12-31T00:00:00"),
+//                Post(id: "2", title: "Post 2", location: "Location 2", author: Author(name: "Author 2", grade: 2), imageUrl: ["https://example.com/image2.jpg"], tagList: [], emojiList: EmojiList(), checkEmoji: [], createdTime: "2024-12-31T00:00:00"),
+//            ]
+//        }
 }
