@@ -32,142 +32,162 @@ struct LocationPostView: View {
                 ScrollView {
                     switch locationType {
                     case "GYM":
-                        ForEach(viewModel.gymPostList) { post in
-                            DetailView(
-                                postViewModel: PostViewModel(),
-                                postId: post.id,
-                                title: post.title,
-                                name: post.author.name,
-                                grade: post.author.grade,
-                                imageUrl: post.imageUrl,
-                                tagList: post.tagList.map{ ($0.name, $0.id) },
-                                emojiList: [
-                                    post.emojiList.chinaCount,
-                                    post.emojiList.congCount,
-                                    post.emojiList.heartCount,
-                                    post.emojiList.poopCount,
-                                    post.emojiList.thinkCount,
-                                    post.emojiList.thumbsCount
-                                ],
-                                checkEmojiList: post.checkEmoji,
-                                createTime: post.createdTime
-                            )
-                            
-                            Rectangle()
-                                .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
-                                .frame(height: 3)
-                                .padding(.vertical, 10)
+                        if viewModel.gymPostList.isEmpty {
+                            PostEmptyView()
+                        } else {
+                            ForEach(viewModel.gymPostList) { post in
+                                DetailView(
+                                    postViewModel: PostViewModel(),
+                                    postId: post.id,
+                                    title: post.title,
+                                    name: post.author.name,
+                                    grade: post.author.grade,
+                                    imageUrl: post.imageUrl,
+                                    tagList: post.tagList.map{ ($0.name, $0.id) },
+                                    emojiList: [
+                                        post.emojiList.chinaCount,
+                                        post.emojiList.congCount,
+                                        post.emojiList.heartCount,
+                                        post.emojiList.poopCount,
+                                        post.emojiList.thinkCount,
+                                        post.emojiList.thumbsCount
+                                    ],
+                                    checkEmojiList: post.checkEmoji,
+                                    createTime: post.createdTime
+                                )
+                                
+                                Rectangle()
+                                    .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
+                                    .frame(height: 3)
+                                    .padding(.vertical, 10)
+                            }
                         }
                     case "HOME":
-                        ForEach(viewModel.homePostList) { post in
-                            DetailView(
-                                postViewModel: PostViewModel(),
-                                postId: post.id,
-                                title: post.title,
-                                name: post.author.name,
-                                grade: post.author.grade,
-                                imageUrl: post.imageUrl,
-                                tagList: post.tagList.map{ ($0.name, $0.id) },
-                                emojiList: [
-                                    post.emojiList.chinaCount,
-                                    post.emojiList.congCount,
-                                    post.emojiList.heartCount,
-                                    post.emojiList.poopCount,
-                                    post.emojiList.thinkCount,
-                                    post.emojiList.thumbsCount
-                                ],
-                                checkEmojiList: post.checkEmoji,
-                                createTime: post.createdTime
-                            )
-                            
-                            Rectangle()
-                                .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
-                                .frame(height: 3)
-                                .padding(.vertical, 10)
+                        if viewModel.homePostList.isEmpty {
+                            PostEmptyView()
+                        } else {
+                            ForEach(viewModel.homePostList) { post in
+                                DetailView(
+                                    postViewModel: PostViewModel(),
+                                    postId: post.id,
+                                    title: post.title,
+                                    name: post.author.name,
+                                    grade: post.author.grade,
+                                    imageUrl: post.imageUrl,
+                                    tagList: post.tagList.map{ ($0.name, $0.id) },
+                                    emojiList: [
+                                        post.emojiList.chinaCount,
+                                        post.emojiList.congCount,
+                                        post.emojiList.heartCount,
+                                        post.emojiList.poopCount,
+                                        post.emojiList.thinkCount,
+                                        post.emojiList.thumbsCount
+                                    ],
+                                    checkEmojiList: post.checkEmoji,
+                                    createTime: post.createdTime
+                                )
+                                
+                                Rectangle()
+                                    .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
+                                    .frame(height: 3)
+                                    .padding(.vertical, 10)
+                            }
                         }
                     case "PLAYGROUND":
-                        ForEach(viewModel.playgroundPostList) { post in
-                            DetailView(
-                                postViewModel: PostViewModel(),
-                                postId: post.id,
-                                title: post.title,
-                                name: post.author.name,
-                                grade: post.author.grade,
-                                imageUrl: post.imageUrl,
-                                tagList: post.tagList.map{ ($0.name, $0.id) },
-                                emojiList: [
-                                    post.emojiList.chinaCount,
-                                    post.emojiList.congCount,
-                                    post.emojiList.heartCount,
-                                    post.emojiList.poopCount,
-                                    post.emojiList.thinkCount,
-                                    post.emojiList.thumbsCount
-                                ],
-                                checkEmojiList: post.checkEmoji,
-                                createTime: post.createdTime
-                            )
-                            
-                            Rectangle()
-                                .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
-                                .frame(height: 3)
-                                .padding(.vertical, 10)
+                        if viewModel.playgroundPostList.isEmpty {
+                            PostEmptyView()
+                        } else {
+                            ForEach(viewModel.playgroundPostList) { post in
+                                DetailView(
+                                    postViewModel: PostViewModel(),
+                                    postId: post.id,
+                                    title: post.title,
+                                    name: post.author.name,
+                                    grade: post.author.grade,
+                                    imageUrl: post.imageUrl,
+                                    tagList: post.tagList.map{ ($0.name, $0.id) },
+                                    emojiList: [
+                                        post.emojiList.chinaCount,
+                                        post.emojiList.congCount,
+                                        post.emojiList.heartCount,
+                                        post.emojiList.poopCount,
+                                        post.emojiList.thinkCount,
+                                        post.emojiList.thumbsCount
+                                    ],
+                                    checkEmojiList: post.checkEmoji,
+                                    createTime: post.createdTime
+                                )
+                                
+                                Rectangle()
+                                    .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
+                                    .frame(height: 3)
+                                    .padding(.vertical, 10)
+                            }
                         }
                     case "DOMITORY":
-                        ForEach(viewModel.domitoryPostList) { post in
-                            DetailView(
-                                postViewModel: PostViewModel(),
-                                postId: post.id,
-                                title: post.title,
-                                name: post.author.name,
-                                grade: post.author.grade,
-                                imageUrl: post.imageUrl,
-                                tagList: post.tagList.map{ ($0.name, $0.id) },
-                                emojiList: [
-                                    post.emojiList.chinaCount,
-                                    post.emojiList.congCount,
-                                    post.emojiList.heartCount,
-                                    post.emojiList.poopCount,
-                                    post.emojiList.thinkCount,
-                                    post.emojiList.thumbsCount
-                                ],
-                                checkEmojiList: post.checkEmoji,
-                                createTime: post.createdTime
-                            )
-                            
-                            Rectangle()
-                                .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
-                                .frame(height: 3)
-                                .padding(.vertical, 10)
+                        if viewModel.domitoryPostList.isEmpty {
+                            PostEmptyView()
+                        } else {
+                            ForEach(viewModel.domitoryPostList) { post in
+                                DetailView(
+                                    postViewModel: PostViewModel(),
+                                    postId: post.id,
+                                    title: post.title,
+                                    name: post.author.name,
+                                    grade: post.author.grade,
+                                    imageUrl: post.imageUrl,
+                                    tagList: post.tagList.map{ ($0.name, $0.id) },
+                                    emojiList: [
+                                        post.emojiList.chinaCount,
+                                        post.emojiList.congCount,
+                                        post.emojiList.heartCount,
+                                        post.emojiList.poopCount,
+                                        post.emojiList.thinkCount,
+                                        post.emojiList.thumbsCount
+                                    ],
+                                    checkEmojiList: post.checkEmoji,
+                                    createTime: post.createdTime
+                                )
+                                
+                                Rectangle()
+                                    .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
+                                    .frame(height: 3)
+                                    .padding(.vertical, 10)
+                            }
                         }
                     case "WALKING_TRAIL":
-                        ForEach(viewModel.walkingTrailPostList) { post in
-                            DetailView(
-                                postViewModel: PostViewModel(),
-                                postId: post.id,
-                                title: post.title,
-                                name: post.author.name,
-                                grade: post.author.grade,
-                                imageUrl: post.imageUrl,
-                                tagList: post.tagList.map{ ($0.name, $0.id) },
-                                emojiList: [
-                                    post.emojiList.chinaCount,
-                                    post.emojiList.congCount,
-                                    post.emojiList.heartCount,
-                                    post.emojiList.poopCount,
-                                    post.emojiList.thinkCount,
-                                    post.emojiList.thumbsCount
-                                ],
-                                checkEmojiList: post.checkEmoji,
-                                createTime: post.createdTime
-                            )
-                            
-                            Rectangle()
-                                .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
-                                .frame(height: 3)
-                                .padding(.vertical, 10)
+                        if viewModel.walkingTrailPostList.isEmpty {
+                            PostEmptyView()
+                        } else {
+                            ForEach(viewModel.walkingTrailPostList) { post in
+                                DetailView(
+                                    postViewModel: PostViewModel(),
+                                    postId: post.id,
+                                    title: post.title,
+                                    name: post.author.name,
+                                    grade: post.author.grade,
+                                    imageUrl: post.imageUrl,
+                                    tagList: post.tagList.map{ ($0.name, $0.id) },
+                                    emojiList: [
+                                        post.emojiList.chinaCount,
+                                        post.emojiList.congCount,
+                                        post.emojiList.heartCount,
+                                        post.emojiList.poopCount,
+                                        post.emojiList.thinkCount,
+                                        post.emojiList.thumbsCount
+                                    ],
+                                    checkEmojiList: post.checkEmoji,
+                                    createTime: post.createdTime
+                                )
+                                
+                                Rectangle()
+                                    .foregroundStyle(GPleAsset.Color.gray900.swiftUIColor)
+                                    .frame(height: 3)
+                                    .padding(.vertical, 10)
+                            }
                         }
                     default:
-                        EmptyView()
+                        PostEmptyView()
                     }
                 }
                 .padding(.top, 8)

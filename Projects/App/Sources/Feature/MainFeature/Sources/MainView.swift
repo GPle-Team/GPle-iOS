@@ -3,6 +3,7 @@ import SwiftUI
 struct MainView: View {
     @StateObject var viewModel = MainViewModel()
     @StateObject var postViewModel: PostViewModel
+    @State private var selectedIndex = 0
 
     var body: some View {
         NavigationView {
@@ -166,38 +167,38 @@ struct MainView: View {
                 .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
             }
+            .padding(.leading, 8)
 
             Text(title)
                 .foregroundStyle(GPleAsset.Color.white.swiftUIColor)
                 .font(GPleFontFamily.Pretendard.semiBold.swiftUIFont(size: 18))
                 .padding(.top, 16)
+                .padding(.leading, 8)
 
             Text(place)
                 .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                 .padding(.top, 4)
+                .padding(.leading, 8)
 
-            ForEach(imageURL, id: \.self) { imageURL in
-                AsyncImage(url: URL(string: imageURL)) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                            .frame(width: 318, height: 318)
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 318)
-                            .cornerRadius(8)
-                    case .failure:
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundColor(.red)
-                            .frame(width: 318, height: 318)
-                    @unknown default:
-                        EmptyView()
+            TabView(selection: $selectedIndex) {
+                ForEach(imageURL.indices, id: \.self) { index in
+                    if let imageUrl = URL(string: imageURL[index]) {
+                        AsyncImage(url: imageUrl) { image in
+                            image
+                                .resizable()
+                                .padding(.top, 12)
+                        } placeholder: {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle())
+                        }
+                        .tag(index)
                     }
                 }
             }
+            .padding(.horizontal, 8)
+            .frame(height: 381)
+            .tabViewStyle(.page)
             .padding(.top, 16)
 
             HStack(spacing: 8) {
@@ -212,16 +213,28 @@ struct MainView: View {
             .foregroundStyle(GPleAsset.Color.gray600.swiftUIColor)
             .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
             .padding(.top, 12)
+            .padding(.leading, 8)
 
-            Text(date)
-                .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
-                .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
-                .padding(.top, 4)
+            let dateString = date.split(separator: "T").first
+            if let dateString = dateString {
+                let components = dateString.split(separator: "-")
+                if components.count >= 3 {
+                    var month = String(components[1])
+                    var day = String(components[2])
+
+                    Text("\(month)월 \(day)일")
+                        .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
+                        .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
+                        .padding(.top, 6)
+                        .padding(.leading, 8)
+                }
+            }
 
         }
+        .padding(.horizontal, 10)
         .padding(.vertical, 20)
-        .padding(.horizontal, 16)
         .background(GPleAsset.Color.gray1000.swiftUIColor)
         .cornerRadius(12)
+        .padding(.horizontal, 20)
     }
 }
