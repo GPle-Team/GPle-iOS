@@ -10,7 +10,7 @@ public final class PostViewModel: ObservableObject {
     )
     private let userProvider = MoyaProvider<UserAPI>()
     private var title: String = ""
-    private var accessToken: String = "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzM0NjYyNTg4LCJleHAiOjE3NDQ2NjI1ODh9.FG4FVQ4oikC4HNy5h7gq0QyCIjVZtceIOKwAMnkULAt4y0lX5gGIF1s2Mdj9qr1H"
+    private var accessToken: String = UserDefaults.standard.string(forKey: "accessToken") ?? ""
     private var userList: [Int] = []
     private var imageUrl: [String] = []
     private var imageUrlString: [String] = []

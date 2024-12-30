@@ -6,7 +6,7 @@ import Domain
 final class LoginViewModel: ObservableObject {
     @Published var isSignedIn: Bool = false
     @Published var errorMessage: String?
-    
+
     private let provider = MoyaProvider<AuthAPI>()
 
     private func getGoogleClientID() -> String? {
@@ -25,7 +25,6 @@ final class LoginViewModel: ObservableObject {
             print("Google Client ID is missing.")
             return
         }
-        
 
         let configuration = GIDConfiguration(clientID: clientID)
         GIDSignIn.sharedInstance.configuration = configuration
@@ -50,69 +49,86 @@ final class LoginViewModel: ObservableObject {
 
             print("CILENT_ID: \(clientID)")
             print("ID Token: \(idToken)")
-            self?.sendIdTokenToServer(idToken)
+            self?.sendIdTokenToServer(idToken) { success in
+                if success {
+                    print("토큰 저장 성공!")
+                } else {
+                    print("토큰 저장 실패.")
+                }
+            }
+
         }
     }
 
-    @MainActor
-    private func sendIdTokenToServer(_ idToken: String) {
+    public func sendIdTokenToServer(_ idToken: String, completion: @escaping (Bool) -> Void) {
         provider.request(.login(idToken: idToken)) { [weak self] result in
             switch result {
             case let .success(res):
                 do {
-                    
                     let loginResponse = try JSONDecoder().decode(Token.self, from: res.data)
-                    
+
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
                     dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
 
-                    if let accessTokenExpirationDate = dateFormatter.date(from: loginResponse.accessExpiredAt),
-                       let refreshTokenExpirationDate = dateFormatter.date(from: loginResponse.refreshExpiredAt) {
+                    let accessTokenExpirationDate = dateFormatter.date(from: loginResponse.accessExpiredAt)
+                    let refreshTokenExpirationDate = dateFormatter.date(from: loginResponse.refreshExpiredAt)
 
-                        let accessTokenExpirationInterval = accessTokenExpirationDate.timeIntervalSinceNow
-                        let refreshTokenExpirationInterval = refreshTokenExpirationDate.timeIntervalSinceNow
-
-                        KeyChain.shared.saveTokenWithExpiration(
-                            key: Const.KeyChainKey.accessToken,
-                            token: loginResponse.accessToken,
-                            expiresIn: accessTokenExpirationInterval
-                        )
-
-                        KeyChain.shared.saveTokenWithExpiration(
-                            key: Const.KeyChainKey.refreshToken,
-                            token: loginResponse.refreshToken,
-                            expiresIn: refreshTokenExpirationInterval
-                        )
-
-                        print("Access Token 만료 날짜: \(accessTokenExpirationDate)")
-                        print("Refresh Token 만료 날짜: \(refreshTokenExpirationDate)")
-                        print("토큰 저장 완료")
-                    } else {
-                        print("만료 시간 변환 오류: 유효한 날짜 형식이 아님.")
+                    if accessTokenExpirationDate == nil {
+                        print("Access Token 만료 시간 변환 실패: 형식이 맞지 않음, 기본 값으로 처리됨.")
                     }
-                    print("------------------------------------------------------------")
-                    
+                    if refreshTokenExpirationDate == nil {
+                        print("Refresh Token 만료 시간 변환 실패: 형식이 맞지 않음, 기본 값으로 처리됨.")
+                    }
+
+                    let accessTokenExpirationInterval = accessTokenExpirationDate?.timeIntervalSinceNow ?? 0
+                    let refreshTokenExpirationInterval = refreshTokenExpirationDate?.timeIntervalSinceNow ?? 0
+
+                    UserDefaults.standard.set(loginResponse.accessToken, forKey: "accessToken")
+                    UserDefaults.standard.set(loginResponse.refreshToken, forKey: "refreshToken")
+
+                    if let savedAccessToken = UserDefaults.standard.string(forKey: "accessToken") {
+                        print("Access Token 저장 완료: \(savedAccessToken)")
+                    } else {
+                        print("Access Token 저장 실패")
+                    }
+
+                    if let savedRefreshToken = UserDefaults.standard.string(forKey: "refreshToken") {
+                        print("Refresh Token 저장 완료: \(savedRefreshToken)")
+                    } else {
+                        print("Refresh Token 저장 실패")
+                    }
+
+                    print("Access Token 만료 날짜: \(accessTokenExpirationDate ?? Date())")
+                    print("Refresh Token 만료 날짜: \(refreshTokenExpirationDate ?? Date())")
+                    print("토큰 저장 완료")
+
                     DispatchQueue.main.async {
-                        print("Access Token: \(loginResponse.accessToken)")
-                        print("Refresh Token: \(loginResponse.refreshToken)")
-                        print("Access Token Expiry: \(loginResponse.accessExpiredAt)")
-                        print("Refresh Token Expiry: \(loginResponse.refreshExpiredAt)")
                         self?.isSignedIn = true
                     }
+
+                    completion(true)
+
                 } catch {
                     DispatchQueue.main.async {
                         self?.errorMessage = "Failed to parse response: \(error.localizedDescription)"
                     }
+                    
+                    completion(false)
                 }
 
             case .failure(let error):
                 DispatchQueue.main.async {
                     self?.errorMessage = "Request failed: \(error.localizedDescription)"
                 }
+
+                completion(false)
             }
         }
     }
+
+
+
 
     func signOut() {
         GIDSignIn.sharedInstance.signOut()

@@ -109,6 +109,7 @@ struct MainView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 
     @ViewBuilder

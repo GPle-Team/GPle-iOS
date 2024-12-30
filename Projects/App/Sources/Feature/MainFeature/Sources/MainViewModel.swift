@@ -4,7 +4,7 @@ import Foundation
 
 public final class MainViewModel: ObservableObject {
     private let authProvider = MoyaProvider<MainAPI>()
-    private var accessToken: String = "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzM0NjYyNTg4LCJleHAiOjE3NDQ2NjI1ODh9.FG4FVQ4oikC4HNy5h7gq0QyCIjVZtceIOKwAMnkULAt4y0lX5gGIF1s2Mdj9qr1H"
+    private var accessToken: String = UserDefaults.standard.string(forKey: "accessToken") ?? ""
 
     @Published public var allPostList: [Post] = []
     @Published public var gymPostList: [Post] = []

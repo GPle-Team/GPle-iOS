@@ -53,7 +53,7 @@ extension MainAPI: TargetType {
     public var headers: [String : String]? {
         switch self {
         case .fetchAllPostList(let authorization), .fetchGymPostList(let authorization), .fetchPlaygroundPostList(let authorization), .fetchDommitoryPostList(let authorization), .fetchHomePostList(let authorization), .fetchWalkingTrailPostList(let authorization):
-            return ["Authorization": authorization]
+            return ["Authorization": "Bearer \(authorization)"]
         }
     }
 }
