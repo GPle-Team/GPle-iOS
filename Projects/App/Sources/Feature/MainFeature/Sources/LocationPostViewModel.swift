@@ -83,7 +83,7 @@ final class LocationPostViewModel: ObservableObject {
     
     @MainActor
     public func fetchDomitoryList() {
-        authProvider.request(.fetchGymPostList(authorization: accessToken)) { result in
+        authProvider.request(.fetchDommitoryPostList(authorization: accessToken)) { result in
             switch result {
             case let .success(res):
                 do {
