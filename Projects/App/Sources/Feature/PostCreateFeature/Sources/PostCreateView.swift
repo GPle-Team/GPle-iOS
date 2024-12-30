@@ -346,6 +346,7 @@ struct PostCreateView: View {
                                        buttonOkColor: GPleAsset.Color.main.swiftUIColor
                             ){
                                 print("클릭")
+                                Haptic.impact(style: .light)
                                 buttonState = false
                                 toast = FancyToast(type: .info, title: "업로드 중...", message: "해당 게시물의 업로드가 진행중입니다. 잠시만 기다려주세요.")
 

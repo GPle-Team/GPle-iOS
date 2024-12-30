@@ -3,7 +3,7 @@ import SwiftUI
 struct DetailView: View {
     @State private var topNavigationState: Bool = false
     @State private var emojiName: [String] = ["heart", "congrats", "thumbsUp", "thinking", "poop", "china"]
-    @State private var emojiServerName: [String] = ["HEART", "CONGRATUATION", "THUMBSUP", "THINKING", "POOP", "CHINA"]
+    @State private var emojiServerName: [String] = ["HEART", "CONGRATS", "THUMBSUP", "THINKING", "POOP", "CHINA"]
     @State private var graySmileState: Bool = false
     @Environment(\.dismiss) private var dismiss
     @StateObject var postViewModel: PostViewModel
@@ -143,14 +143,13 @@ struct DetailView: View {
                                 HStack(spacing: 25) {
                                     ForEach(0..<6) { tag in
                                         Button(action: {
-                                            Haptic.impact(style: .soft)
+                                            Haptic.impact(style: .light)
                                             postViewModel.setupPostId(postId: postId)
                                             postViewModel.setupEmojiType(emojiType: emojiServerName[tag])
 
                                             postViewModel.postEmoji { success in
-                                                print("\(emojiName[tag]) 성공")
-
                                                 if success {
+                                                    print("\(emojiName[tag]) 성공")
                                                     if checkEmojiList[tag] == true {
                                                         emojiList[tag] -= 1
                                                         checkEmojiList[tag].toggle()
@@ -158,6 +157,8 @@ struct DetailView: View {
                                                         emojiList[tag] = 1
                                                         checkEmojiList[tag].toggle()
                                                     }
+                                                } else {
+                                                    print("\(emojiName[tag]) 실패")
                                                 }
                                             }
                                         }) {
