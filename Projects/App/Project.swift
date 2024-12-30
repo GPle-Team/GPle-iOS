@@ -33,7 +33,6 @@ let targets: [Target] = [
         scripts: scripts,
         dependencies: [
             .SPM.Moya,
-            .SPM.Firebase,
             .SPM.GoogleSignIn,
             .domain(target: .Domain)
         ],
