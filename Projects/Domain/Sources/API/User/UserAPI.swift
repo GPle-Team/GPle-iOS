@@ -2,7 +2,7 @@ import Foundation
 import Moya
 
 public enum UserAPI {
-    case userInfoInput(authorization: String)
+    case userInfoInput(authorization: String, name: String, number: String, file: Data?)
 }
 
 extension UserAPI: TargetType {
@@ -20,7 +20,7 @@ extension UserAPI: TargetType {
     public var method: Moya.Method {
         switch self {
         case .userInfoInput:
-            return .get
+            return .post
         }
     }
 
@@ -29,16 +29,28 @@ extension UserAPI: TargetType {
     }
 
     public var task: Task {
-            switch self {
-            case .userInfoInput:
-                return .requestPlain
+        switch self {
+        case let .userInfoInput(_, name, number, file):
+            var formData: [MultipartFormData] = [
+                MultipartFormData(provider: .data(name.data(using: .utf8)!), name: "name"),
+                MultipartFormData(provider: .data(number.data(using: .utf8)!), name: "number")
+            ]
+            
+            if let fileData = file {
+                let fileFormData = MultipartFormData(provider: .data(fileData), name: "image", fileName: "profile_image.jpg", mimeType: "image/jpeg")
+                formData.append(fileFormData)
             }
+            
+            return .uploadMultipart(formData)
         }
+    }
 
-        public var headers: [String : String]? {
-            switch self {
-            case .userInfoInput(let authorization):
-                return ["Authorization": authorization]
-            }
+    public var headers: [String : String]? {
+        switch self {
+        case .userInfoInput(let authorization, _, _, _):
+            return [
+                "Authorization": "Bearer \(authorization)"
+            ]
         }
+    }
 }

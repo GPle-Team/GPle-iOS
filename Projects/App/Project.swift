@@ -26,7 +26,10 @@ let targets: [Target] = [
         deploymentTargets: env.deploymentTargets,
         infoPlist: .file(path: "Support/Info.plist"),
         sources: ["Sources**"],
-        resources: ["Resources/**"],
+        resources: [
+            "Resources/**",
+            "Support/GoogleService-Info.plist"
+        ],
         scripts: scripts,
         dependencies: [
             .SPM.Moya,
