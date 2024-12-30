@@ -8,6 +8,7 @@ public final class PostViewModel: ObservableObject {
     private let emojiProvider = MoyaProvider<EmojiAPI>(
         plugins: [NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))]
     )
+    private let userProvider = MoyaProvider<UserAPI>()
     private var title: String = ""
     private var accessToken: String = "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzM0NjYyNTg4LCJleHAiOjE3NDQ2NjI1ODh9.FG4FVQ4oikC4HNy5h7gq0QyCIjVZtceIOKwAMnkULAt4y0lX5gGIF1s2Mdj9qr1H"
     private var userList: [Int] = []
@@ -20,8 +21,11 @@ public final class PostViewModel: ObservableObject {
     private var postId: Int = 0
     private var emojiType: String = ""
     @Published public var allUserList: [UserListResponse] = []
+    @Published public var popularityUserList: [PopularityRankingUserListResponse] = []
     @Published var myPostList: [MyPostListResponse] = []
     @Published var myReactionPostList: [MyReactionPostListResponse] = []
+    @Published var popularityPostList: [PopularityResponse] = []
+    @Published public var myInfo: MyInfoResponse?
     private var imageUploadResponse: ImageUploadResponse?
 
 
@@ -104,7 +108,6 @@ public final class PostViewModel: ObservableObject {
         }
     }
 
-
     public func myPostList(completion: @escaping (Bool) -> Void) {
             authProvider.request(.myPostList(authorization: accessToken)) { result in
                 switch result {
@@ -130,16 +133,76 @@ public final class PostViewModel: ObservableObject {
             }
         }
 
+    public func popularityPostList(completion: @escaping (Bool) -> Void) {
+        authProvider.request(.popularityPostList(authorization: accessToken)) { result in
+                switch result {
+                case let .success(response):
+                    do {
+                        let decodedResponse = try JSONDecoder().decode([PopularityResponse].self, from: response.data)
+                        self.popularityPostList = decodedResponse
+
+                        for post in decodedResponse {
+                            print("게시물 ID: \(post.id), 위치: \(post.location)")
+                            print("이미지: \(post.imageUrl)")
+                        }
+
+                        completion(true)
+                    } catch {
+                        print("JSON 디코딩 실패: \(error)")
+                        completion(false)
+                    }
+                case let .failure(err):
+                    print("네트워크 요청 실패: \(err)")
+                    completion(false)
+                }
+            }
+        }
+
     public func allUserList(completion: @escaping (Bool) -> Void) {
         authProvider.request(.allUserList(authorization: accessToken)) { result in
             switch result {
             case let .success(response):
                 do {
-                    print("성공ㅣ유저 리스트 불러오기")
+                    // 응답 데이터를 String으로 변환하여 출력
+                    if let responseString = String(data: response.data, encoding: .utf8) {
+                        print("Response Data as String: \(responseString)")
+                    }
+
+                    // JSON 디코딩
+                    print("성공: 유저 리스트 불러오기")
                     self.allUserList = try JSONDecoder().decode([UserListResponse].self, from: response.data)
                     completion(true)
                 } catch {
-                    print("Failed to decode JSON response")
+                    // 디코딩 실패 시 에러 출력
+                    print("Failed to decode JSON response: \(error)")
+                    completion(false)
+                }
+            case let .failure(err):
+                // 네트워크 요청 실패 시 에러 출력
+                print("Network request failed: \(err)")
+                completion(false)
+            }
+        }
+    }
+
+
+    public func popularityUserList(completion: @escaping (Bool) -> Void) {
+        authProvider.request(.popularityUserList(authorization: accessToken)) { result in
+            switch result {
+            case let .success(response):
+                do {
+                    print("성공: 유저 리스트 불러오기")
+
+                    self.popularityUserList = try JSONDecoder().decode([PopularityRankingUserListResponse].self, from: response.data)
+
+                    print("불러온 유저 리스트:")
+                    for (index, user) in self.popularityUserList.enumerated() {
+                        print("[\(index)] \(user)")
+                    }
+
+                    completion(true)
+                } catch {
+                    print("Failed to decode JSON response: \(error)")
                     completion(false)
                 }
             case let .failure(err):
@@ -148,6 +211,28 @@ public final class PostViewModel: ObservableObject {
             }
         }
     }
+
+    public func myInfo(completion: @escaping (Bool) -> Void) {
+        userProvider.request(.userInfoInput(authorization: accessToken)) { result in
+            switch result {
+            case let .success(response):
+                do {
+                    print("성공: 내 정보 불러오기")
+
+                    self.myInfo = try JSONDecoder().decode(MyInfoResponse.self, from: response.data)
+
+                    completion(true)
+                } catch {
+                    print("Failed to decode JSON response: \(error)")
+                    completion(false)
+                }
+            case let .failure(err):
+                print("Network request failed: \(err)")
+                completion(false)
+            }
+        }
+    }
+
 
 
     public func uploadImages(completion: @escaping (Bool) -> Void) {

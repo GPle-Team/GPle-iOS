@@ -2,7 +2,6 @@ import SwiftUI
 import Domain
 
 struct MyPageView: View {
-    @StateObject var viewModel: MyPageViewModel
     @State private var topNavigationState = false
     @StateObject var postViewModel: PostViewModel
     @Environment(\.dismiss) private var dismiss
@@ -31,7 +30,7 @@ struct MyPageView: View {
 
                     HStack(spacing: 0) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(viewModel.name)님,")
+                            Text("\(postViewModel.myInfo?.name ?? "")님,")
                                 .foregroundStyle(.white)
                                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 20))
 
@@ -120,20 +119,9 @@ struct MyPageView: View {
 
                             ScrollView {
                                 LazyVGrid(columns: columns, spacing: 2) {
-                                    ForEach(postViewModel.myPostList.indices, id: \.self) { index in
-                                        let myPost = postViewModel.myPostList[index]
-
-                                        let myPostEmojiArray = [
-                                            myPost.emojiList.heartCount,
-                                            myPost.emojiList.congCount,
-                                            myPost.emojiList.thumbsCount,
-                                            myPost.emojiList.thinkCount,
-                                            myPost.emojiList.poopCount,
-                                            myPost.emojiList.chinaCount
-                                        ]
+                                    ForEach(postViewModel.myPostList, id: \.id) { myPost in
 
                                         NavigationLink(destination: DetailView(
-                                            viewModel: DetailViewModel(),
                                             postViewModel: PostViewModel(),
                                             postId: myPost.id,
                                             location: myPost.location,
@@ -142,7 +130,14 @@ struct MyPageView: View {
                                             grade: myPost.author.grade,
                                             imageUrl: myPost.imageUrl,
                                             tagList: myPost.tagList.map { ($0.name, $0.id) },
-                                            emojiList: myPostEmojiArray,
+                                            emojiList: [
+                                                myPost.emojiList.heartCount,
+                                                myPost.emojiList.congCount,
+                                                myPost.emojiList.thumbsCount,
+                                                myPost.emojiList.thinkCount,
+                                                myPost.emojiList.poopCount,
+                                                myPost.emojiList.chinaCount
+                                            ],
                                             checkEmojiList: myPost.checkEmoji,
                                             createTime: myPost.createdTime
                                         )) {
@@ -173,20 +168,9 @@ struct MyPageView: View {
 
                             ScrollView {
                                 LazyVGrid(columns: columns1, spacing: 2) {
-                                    ForEach(postViewModel.myReactionPostList.indices, id: \.self) { index in
-                                        let rtPost = postViewModel.myReactionPostList[index]
-
-                                        let emojiArray = [
-                                            rtPost.emojiList.heartCount,
-                                            rtPost.emojiList.congCount,
-                                            rtPost.emojiList.thumbsCount,
-                                            rtPost.emojiList.thinkCount,
-                                            rtPost.emojiList.poopCount,
-                                            rtPost.emojiList.chinaCount
-                                        ]
+                                    ForEach(postViewModel.myReactionPostList, id: \.id) { rtPost in
 
                                         NavigationLink(destination: DetailView(
-                                            viewModel: DetailViewModel(),
                                             postViewModel: PostViewModel(),
                                             postId: rtPost.id,
                                             location: rtPost.location,
@@ -195,7 +179,14 @@ struct MyPageView: View {
                                             grade: rtPost.author.grade,
                                             imageUrl: rtPost.imageUrl,
                                             tagList: rtPost.tagList.map { ($0.name, $0.id) },
-                                            emojiList: emojiArray,
+                                            emojiList: [
+                                                rtPost.emojiList.heartCount,
+                                                rtPost.emojiList.congCount,
+                                                rtPost.emojiList.thumbsCount,
+                                                rtPost.emojiList.thinkCount,
+                                                rtPost.emojiList.poopCount,
+                                                rtPost.emojiList.chinaCount
+                                            ],
                                             checkEmojiList: rtPost.checkEmoji,
                                             createTime: rtPost.createdTime
                                         )) {
@@ -240,6 +231,14 @@ struct MyPageView: View {
                     print("반응 게시물 최신화 성공")
                 } else {
                     print("반응 게시물 최신화 실패")
+                }
+            }
+
+            postViewModel.myInfo { success in
+                if success {
+                    print("내 정보 불러오기 성공")
+                } else {
+                    print("내 정보 불러오기 실패")
                 }
             }
         }

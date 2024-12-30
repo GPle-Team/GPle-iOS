@@ -1,12 +1,9 @@
 import SwiftUI
 
 struct DetailView: View {
-    @StateObject var viewModel: DetailViewModel
     @State private var topNavigationState: Bool = false
     @State private var emojiName: [String] = ["heart", "congrats", "thumbsUp", "thinking", "poop", "china"]
     @State private var emojiServerName: [String] = ["HEART", "CONGRATUATION", "THUMBSUP", "THINKING", "POOP", "CHINA"]
-    @State private var emojiStates: [Int] = [0, 2, 3, 400, 500, 600]
-    @State private var test: [Bool] = [false, false, false, false, false, false]
     @State private var graySmileState: Bool = false
     @Environment(\.dismiss) private var dismiss
     @StateObject var postViewModel: PostViewModel
@@ -18,11 +15,12 @@ struct DetailView: View {
     @State public var name: String = ""
     @State public var grade: Int = 0
     @State public var imageUrl: [String] = []
-    @State public var tagList: [(name: String, id: Int)]
+    @State public var tagList: [(name: String, id: Int)] = []
     @State public var emojiList: [Int] = []
     @State public var checkEmojiList: [Bool] = []
     @State public var createTime: String = ""
     @State public var topNavigationBar: Bool = true
+    @State private var selectedIndex = 0
 
     var body: some View {
         NavigationStack {
@@ -66,12 +64,11 @@ struct DetailView: View {
                                     .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 14))
                                     .foregroundStyle(GPleAsset.Color.gray800.swiftUIColor)
 
-
                                 Spacer()
                             }
                             .padding(.top, 8)
 
-                            TabView(selection: $viewModel.imageCount) {
+                            TabView(selection: $selectedIndex) {
                                 ForEach(imageUrl.indices, id: \.self) { index in
                                     if let imageUrl = URL(string: imageUrl[index]) {
                                         AsyncImage(url: imageUrl) { image in
@@ -96,7 +93,6 @@ struct DetailView: View {
                                 .padding(.top, 16)
                                 .padding(.leading, 16)
 
-
                             HStack(spacing: 8) {
                                 ForEach(tagList.indices, id: \.self) { tag in
                                     Text("@\(tagList[tag].name)")
@@ -106,7 +102,6 @@ struct DetailView: View {
                             }
                             .padding(.top, 6)
                             .padding(.leading, 16)
-
 
                             let dateString = createTime.split(separator: "T").first
                             if let dateString = dateString {
@@ -143,46 +138,48 @@ struct DetailView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
+
+                            if graySmileState {
+                                HStack(spacing: 25) {
+                                    ForEach(0..<6) { tag in
+                                        Button(action: {
+                                            Haptic.impact(style: .soft)
+                                            postViewModel.setupPostId(postId: postId)
+                                            postViewModel.setupEmojiType(emojiType: emojiServerName[tag])
+
+                                            postViewModel.postEmoji { success in
+                                                print("\(emojiName[tag]) 성공")
+
+                                                if success {
+                                                    if checkEmojiList[tag] == true {
+                                                        emojiList[tag] -= 1
+                                                        checkEmojiList[tag].toggle()
+                                                    } else {
+                                                        emojiList[tag] = 1
+                                                        checkEmojiList[tag].toggle()
+                                                    }
+                                                }
+                                            }
+                                        }) {
+                                            Image(emojiName[tag])
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
+                                )
+                                .padding(.leading, 20)
+                                .padding(.top, 10)
+                            }
                         }
                     }
 
                     Spacer()
                 }
                 .padding(.top, 8)
-
-                if graySmileState {
-                    HStack(spacing: 25) {
-                        ForEach(0..<6) { tag in
-                            Button(action: {
-                                Haptic.impact(style: .soft)
-                                postViewModel.setupPostId(postId: postId)
-                                postViewModel.setupEmojiType(emojiType: emojiServerName[tag])
-
-                                postViewModel.postEmoji { success in
-                                    print("\(emojiName[tag]) 성공")
-
-                                    if checkEmojiList[tag] == true {
-                                        emojiList[tag] -= 1
-                                        checkEmojiList[tag].toggle()
-                                    } else {
-                                        emojiList[tag] = 1
-                                        checkEmojiList[tag].toggle()
-                                    }
-                                }
-                            }) {
-                                Image(emojiName[tag])
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 5)
-                            .foregroundStyle(GPleAsset.Color.gray1000.swiftUIColor)
-                    )
-                    .padding(.leading, 20)
-                    .padding(.top, 490)
-                }
             }
         }
         .navigationBarBackButtonHidden(true)

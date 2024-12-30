@@ -7,6 +7,11 @@ public final class MainViewModel: ObservableObject {
     private var accessToken: String = "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzM0NjYyNTg4LCJleHAiOjE3NDQ2NjI1ODh9.FG4FVQ4oikC4HNy5h7gq0QyCIjVZtceIOKwAMnkULAt4y0lX5gGIF1s2Mdj9qr1H"
 
     @Published public var allPostList: [Post] = []
+    @Published public var gymPostList: [Post] = []
+    @Published public var homePostList: [Post] = []
+    @Published public var playgroundPostList: [Post] = []
+    @Published public var domitoryPostList: [Post] = []
+    @Published public var walkingTrailPostList: [Post] = []
 
     @MainActor
     public func fetchAllPostList() {

@@ -104,3 +104,4 @@ Derived/
 *.xcworkspace
 *.xcodeproj
 master.key
+Package.resolved

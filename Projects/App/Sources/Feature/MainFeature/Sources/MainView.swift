@@ -5,78 +5,106 @@ struct MainView: View {
     @StateObject var postViewModel: PostViewModel
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                GPleAsset.Color.back.swiftUIColor
-                    .ignoresSafeArea()
+        NavigationView {
+            NavigationStack {
+                ZStack {
+                    GPleAsset.Color.back.swiftUIColor
+                        .ignoresSafeArea()
 
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 0) {
-                        HStack(spacing: 0) {
-                            GPleAsset.Assets.gpleBigLogo.swiftUIImage
-                                .padding(.leading, 20)
+                    ScrollView(showsIndicators: false) {
+                        VStack(spacing: 0) {
+                            HStack(spacing: 0) {
+                                GPleAsset.Assets.gpleBigLogo.swiftUIImage
+                                    .padding(.leading, 20)
+
+                                Spacer()
+
+                                NavigationLink(destination:
+                                                MyPageView(
+                                                    postViewModel: PostViewModel())) {
+                                                        GPleAsset.Assets.profile.swiftUIImage
+                                                            .padding(.trailing, 20)
+                                                    }
+                            }
+                            .padding(.top, 16)
+
+                            NavigationLink(destination: LocationPostView(viewModel: LocationPostViewModel(), locationType: "WALKING_TRAIL")) {
+                                GPleAsset.Assets.backyard.swiftUIImage
+                                    .padding(.top, 61)
+                            }
+
+                            NavigationLink(destination: LocationPostView(viewModel: LocationPostViewModel(), locationType: "HOME")) {
+                                GPleAsset.Assets.bongwan.swiftUIImage
+                                    .padding(.top, 6)
+                            }
+
+                            HStack(spacing: 13) {
+                                NavigationLink(destination: LocationPostView(viewModel: LocationPostViewModel(), locationType: "GYM")) {
+                                    GPleAsset.Assets.geumbongGwan.swiftUIImage
+                                }
+
+                                NavigationLink(destination: LocationPostView(viewModel: LocationPostViewModel(), locationType: "PLAYGROUND")) {
+                                    GPleAsset.Assets.playground.swiftUIImage
+                                }
+
+                                NavigationLink(destination: LocationPostView(viewModel: LocationPostViewModel(), locationType: "DOMITORY")) {
+                                    GPleAsset.Assets.dongHaengGwan.swiftUIImage
+                                }
+                            }
+                            .padding(.top, 8)
+
+                            HStack(spacing: 36) {
+                                NavigationLink(destination: RankView(postViewModel: PostViewModel())) {
+                                    rankButton()
+                                }
+
+                                NavigationLink(destination: PostCreateView(viewModel: PostViewModel())) {
+                                    imageUploadButton()
+                                }
+
+                            }
+                            .padding(.top, 16)
+
+                            ForEach(viewModel.allPostList) { post in
+                                NavigationLink(destination: DetailView(
+                                    postViewModel: PostViewModel(),
+                                    postId: post.id,
+                                    location: post.location,
+                                    title: post.title,
+                                    name: post.author.name,
+                                    grade: post.author.grade,
+                                    imageUrl: post.imageUrl,
+                                    tagList: post.tagList.map { ($0.name, $0.id) },
+                                    emojiList: [
+                                        post.emojiList.heartCount,
+                                        post.emojiList.congCount,
+                                        post.emojiList.thumbsCount,
+                                        post.emojiList.thinkCount,
+                                        post.emojiList.poopCount,
+                                        post.emojiList.chinaCount
+                                    ],
+                                    checkEmojiList: post.checkEmoji,
+                                    createTime: post.createdTime
+                                )) {
+                                    postList(
+                                        name: post.author.name,
+                                        grade: post.author.grade,
+                                        title: post.title,
+                                        place: post.location,
+                                        tag: post.tagList.map { $0.name },
+                                        date: post.createdTime,
+                                        imageURL: post.imageUrl
+                                    )
+                                }
+                            }
+                            .padding(.top, 60)
 
                             Spacer()
-
-                            NavigationLink(destination: MyPageView(viewModel: MyPageViewModel(), postViewModel: PostViewModel())) {
-                                GPleAsset.Assets.profile.swiftUIImage
-                                    .padding(.trailing, 20)
-                            }
                         }
-                        .padding(.top, 16)
-
-                        GPleAsset.Assets.backyard.swiftUIImage
-                            .padding(.top, 61)
-
-                        GPleAsset.Assets.bongwan.swiftUIImage
-                            .padding(.top, 6)
-
-                        HStack(spacing: 13) {
-                            GPleAsset.Assets.geumbongGwan.swiftUIImage
-
-                            GPleAsset.Assets.playground.swiftUIImage
-
-                            GPleAsset.Assets.dongHaengGwan.swiftUIImage
-                        }
-                        .padding(.top, 8)
-
-                        HStack(spacing: 16) {
-                            Spacer()
-
-                            GPleAsset.Assets.zoomOut.swiftUIImage
-
-                            GPleAsset.Assets.zoomIn.swiftUIImage
-                        }
-                        .padding(.top, 19)
-                        .padding(.trailing, 24)
-
-                        HStack(spacing: 36) {
-                            rankButton()
-
-                            NavigationLink(destination: PostCreateView(viewModel: PostViewModel())) {
-                                imageUploadButton()
-                            }
-                        }
-                        .padding(.top, 40)
-
-                        ForEach(viewModel.allPostList) { post in
-                            postList(
-                                name: post.author.name,
-                                grade: post.author.grade,
-                                title: post.title,
-                                place: post.location,
-                                tag: post.tagList.map { $0.name },
-                                date: post.createdTime,
-                                imageURL: post.imageUrl
-                            )
-                        }
-                        .padding(.top, 60)
-
-                        Spacer()
                     }
-                }
-                .onAppear {
-                    viewModel.fetchAllPostList()
+                    .onAppear {
+                        viewModel.fetchAllPostList()
+                    }
                 }
             }
         }
