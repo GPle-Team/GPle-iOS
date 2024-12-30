@@ -2,40 +2,52 @@ import Moya
 import Security
 import Foundation
 
-// 토큰과 만료 기간을 포함하는 구조체
-struct TokenData: Codable {
-    let token: String
+public struct TokenData: Codable {
+    public let token: String
+    public let expirationDate: Date
 }
 
 public class KeyChain {
     public static let shared = KeyChain()
 
-    // 토큰 저장하기 (만료 기간과 함께)
     func create(key: String, token: String) {
-        // 먼저 토큰을 데이터로 변환하고 만료 기간을 설정
         if let tokenData = token.data(using: .utf8) {
             let query: NSDictionary = [
                 kSecClass: kSecClassGenericPassword,
                 kSecAttrAccount: key,
                 kSecValueData: tokenData
             ]
-            SecItemDelete(query)  // 기존 데이터 삭제
+            SecItemDelete(query)
             let status = SecItemAdd(query, nil)
             assert(status == noErr, "failed to save Token")
         }
     }
 
-    // 토큰과 만료 기간을 JSON으로 저장하기
     public func saveTokenWithExpiration(key: String, token: String, expiresIn: TimeInterval) {
-        let expirationDate = Date().addingTimeInterval(expiresIn)  // 만료일 계산
-        let tokenData = TokenData(token: token)
+        let expirationDate = Date().addingTimeInterval(expiresIn)
+        let tokenData = TokenData(token: token, expirationDate: expirationDate)
 
-        if let encodedData = try? JSONEncoder().encode(tokenData),
-           let tokenString = String(data: encodedData, encoding: .utf8) {
-            create(key: key, token: tokenString)
-            print("Token 저장 완료: \(tokenString)")
+        guard let encodedData = try? JSONEncoder().encode(tokenData) else {
+            print("Token encoding failed.")
+            return
+        }
+
+        let query: [CFString: Any] = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrAccount: key,
+            kSecValueData: encodedData
+        ]
+
+        let deleteStatus = SecItemDelete(query as CFDictionary)
+        if deleteStatus != errSecSuccess {
+            print("Failed to delete existing token, status: \(deleteStatus)")
+        }
+
+        let status = SecItemAdd(query as CFDictionary, nil)
+        if status == errSecSuccess {
+            print("Token saved successfully to Keychain.")
         } else {
-            print("TokenData 인코딩 실패")
+            print("Failed to save token, status: \(status)")
         }
     }
 
@@ -52,20 +64,16 @@ public class KeyChain {
 
         if status == errSecSuccess {
             if let retrievedData: Data = dataTypeRef as? Data {
-                if let tokenData = try? JSONDecoder().decode(TokenData.self, from: retrievedData) {
-                    return tokenData.token
-                } else {
-                    return String(data: retrievedData, encoding: .utf8)
-                }
-            }
+                let value = String(data: retrievedData, encoding: .utf8)
+                return value
+            } else { return nil }
         } else {
-            print("failed to load token, status code = \(status)")
+            print("failed to loading, status code = \(status)")
+            return nil
         }
-        return nil
     }
 
-    // 토큰과 만료 기간을 함께 읽기
-    func loadTokenWithExpiration(key: String) -> TokenData? {
+    public func loadTokenWithExpiration(key: String) -> TokenData? {
         if let tokenString = read(key: key),
            let tokenData = tokenString.data(using: .utf8) {
             return try? JSONDecoder().decode(TokenData.self, from: tokenData)
@@ -73,7 +81,13 @@ public class KeyChain {
         return nil
     }
 
-    // 토큰 업데이트하기
+    public func isTokenExpired(key: String) -> Bool {
+        if let tokenData = loadTokenWithExpiration(key: key) {
+            return tokenData.expirationDate < Date()
+        }
+        return true
+    }
+
     func updateItem(token: Any, key: Any) -> Bool {
         let prevQuery: [CFString: Any] = [kSecClass: kSecClassGenericPassword,
                                           kSecAttrAccount: key]
@@ -90,7 +104,6 @@ public class KeyChain {
         return result
     }
 
-    // 토큰 삭제
     func delete(key: String) {
         let query: NSDictionary = [
             kSecClass: kSecClassGenericPassword,

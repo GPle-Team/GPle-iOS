@@ -38,7 +38,7 @@ extension EmojiAPI: TargetType {
     public var headers: [String : String]? {
         switch self {
         case .emojiPost(_, let authorization):
-            return ["Authorization": authorization]
+            return ["Authorization": "Bearer \(authorization)"]
         }
     }
 }

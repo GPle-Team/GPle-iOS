@@ -53,9 +53,7 @@ extension UserAPI: TargetType {
     public var headers: [String : String]? {
         switch self {
         case .userInfoInput(let authorization, _, _, _), .myInfo(let authorization):
-            return [
-                "Authorization": "Bearer \(authorization)"
-            ]
+            return ["Authorization": "Bearer \(authorization)"]
         }
     }
 }

@@ -442,7 +442,7 @@ struct PostCreateView: View {
                             ForEach(filteredUsers.indices, id: \.self) { index in
                                 let student = filteredUsers[index]
                                 searchUserList(
-                                    userProfileImage: student.profileImage,
+                                    userProfileImage: student.profileImage ?? "",
                                     userName: student.name,
                                     userYear: student.grade,
                                     userId: student.id

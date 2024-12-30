@@ -5,6 +5,8 @@ struct MyPageView: View {
     @State private var topNavigationState = false
     @StateObject var postViewModel: PostViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var navigateToUserInfo = false
+    @State private var navigateToLogin = false
 
     var body: some View {
         NavigationStack {
@@ -49,18 +51,31 @@ struct MyPageView: View {
                         Spacer()
 
                         Menu {
-                            Button("프로필 변경", action: {
-                            })
+                            Button("프로필 변경", action: { navigateToUserInfo = true })
                             .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
-                            Button("로그아웃", action: { /* 액션 */ })
+                            Button("로그아웃", action: { navigateToLogin = true })
                                 .font(GPleFontFamily.Pretendard.regular.swiftUIFont(size: 16))
                                 .foregroundStyle(GPleAsset.Color.system.swiftUIColor)
-
                         } label: {
                             GPleAsset.Assets.point3.swiftUIImage
                                 .padding(.trailing, 20)
                                 .padding(.top, 8)
                         }
+
+                        NavigationLink(
+                                        destination: UserInfoView(viewModel: UserInfoViewModel()),
+                                        isActive: $navigateToUserInfo
+                                    ) {
+                                        EmptyView()
+                                    }
+
+                                    // 로그아웃 화면 네비게이션
+                                    NavigationLink(
+                                        destination: LoginView(viewModel: LoginViewModel(), userInfoViewModel: UserInfoViewModel()),
+                                        isActive: $navigateToLogin
+                                    ) {
+                                        EmptyView()
+                                    }
                     }
 
                     VStack(alignment: topNavigationState ? .trailing : .leading, spacing: 0) {
