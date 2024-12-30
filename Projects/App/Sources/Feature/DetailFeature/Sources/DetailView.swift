@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DetailView: View {
     @State private var topNavigationState: Bool = false
-    @State private var emojiName: [String] = ["heart", "congratstion", "thumbsUp", "thinking", "poop", "china"]
+    @State private var emojiName: [String] = ["heart", "congrats", "thumbsUp", "thinking", "poop", "china"]
     @State private var emojiServerName: [String] = ["HEART", "CONGRATUATION", "THUMBSUP", "THINKING", "POOP", "CHINA"]
     @State private var graySmileState: Bool = false
     @Environment(\.dismiss) private var dismiss
