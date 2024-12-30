@@ -1,12 +1,12 @@
 import SwiftUI
 
-struct EmptyView: View {
+struct PostEmptyView: View {
     var body: some View {
         NavigationView {
             NavigationStack {
                 ZStack {
-                        GPleAsset.Color.back.swiftUIColor
-                            .ignoresSafeArea()
+                    GPleAsset.Color.back.swiftUIColor
+                        .ignoresSafeArea()
                     
                     VStack(spacing: 0) {
                         Text("아무것도 없어요...")
@@ -41,8 +41,4 @@ struct EmptyView: View {
         .background(GPleAsset.Color.gray1000.swiftUIColor)
         .cornerRadius(8)
     }
-}
-
-#Preview {
-    EmptyView()
 }
