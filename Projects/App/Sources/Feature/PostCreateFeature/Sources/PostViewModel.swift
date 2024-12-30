@@ -213,7 +213,7 @@ public final class PostViewModel: ObservableObject {
     }
 
     public func myInfo(completion: @escaping (Bool) -> Void) {
-        userProvider.request(.userInfoInput(authorization: accessToken)) { result in
+        userProvider.request(.myInfo(authorization: accessToken)) { result in
             switch result {
             case let .success(response):
                 do {

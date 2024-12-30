@@ -6,7 +6,6 @@ struct LoginButton: View {
     var body: some View {
         Button {
             loginViewModel.signIn()
-            
         } label: {
             VStack {
                 HStack(spacing: 12) {
